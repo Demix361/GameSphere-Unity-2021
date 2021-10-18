@@ -10,12 +10,23 @@ namespace GameMechanics
         [SerializeField] private float popTime;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] public float maxScale;
-    
+
+        [SerializeField] private Sprite[] sprites;
+        
         private GameController gameController;
 
         private void Start()
         {
             gameController = FindObjectOfType<GameController>();
+            var rand = new System.Random();
+
+            GetComponent<SpriteRenderer>().sprite = sprites[rand.Next(sprites.Length)];
+            if (rand.Next(2) == 0)
+            {
+                var ls = transform.localScale;
+                transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
+            }
+            
             StartCoroutine(LifeCycle());
         }
 

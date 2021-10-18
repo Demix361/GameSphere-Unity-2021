@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +12,12 @@ namespace UI
         [SerializeField] private InputField lengthInputField;
 
         [SerializeField] private GameMechanics.GameController gameController;
-        
+
+        private void Start()
+        {
+            lengthInputField.text = "10";
+        }
+
         public void OnClickStartGame()
         {
             var length = Convert.ToInt32(lengthInputField.text);
