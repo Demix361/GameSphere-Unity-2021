@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -38,11 +39,7 @@ namespace GameMechanics
         {
             points = 0;
             missed = 0;
-            statsPanel.ChangePointsText(points);
-            statsPanel.ChangeMissedText(missed);
-            
             StartCoroutine(SpawnBalls());
-            StartCoroutine(LifeCycle());
         }
         
         private void Update()
@@ -57,6 +54,12 @@ namespace GameMechanics
                     points += 1;
                     statsPanel.ChangePointsText(points);
                     Destroy(a.gameObject);
+
+                    if (points % 100 == 0 && missed > 0)
+                    {
+                        missed -= 1;
+                        statsPanel.DecreaseMissed();
+                    }
                 }
             }
         }
@@ -80,27 +83,65 @@ namespace GameMechanics
         {
             var z = 0f;
             var sortingOrder = 0;
-
+            var timePassed = 0f;
+            var curSpawnInterval = spawnInterval;
+            
             while (true)
             {
                 var pos = new Vector3(Random.Range(-width, height), Random.Range(-height, height), z);
                 var ball = Instantiate(ballPrefab, pos, Quaternion.identity);
-                
-                ball.GetComponent<Ball>().SetSettings(changeScale, changeColor);
-                
+
+                ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2);
                 ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
 
                 z -= 0.00001f;
                 sortingOrder += 1;
 
-                yield return new WaitForSeconds(spawnInterval);
+                curSpawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
+                yield return new WaitForSeconds(curSpawnInterval);
+                timePassed += curSpawnInterval;
+
+                spawnInterval = ProgressSpawnInterval(timePassed);
             }
         }
 
+        private float ProgressSpawnInterval(float value)
+        {
+            // парабола (1): Начальная точка относительно (4) (1 + 4);
+            // (2): Скорость уменьшения функции;
+            // (3): Смещение графика по X;
+            // (4): Предел к которому стремится функция;
+            return 0.7f / (0.015f * value + 1) + 0.3f;
+        }
+        
         public void MissBall()
         {
             missed += 1;
-            statsPanel.ChangeMissedText(missed);
+            statsPanel.IncreaseMissed();
+
+            if (missed >= 3)
+            {
+                EndGame();
+            }
+        }
+
+        private void EndGame()
+        {
+            var highscore = PlayerPrefs.GetInt("highscore", 0);
+            if (points > highscore)
+            {
+                PlayerPrefs.SetInt("highscore", points);
+            }
+
+            var amoguses = FindObjectsOfType<Ball>();
+            foreach (var a in amoguses)
+            {
+                Destroy(a.gameObject);
+            }
+            
+            statsPanel.gameObject.SetActive(false);
+            startPanel.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 }

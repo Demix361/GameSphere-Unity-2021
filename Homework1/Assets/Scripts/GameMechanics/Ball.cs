@@ -5,7 +5,7 @@ namespace GameMechanics
 {
     public class Ball : MonoBehaviour
     {
-        [SerializeField] private bool changeScale;
+        [SerializeField] private bool changeScale = true;
         [SerializeField] private bool changeColor;
         [SerializeField] private float popTime;
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -30,10 +30,9 @@ namespace GameMechanics
             StartCoroutine(LifeCycle());
         }
 
-        public void SetSettings(bool changeScale, bool changeColor)
+        public void SetPopTime(float time)
         {
-            this.changeColor = changeColor;
-            this.changeScale = changeScale;
+            popTime = time;
         }
 
         private IEnumerator LifeCycle()
