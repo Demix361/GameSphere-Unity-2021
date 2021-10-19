@@ -16,7 +16,7 @@ namespace GameMechanics
             for (int i = 0; i < starAmount; i++)
             {
                 var pos = new Vector2(Random.Range(-width, width), Random.Range(-height, height));
-                var star = Instantiate(starPrefab, pos, Quaternion.identity);
+                var star = Instantiate(starPrefab, pos, Quaternion.identity, transform);
                 star.transform.localScale *= Random.Range(0.2f, 1f);
             }
         }

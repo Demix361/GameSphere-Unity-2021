@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GameMechanics
 {
@@ -24,20 +25,19 @@ namespace GameMechanics
             popTime = time;
             imposter = isImposter;
             gameController = FindObjectOfType<GameController>();
-            var rand = new System.Random();
 
             if (imposter)
             {
-                GetComponent<SpriteRenderer>().sprite = imposterSprites[rand.Next(imposterSprites.Length)];
+                GetComponent<SpriteRenderer>().sprite = imposterSprites[Random.Range(0, imposterSprites.Length)];
                 defaultCollider.enabled = false;
                 imposterCollider.enabled = true;
             }
             else
             {
-                GetComponent<SpriteRenderer>().sprite = sprites[rand.Next(sprites.Length)];
+                GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
             }
 
-            if (rand.Next(2) == 0)
+            if (Random.Range(0, 2) == 0)
             {
                 var ls = transform.localScale;
                 transform.localScale = new Vector3(-ls.x, ls.y, ls.z);

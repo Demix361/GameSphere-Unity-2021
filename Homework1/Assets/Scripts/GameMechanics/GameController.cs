@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Security.Cryptography;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,10 +6,6 @@ namespace GameMechanics
 {
     public class GameController : MonoBehaviour
     {
-        [SerializeField] private float gameLength;
-        [SerializeField] private bool changeColor;
-        [SerializeField] private bool changeScale;
-        [SerializeField] private bool changeRotation;
         [SerializeField] private float spawnInterval;
         [SerializeField] private GameObject ballPrefab;
         [SerializeField] private UI.StatsPanel statsPanel;
@@ -22,10 +16,12 @@ namespace GameMechanics
         private Camera cam;
         private float height;
         private float width;
+        private float originalSpawnInterval;
         
         
         private void Start()
         {
+            originalSpawnInterval = spawnInterval;
             cam = Camera.main;
             var ballSR = ballPrefab.GetComponent<SpriteRenderer>();
             
@@ -39,6 +35,7 @@ namespace GameMechanics
         {
             points = 0;
             missed = 0;
+            spawnInterval = originalSpawnInterval;
             StartCoroutine(SpawnBalls());
         }
         
@@ -70,22 +67,7 @@ namespace GameMechanics
                 }
             }
         }
-        
-        public void InitializeGameController(int gameLength, bool changeColor, bool changeScale, bool changeRotation)
-        {
-            this.gameLength = gameLength;
-            this.changeColor = changeColor;
-            this.changeScale = changeScale;
-            this.changeRotation = changeRotation;
-        }
-        
-        private IEnumerator LifeCycle()
-        {
-            yield return new WaitForSeconds(gameLength);
-            startPanel.gameObject.SetActive(true);
-            gameObject.SetActive(false);
-        }
-        
+
         private IEnumerator SpawnBalls()
         {
             var z = 0f;

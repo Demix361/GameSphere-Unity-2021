@@ -24,7 +24,6 @@ namespace UI
 
         public void OnClickStartGame()
         {
-            gameController.InitializeGameController(9999999, false, true, true);
             gameController.gameObject.SetActive(true);
             statsPanel.gameObject.SetActive(true);
             gameObject.SetActive(false);
