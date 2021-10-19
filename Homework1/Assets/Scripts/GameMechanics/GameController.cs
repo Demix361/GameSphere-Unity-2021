@@ -51,14 +51,21 @@ namespace GameMechanics
 
                 if (a != null && a.GetComponent<Ball>())
                 {
-                    points += 1;
-                    statsPanel.ChangePointsText(points);
-                    Destroy(a.gameObject);
-
-                    if (points % 100 == 0 && missed > 0)
+                    if (!a.GetComponent<Ball>().imposter)
                     {
-                        missed -= 1;
-                        statsPanel.DecreaseMissed();
+                        points += 1;
+                        statsPanel.ChangePointsText(points);
+                        Destroy(a.gameObject);
+
+                        if (points % 100 == 0 && missed > 0)
+                        {
+                            missed -= 1;
+                            statsPanel.DecreaseMissed();
+                        }
+                    }
+                    else
+                    {
+                        EndGame();
                     }
                 }
             }
@@ -91,7 +98,16 @@ namespace GameMechanics
                 var pos = new Vector3(Random.Range(-width, height), Random.Range(-height, height), z);
                 var ball = Instantiate(ballPrefab, pos, Quaternion.identity);
 
-                ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2);
+                var imposterChance = Random.Range(0f, 1f);
+                if (imposterChance > 0.9f)
+                {
+                    ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2, true);
+                }
+                else
+                {
+                    ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2, false);
+                }
+
                 ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
 
                 z -= 0.00001f;

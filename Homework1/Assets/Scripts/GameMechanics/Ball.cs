@@ -10,17 +10,33 @@ namespace GameMechanics
         [SerializeField] private float popTime;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] public float maxScale;
+        [SerializeField] private PolygonCollider2D defaultCollider;
+        [SerializeField] private PolygonCollider2D imposterCollider;
 
         [SerializeField] private Sprite[] sprites;
+        [SerializeField] private Sprite[] imposterSprites;
         
         private GameController gameController;
+        public bool imposter;
 
-        private void Start()
+        public void SetPopTime(float time, bool isImposter)
         {
+            popTime = time;
+            imposter = isImposter;
             gameController = FindObjectOfType<GameController>();
             var rand = new System.Random();
 
-            GetComponent<SpriteRenderer>().sprite = sprites[rand.Next(sprites.Length)];
+            if (imposter)
+            {
+                GetComponent<SpriteRenderer>().sprite = imposterSprites[rand.Next(imposterSprites.Length)];
+                defaultCollider.enabled = false;
+                imposterCollider.enabled = true;
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().sprite = sprites[rand.Next(sprites.Length)];
+            }
+
             if (rand.Next(2) == 0)
             {
                 var ls = transform.localScale;
@@ -28,11 +44,6 @@ namespace GameMechanics
             }
             
             StartCoroutine(LifeCycle());
-        }
-
-        public void SetPopTime(float time)
-        {
-            popTime = time;
         }
 
         private IEnumerator LifeCycle()
@@ -58,8 +69,12 @@ namespace GameMechanics
 
                 yield return null;
             }
-        
-            gameController.MissBall();
+
+            if (!imposter)
+            {
+                gameController.MissBall();
+            }
+
             Destroy(gameObject);
         }
     }
