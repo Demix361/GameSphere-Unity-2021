@@ -1,4 +1,5 @@
 using System.Collections;
+using UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -6,22 +7,19 @@ namespace GameMechanics
 {
     public class GameController : MonoBehaviour
     {
-        [SerializeField] private float spawnInterval;
+        [SerializeField] private WindowManager _windowManager;
         [SerializeField] private GameObject ballPrefab;
-        [SerializeField] private UI.StatsPanel statsPanel;
-        [SerializeField] private UI.StartPanel startPanel;
         
-        private int points = 0;
-        private int missed = 0;
         private Camera cam;
         private float height;
         private float width;
         private float originalSpawnInterval;
+
+        private Coroutine _spawnBallsCoroutine;
+        private Coroutine _inputCoroutine;
         
-        
-        private void Start()
+        public void StartClassic()
         {
-            originalSpawnInterval = spawnInterval;
             cam = Camera.main;
             var ballSR = ballPrefab.GetComponent<SpriteRenderer>();
             
@@ -29,42 +27,35 @@ namespace GameMechanics
                 ballSR.transform.localScale.y * ballPrefab.GetComponent<Ball>().maxScale);
             width = (cam.orthographicSize * Screen.width / Screen.height - ballSR.sprite.rect.size.x / ballSR.sprite.pixelsPerUnit / 2 * 
                 ballSR.transform.localScale.x * ballPrefab.GetComponent<Ball>().maxScale);
+            
+            _spawnBallsCoroutine = StartCoroutine(SpawnBalls());
+            _inputCoroutine = StartCoroutine(InputCoroutine());
         }
-        
-        private void OnEnable()
+
+        private IEnumerator InputCoroutine()
         {
-            points = 0;
-            missed = 0;
-            spawnInterval = originalSpawnInterval;
-            StartCoroutine(SpawnBalls());
-        }
-        
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(0))
+            while (true)
             {
-                var pos = cam.ScreenToWorldPoint(Input.mousePosition);
-                var a = Physics2D.OverlapPoint(pos);
-
-                if (a != null && a.GetComponent<Ball>())
+                if (Input.GetMouseButtonDown(0))
                 {
-                    if (!a.GetComponent<Ball>().imposter)
-                    {
-                        points += 1;
-                        statsPanel.ChangePointsText(points);
-                        Destroy(a.gameObject);
+                    var pos = cam.ScreenToWorldPoint(Input.mousePosition);
+                    var a = Physics2D.OverlapPoint(pos);
 
-                        if (points % 100 == 0 && missed > 0)
+                    if (a != null && a.GetComponent<Ball>())
+                    {
+                        if (!a.GetComponent<Ball>().imposter)
                         {
-                            missed -= 1;
-                            statsPanel.DecreaseMissed();
+                            _windowManager.ClassicGameModel.OnChangePoints(_windowManager.ClassicGameModel.Points + 1);
+                            Destroy(a.gameObject);
+                        }
+                        else
+                        {
+                            _windowManager.ClassicGameModel.OnEndGame();
+                            ProcessGameEnd();
                         }
                     }
-                    else
-                    {
-                        EndGame();
-                    }
                 }
+                yield return null;
             }
         }
 
@@ -73,6 +64,7 @@ namespace GameMechanics
             var z = 0f;
             var sortingOrder = 0;
             var timePassed = 0f;
+            var spawnInterval = _windowManager.ClassicGameModel.SpawnInterval;
             var curSpawnInterval = spawnInterval;
             
             while (true)
@@ -114,32 +106,27 @@ namespace GameMechanics
         
         public void MissBall()
         {
-            missed += 1;
-            statsPanel.IncreaseMissed();
-
-            if (missed >= 3)
+            if (_windowManager.ClassicGameModel.OnChangeLives(_windowManager.ClassicGameModel.CurLives - 1))
             {
-                EndGame();
+                ProcessGameEnd();
             }
         }
 
-        private void EndGame()
+        private void ProcessGameEnd()
         {
-            var highscore = PlayerPrefs.GetInt("highscore", 0);
-            if (points > highscore)
-            {
-                PlayerPrefs.SetInt("highscore", points);
-            }
-
+            StopCoroutine(_spawnBallsCoroutine);
+            StopCoroutine(_inputCoroutine);
+            
             var amoguses = FindObjectsOfType<Ball>();
             foreach (var a in amoguses)
             {
                 Destroy(a.gameObject);
             }
+        }
+
+        public void StartArcade()
+        {
             
-            statsPanel.gameObject.SetActive(false);
-            startPanel.gameObject.SetActive(true);
-            gameObject.SetActive(false);
         }
     }
 }
