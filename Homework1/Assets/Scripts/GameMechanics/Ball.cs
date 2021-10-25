@@ -6,10 +6,7 @@ namespace GameMechanics
 {
     public class Ball : MonoBehaviour
     {
-        [SerializeField] private bool changeScale = true;
-        [SerializeField] private bool changeColor;
         [SerializeField] private float popTime;
-        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] public float maxScale;
         [SerializeField] private PolygonCollider2D defaultCollider;
         [SerializeField] private PolygonCollider2D imposterCollider;
@@ -19,9 +16,11 @@ namespace GameMechanics
         
         private GameController gameController;
         public bool imposter;
+        private string _gameType;
 
-        public void SetPopTime(float time, bool isImposter)
+        public void SetAmogus(float time, bool isImposter, string gameType)
         {
+            _gameType = gameType;
             popTime = time;
             imposter = isImposter;
             gameController = FindObjectOfType<GameController>();
@@ -49,28 +48,19 @@ namespace GameMechanics
         private IEnumerator LifeCycle()
         {
             var counter = 0f;
-            var deltaColor = Color.red - spriteRenderer.color;
             var scale = transform.localScale;
             var deltaScale = new Vector3(maxScale * scale.x, maxScale * scale.y, 1) - scale;
         
             while (counter < popTime)
             {
                 counter += Time.deltaTime;
-
-                if (changeColor)
-                {
-                    spriteRenderer.color += deltaColor * Time.deltaTime / popTime;
-                }
-
-                if (changeScale)
-                {
-                    transform.localScale += deltaScale * Time.deltaTime / popTime;
-                }
+                
+                transform.localScale += deltaScale * Time.deltaTime / popTime;
 
                 yield return null;
             }
-
-            if (!imposter)
+            
+            if (!imposter && _gameType == "Classic")
             {
                 gameController.MissBall();
             }

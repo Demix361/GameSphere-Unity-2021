@@ -28,6 +28,7 @@ namespace UI
             var scoreC = "Highscore: " + Convert.ToString(_playerModel.HighScoreClassic);
             var scoreA = "Highscore: " + Convert.ToString(_playerModel.HighScoreArcade);
             _startWindow.SetHighScores(scoreC, scoreA);
+            
             _startWindow.StartClassicEvent += OnStartWindowOnStartClassicEvent;
             _startWindow.StartArcadeEvent += OnStartWindowOnStartArcadeEvent;
             _startWindow.SettingsEvent += OnStartWindowOnSettingsEvent;

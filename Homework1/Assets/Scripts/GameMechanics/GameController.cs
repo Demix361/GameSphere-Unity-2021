@@ -28,11 +28,11 @@ namespace GameMechanics
             width = (cam.orthographicSize * Screen.width / Screen.height - ballSR.sprite.rect.size.x / ballSR.sprite.pixelsPerUnit / 2 * 
                 ballSR.transform.localScale.x * ballPrefab.GetComponent<Ball>().maxScale);
             
-            _spawnBallsCoroutine = StartCoroutine(SpawnBalls());
-            _inputCoroutine = StartCoroutine(InputCoroutine());
+            _spawnBallsCoroutine = StartCoroutine(ClassicSpawnBalls());
+            _inputCoroutine = StartCoroutine(ClassicInputCoroutine());
         }
 
-        private IEnumerator InputCoroutine()
+        private IEnumerator ClassicInputCoroutine()
         {
             while (true)
             {
@@ -59,7 +59,7 @@ namespace GameMechanics
             }
         }
 
-        private IEnumerator SpawnBalls()
+        private IEnumerator ClassicSpawnBalls()
         {
             var z = 0f;
             var sortingOrder = 0;
@@ -75,11 +75,98 @@ namespace GameMechanics
                 var imposterChance = Random.Range(0f, 1f);
                 if (imposterChance > 0.9f)
                 {
-                    ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2, true);
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, true, "Classic");
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2, false);
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, false, "Classic");
+                }
+
+                ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
+
+                z -= 0.00001f;
+                sortingOrder += 1;
+
+                curSpawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
+                yield return new WaitForSeconds(curSpawnInterval);
+                timePassed += curSpawnInterval;
+
+                spawnInterval = ProgressSpawnInterval(timePassed);
+            }
+        }
+        
+        public void StartArcade()
+        {
+            cam = Camera.main;
+            var ballSR = ballPrefab.GetComponent<SpriteRenderer>();
+            
+            height = (cam.orthographicSize - ballSR.sprite.rect.size.y / ballSR.sprite.pixelsPerUnit / 2 * 
+                ballSR.transform.localScale.y * ballPrefab.GetComponent<Ball>().maxScale);
+            width = (cam.orthographicSize * Screen.width / Screen.height - ballSR.sprite.rect.size.x / ballSR.sprite.pixelsPerUnit / 2 * 
+                ballSR.transform.localScale.x * ballPrefab.GetComponent<Ball>().maxScale);
+            
+            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBalls());
+            _inputCoroutine = StartCoroutine(ArcadeInputCoroutine());
+        }
+        
+         private IEnumerator ArcadeInputCoroutine()
+        {
+            var counter = _windowManager.ArcadeGameModel.CurTimer;
+            
+            while (true)
+            {
+                counter -= Time.deltaTime;
+                _windowManager.ArcadeGameModel.OnChangeTime(counter);
+
+                if (counter <= 0)
+                {
+                    ProcessGameEnd();
+                }
+                
+                if (Input.GetMouseButtonDown(0))
+                {
+                    var pos = cam.ScreenToWorldPoint(Input.mousePosition);
+                    var a = Physics2D.OverlapPoint(pos);
+
+                    if (a != null && a.GetComponent<Ball>())
+                    {
+                        if (!a.GetComponent<Ball>().imposter)
+                        {
+                            _windowManager.ArcadeGameModel.OnChangePoints(_windowManager.ArcadeGameModel.Points + 1);
+                            Destroy(a.gameObject);
+                        }
+                        else
+                        {
+                            _windowManager.ArcadeGameModel.OnChangePoints(_windowManager.ArcadeGameModel.Points - 10);
+                            Destroy(a.gameObject);
+                        }
+                    }
+                }
+                yield return null;
+            }
+        }
+
+        private IEnumerator ArcadeSpawnBalls()
+        {
+            var z = 0f;
+            var sortingOrder = 0;
+            var timePassed = 0f;
+            var spawnInterval = _windowManager.ArcadeGameModel.SpawnInterval;
+            var curSpawnInterval = spawnInterval;
+
+            while (true)
+            {
+                var pos = new Vector3(Random.Range(-width, height), Random.Range(-height, height), z);
+                var ball = Instantiate(ballPrefab, pos, Quaternion.identity);
+
+                var imposterChance = Random.Range(0f, 1f);
+                if (imposterChance > 0.9f)
+                {
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, true, "Arcade");
+                }
+                else
+                {
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, false, "Arcade");
                 }
 
                 ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
@@ -122,11 +209,6 @@ namespace GameMechanics
             {
                 Destroy(a.gameObject);
             }
-        }
-
-        public void StartArcade()
-        {
-            
         }
     }
 }
