@@ -43,12 +43,12 @@ namespace GameMechanics
 
                     if (a != null && a.GetComponent<Ball>())
                     {
-                        if (!a.GetComponent<Ball>().imposter)
+                        if (a.GetComponent<Ball>()._type == "Default")
                         {
                             _windowManager.ClassicGameModel.OnChangePoints(_windowManager.ClassicGameModel.Points + 1);
                             Destroy(a.gameObject);
                         }
-                        else
+                        else if (a.GetComponent<Ball>()._type == "Imposter")
                         {
                             _windowManager.ClassicGameModel.OnEndGame();
                             ProcessGameEnd();
@@ -75,11 +75,11 @@ namespace GameMechanics
                 var imposterChance = Random.Range(0f, 1f);
                 if (imposterChance > 0.9f)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, true, "Classic");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, "Imposter", "Classic");
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, false, "Classic");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, "Default", "Classic");
                 }
 
                 ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
@@ -130,12 +130,18 @@ namespace GameMechanics
 
                     if (a != null && a.GetComponent<Ball>())
                     {
-                        if (!a.GetComponent<Ball>().imposter)
+                        if (a.GetComponent<Ball>()._type == "Default")
                         {
                             _windowManager.ArcadeGameModel.OnChangePoints(_windowManager.ArcadeGameModel.Points + 1);
                             Destroy(a.gameObject);
                         }
-                        else
+                        else if (a.GetComponent<Ball>()._type == "Bonus")
+                        {
+                            counter += 3;
+                            _windowManager.ArcadeGameModel.OnChangeTime(counter);
+                            Destroy(a.gameObject);
+                        }
+                        else if (a.GetComponent<Ball>()._type == "Imposter")
                         {
                             _windowManager.ArcadeGameModel.OnChangePoints(_windowManager.ArcadeGameModel.Points - 10);
                             Destroy(a.gameObject);
@@ -159,14 +165,18 @@ namespace GameMechanics
                 var pos = new Vector3(Random.Range(-width, height), Random.Range(-height, height), z);
                 var ball = Instantiate(ballPrefab, pos, Quaternion.identity);
 
-                var imposterChance = Random.Range(0f, 1f);
-                if (imposterChance > 0.9f)
+                var typeChance = Random.Range(0f, 1f);
+                if (typeChance > 0.8f && typeChance <= 0.9f)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, true, "Arcade");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, "Bonus", "Arcade");
+                }
+                else if (typeChance > 0.9f)
+                {
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, "Imposter", "Arcade");
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, false, "Arcade");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, "Default", "Arcade");
                 }
 
                 ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;

@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -13,19 +14,21 @@ namespace GameMechanics
 
         [SerializeField] private Sprite[] sprites;
         [SerializeField] private Sprite[] imposterSprites;
+
+        [SerializeField] private SpriteRenderer bonus;
         
         private GameController gameController;
-        public bool imposter;
+        public string _type;
         private string _gameType;
 
-        public void SetAmogus(float time, bool isImposter, string gameType)
+        public void SetAmogus(float time, string type, string gameType)
         {
             _gameType = gameType;
             popTime = time;
-            imposter = isImposter;
+            _type = type;
             gameController = FindObjectOfType<GameController>();
 
-            if (imposter)
+            if (_type == "Imposter")
             {
                 GetComponent<SpriteRenderer>().sprite = imposterSprites[Random.Range(0, imposterSprites.Length)];
                 defaultCollider.enabled = false;
@@ -34,6 +37,10 @@ namespace GameMechanics
             else
             {
                 GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
+                if (_type == "Bonus")
+                {
+                    bonus.gameObject.SetActive(true);
+                }
             }
 
             if (Random.Range(0, 2) == 0)
@@ -60,7 +67,7 @@ namespace GameMechanics
                 yield return null;
             }
             
-            if (!imposter && _gameType == "Classic")
+            if (_type == "Default" && _gameType == "Classic")
             {
                 gameController.MissBall();
             }
