@@ -1,16 +1,17 @@
 ﻿using System;
-using UnityEngine;
 
 namespace GameMechanics
 {
     public class ClassicGameModel
     {
         private static int _lives = 3;
-        private float _spawnInterval = 2;
-        private int _restoreLivePoints = 100;
-        private int _points = 0;
+        private float _spawnInterval = 1f;
+        private int _restoreLifePoints = 100;
         private int _curLives = _lives;
         private PlayerModel _playerModel;
+        public float AmogusMaxScale { get; } = 2;
+        public float ImposterChance { get; } = 0.1f;
+        public float DefaultChance { get; } = 0.9f;
 
         public ClassicGameModel(PlayerModel playerModel)
         {
@@ -30,19 +31,10 @@ namespace GameMechanics
                 _spawnInterval = value;
             }
         }
-        public int RestoreLivePoints => _restoreLivePoints;
+        public int RestoreLifePoints => _restoreLifePoints;
 
-        public int Points
-        {
-            get
-            {
-                return _points;
-            }
-            set
-            {
-                _points = value;
-            }
-        }
+        public int Points { get; set; } = 0;
+
         public int CurLives
         {
             get
@@ -59,12 +51,19 @@ namespace GameMechanics
         public event Action<int> ChangePointsEvent;
         public event Action<int> ChangeLivesEvent;
 
+        public event Action StartGame;
+
+        public void OnStartGame()
+        {
+            StartGame?.Invoke();
+        }
+        
         public void OnChangePoints(int newValue)
         {
             ChangePointsEvent?.Invoke(newValue);
             
             Points = newValue;
-            if (Points % RestoreLivePoints == 0 && CurLives < Lives)
+            if (Points % RestoreLifePoints == 0 && CurLives < Lives)
             {
                 CurLives += 1;
                 ChangeLivesEvent?.Invoke(CurLives);
@@ -100,6 +99,16 @@ namespace GameMechanics
             Points = 0;
 
             EndGameEvent?.Invoke();
+        }
+        
+        public float ProgressSpawnInterval(float value)
+        {
+            // парабола
+            // (1): Начальная точка относительно (4) (1 + 4);
+            // (2): Скорость уменьшения функции;
+            // (3): Смещение графика по X;
+            // (4): Предел к которому стремится функция;
+            return (_spawnInterval - 0.3f) / (0.015f * value + 1) + 0.3f;
         }
     }
 }

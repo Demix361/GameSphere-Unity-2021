@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,25 +6,24 @@ namespace GameMechanics
 {
     public class Ball : MonoBehaviour
     {
-        [SerializeField] private float popTime;
-        [SerializeField] public float maxScale;
         [SerializeField] private PolygonCollider2D defaultCollider;
         [SerializeField] private PolygonCollider2D imposterCollider;
-
         [SerializeField] private Sprite[] sprites;
         [SerializeField] private Sprite[] imposterSprites;
-
-        [SerializeField] private SpriteRenderer bonus;
+        [SerializeField] public SpriteRenderer bonus;
         
         private GameController gameController;
         public string _type;
         private string _gameType;
-
-        public void SetAmogus(float time, string type, string gameType)
+        private float _popTime;
+        private float _maxScale;
+        
+        public void SetAmogus(float time, float maxScale, string type, string gameType)
         {
             _gameType = gameType;
-            popTime = time;
+            _popTime = time;
             _type = type;
+            _maxScale = maxScale;
             gameController = FindObjectOfType<GameController>();
 
             if (_type == "Imposter")
@@ -47,6 +45,9 @@ namespace GameMechanics
             {
                 var ls = transform.localScale;
                 transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
+
+                var bls = bonus.transform.localScale;
+                bonus.transform.localScale = new Vector3(-bls.x, bls.y, bls.z);
             }
             
             StartCoroutine(LifeCycle());
@@ -56,13 +57,13 @@ namespace GameMechanics
         {
             var counter = 0f;
             var scale = transform.localScale;
-            var deltaScale = new Vector3(maxScale * scale.x, maxScale * scale.y, 1) - scale;
+            var deltaScale = new Vector3(_maxScale * scale.x, _maxScale * scale.y, scale.z) - scale;
         
-            while (counter < popTime)
+            while (counter < _popTime)
             {
                 counter += Time.deltaTime;
                 
-                transform.localScale += deltaScale * Time.deltaTime / popTime;
+                transform.localScale += deltaScale * Time.deltaTime / _popTime;
 
                 yield return null;
             }

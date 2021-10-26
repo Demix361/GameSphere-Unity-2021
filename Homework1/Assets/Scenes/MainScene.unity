@@ -1603,9 +1603,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1008474610}
+  - component: {fileID: 1008474611}
   - component: {fileID: 1008474609}
   m_Layer: 0
-  m_Name: WindowManager
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1628,6 +1629,7 @@ MonoBehaviour:
   _classicGameWindow: {fileID: 1471097832}
   _arcadeGameWindow: {fileID: 2017443146}
   _gameController: {fileID: 1340848971}
+  _modelManager: {fileID: 1008474611}
 --- !u!4 &1008474610
 Transform:
   m_ObjectHideFlags: 0
@@ -1642,6 +1644,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1008474611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008474608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a0f4d8990d54b30aa7a5fbb164e6d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1026519225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2062,8 +2076,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a130a06bbbe5fcb4da6fe809ab18f8a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _windowManager: {fileID: 1008474609}
-  ballPrefab: {fileID: 7813806208777863385, guid: b83fbd3912fdede4e8ff6e9aa86e4a8e, type: 3}
+  _modelManager: {fileID: 1008474611}
+  _amogusPrefab: {fileID: 7813806208777863385, guid: b83fbd3912fdede4e8ff6e9aa86e4a8e, type: 3}
 --- !u!4 &1340848972
 Transform:
   m_ObjectHideFlags: 0

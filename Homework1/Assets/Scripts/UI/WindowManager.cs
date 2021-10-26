@@ -10,36 +10,29 @@ namespace UI
         [SerializeField] private ClassicGameWindow _classicGameWindow;
         [SerializeField] private ArcadeGameWindow _arcadeGameWindow;
         
-        // использовать actions?
-        [SerializeField] private GameController _gameController;
-
+        [SerializeField] private ModelManager _modelManager;
+        
         private StartPresenter _startPresenter;
         private SettingsPresenter _settingsPresenter;
         private ClassicGamePresenter _classicGamePresenter;
-        private static PlayerModel _playerModel = new PlayerModel();
-        private ClassicGameModel _classicGameModel = new ClassicGameModel(_playerModel);
         private ArcadeGamePresenter _arcadeGamePresenter;
-        private ArcadeGameModel _arcadeGameModel = new ArcadeGameModel(_playerModel);
-
-        public ClassicGameModel ClassicGameModel => _classicGameModel;
-        public ArcadeGameModel ArcadeGameModel => _arcadeGameModel;
 
         private void Start()
         {
-            _settingsPresenter = new SettingsPresenter(_playerModel, _settingsWindow, () =>
+            _settingsPresenter = new SettingsPresenter(_modelManager.PlayerModel, _settingsWindow, () =>
             {
                 _settingsPresenter.OnClose();
                 ShowStartWindow();
             });
             
-            _startPresenter = new StartPresenter(_playerModel, _startWindow, () =>
+            _startPresenter = new StartPresenter(_modelManager.PlayerModel, _startWindow, () =>
             {
                 _startWindow.gameObject.SetActive(false);
                 _startPresenter.OnClose();
                 
                 _classicGameWindow.gameObject.SetActive(true);
                 _classicGamePresenter.OnOpen();
-                _gameController.StartClassic(); //
+                _modelManager.ClassicGameModel.OnStartGame();
             }, () =>
             {
                 _startWindow.gameObject.SetActive(false);
@@ -47,7 +40,7 @@ namespace UI
                 
                 _arcadeGameWindow.gameObject.SetActive(true);
                 _arcadeGamePresenter.OnOpen();
-                _gameController.StartArcade(); //
+                _modelManager.ArcadeGameModel.OnStartGame();
             }, () =>
             {
                 _startWindow.gameObject.SetActive(false);
@@ -61,13 +54,13 @@ namespace UI
                 Application.Quit();
             });
 
-            _classicGamePresenter = new ClassicGamePresenter(_classicGameModel, _classicGameWindow, () =>
+            _classicGamePresenter = new ClassicGamePresenter(_modelManager.ClassicGameModel, _classicGameWindow, () =>
             {
                 _classicGamePresenter.OnClose();
                 ShowStartWindow();
             });
 
-            _arcadeGamePresenter = new ArcadeGamePresenter(_arcadeGameModel, _arcadeGameWindow, () =>
+            _arcadeGamePresenter = new ArcadeGamePresenter(_modelManager.ArcadeGameModel, _arcadeGameWindow, () =>
             {
                 _arcadeGamePresenter.OnClose();
                 ShowStartWindow();
