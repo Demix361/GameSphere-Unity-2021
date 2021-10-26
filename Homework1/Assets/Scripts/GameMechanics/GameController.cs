@@ -167,7 +167,7 @@ namespace GameMechanics
             
             while (true)
             {
-                var pos = new Vector3(Random.Range(-_width, _height), Random.Range(-_height, _height), z);
+                var pos = new Vector3(Random.Range(-_width, _width), Random.Range(-_height, _height), z);
                 var ball = Instantiate(_amogusPrefab, pos, Quaternion.identity);
 
                 var typeChance = Random.Range(0f, defaultC + imposterC + bonusC);
