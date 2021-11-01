@@ -43,15 +43,17 @@ namespace GameMechanics
                 {
                     var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
                     var a = Physics2D.OverlapPoint(pos);
-
+                    
                     if (a != null && a.GetComponent<Ball>())
                     {
-                        if (a.GetComponent<Ball>()._type == "Default")
+                        var amogus = a.GetComponent<Ball>();
+                        
+                        if (amogus._type == "Default")
                         {
                             _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
-                            Destroy(a.gameObject);
+                            amogus.Clicked();
                         }
-                        else if (a.GetComponent<Ball>()._type == "Imposter")
+                        else if (amogus._type == "Imposter")
                         {
                             _modelManager.ClassicGameModel.OnEndGame();
                             ProcessGameEnd();
@@ -133,18 +135,20 @@ namespace GameMechanics
 
                     if (a != null && a.GetComponent<Ball>())
                     {
-                        if (a.GetComponent<Ball>()._type == "Default")
+                        var amogus = a.GetComponent<Ball>();
+                        
+                        if (amogus._type == "Default")
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
-                            Destroy(a.gameObject);
+                            amogus.Clicked();
                         }
-                        else if (a.GetComponent<Ball>()._type == "Bonus")
+                        else if (amogus._type == "Bonus")
                         {
                             counter += 3;
                             _modelManager.ArcadeGameModel.OnChangeTime(counter);
-                            Destroy(a.gameObject);
+                            amogus.Clicked();
                         }
-                        else if (a.GetComponent<Ball>()._type == "Imposter")
+                        else if (amogus._type == "Imposter")
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
                             Destroy(a.gameObject);

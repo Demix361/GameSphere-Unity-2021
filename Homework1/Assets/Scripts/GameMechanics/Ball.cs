@@ -11,12 +11,14 @@ namespace GameMechanics
         [SerializeField] private Sprite[] sprites;
         [SerializeField] private Sprite[] imposterSprites;
         [SerializeField] public SpriteRenderer bonus;
+        [SerializeField] private ParticleSystem _particleSystem;
         
-        private GameController gameController;
+        private GameController _gameController;
         public string _type;
         private string _gameType;
         private float _popTime;
         private float _maxScale;
+        private bool _collected = false;
         
         public void SetAmogus(float time, float maxScale, string type, string gameType)
         {
@@ -24,7 +26,7 @@ namespace GameMechanics
             _popTime = time;
             _type = type;
             _maxScale = maxScale;
-            gameController = FindObjectOfType<GameController>();
+            _gameController = FindObjectOfType<GameController>();
 
             if (_type == "Imposter")
             {
@@ -68,12 +70,41 @@ namespace GameMechanics
                 yield return null;
             }
             
-            if (_type == "Default" && _gameType == "Classic")
+            if (_type == "Default" && _gameType == "Classic" && !_collected)
             {
-                gameController.MissBall();
+                _gameController.MissBall();
             }
 
+            if (!_collected)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        private IEnumerator ClickedCoroutine()
+        {
+            _collected = true;
+
+            var color = GetComponent<SpriteRenderer>().sprite.texture.GetPixel(300, 350);
+            var psMain = _particleSystem.main;
+            psMain.startColor = color;
+            
+            var em = _particleSystem.emission;
+            em.enabled = true;
+            _particleSystem.Play();
+            
+            defaultCollider.enabled = false;
+            imposterCollider.enabled = false;
+            GetComponent<SpriteRenderer>().enabled = false;
+
+            yield return new WaitForSeconds(0.7f);
+            
             Destroy(gameObject);
+        }
+        
+        public void Clicked()
+        {
+            StartCoroutine(ClickedCoroutine());
         }
     }
 }

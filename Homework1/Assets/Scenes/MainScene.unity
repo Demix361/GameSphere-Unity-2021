@@ -1628,7 +1628,6 @@ MonoBehaviour:
   _settingsWindow: {fileID: 823286843}
   _classicGameWindow: {fileID: 1471097832}
   _arcadeGameWindow: {fileID: 2017443146}
-  _gameController: {fileID: 1340848971}
   _modelManager: {fileID: 1008474611}
 --- !u!4 &1008474610
 Transform:
