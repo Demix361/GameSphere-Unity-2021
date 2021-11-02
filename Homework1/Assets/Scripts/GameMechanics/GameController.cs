@@ -15,6 +15,14 @@ namespace GameMechanics
         private Coroutine _spawnBallsCoroutine;
         private Coroutine _inputCoroutine;
 
+        private enum GameType
+        {
+            Classic,
+            Arcade
+        }
+
+        private GameType _curGameType;
+
         private void Start()
         {
             _modelManager.ClassicGameModel.StartGame += StartClassic;
@@ -23,6 +31,8 @@ namespace GameMechanics
 
         public void StartClassic()
         {
+            _curGameType = GameType.Classic;
+            
             _cam = Camera.main;
             var amogusSR = _amogusPrefab.GetComponent<SpriteRenderer>();
             
@@ -48,12 +58,12 @@ namespace GameMechanics
                     {
                         var amogus = a.GetComponent<Ball>();
                         
-                        if (amogus._type == "Default")
+                        if (amogus._type == Ball.AmogusType.Default)
                         {
                             _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
                             amogus.Clicked();
                         }
-                        else if (amogus._type == "Imposter")
+                        else if (amogus._type == Ball.AmogusType.Imposter)
                         {
                             _modelManager.ClassicGameModel.OnEndGame();
                             ProcessGameEnd();
@@ -81,11 +91,11 @@ namespace GameMechanics
                 var typeChance = Random.Range(0f, defaultC + imposterC);
                 if (typeChance <= imposterC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ClassicGameModel.AmogusMaxScale, "Imposter", "Classic");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ClassicGameModel.AmogusMaxScale, Ball.AmogusType.Imposter);
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2,_modelManager.ClassicGameModel.AmogusMaxScale, "Default", "Classic");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2,_modelManager.ClassicGameModel.AmogusMaxScale, Ball.AmogusType.Default);
                 }
 
                 ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
@@ -103,6 +113,8 @@ namespace GameMechanics
         
         public void StartArcade()
         {
+            _curGameType = GameType.Arcade;
+            
             _cam = Camera.main;
             var amogusSR = _amogusPrefab.GetComponent<SpriteRenderer>();
             _height = (_cam.orthographicSize - amogusSR.sprite.rect.size.y / amogusSR.sprite.pixelsPerUnit / 2 * 
@@ -137,18 +149,18 @@ namespace GameMechanics
                     {
                         var amogus = a.GetComponent<Ball>();
                         
-                        if (amogus._type == "Default")
+                        if (amogus._type == Ball.AmogusType.Default)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
                             amogus.Clicked();
                         }
-                        else if (amogus._type == "Bonus")
+                        else if (amogus._type == Ball.AmogusType.Bonus)
                         {
                             counter += 3;
                             _modelManager.ArcadeGameModel.OnChangeTime(counter);
                             amogus.Clicked();
                         }
-                        else if (amogus._type == "Imposter")
+                        else if (amogus._type == Ball.AmogusType.Imposter)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
                             Destroy(a.gameObject);
@@ -177,15 +189,15 @@ namespace GameMechanics
                 var typeChance = Random.Range(0f, defaultC + imposterC + bonusC);
                 if (typeChance <= defaultC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, "Default", "Arcade");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Default);
                 }
                 else if (typeChance <= defaultC + imposterC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, "Imposter", "Arcade");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Imposter);
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval, _modelManager.ArcadeGameModel.AmogusMaxScale, "Bonus", "Arcade");
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Bonus);
                     ball.GetComponent<Ball>().bonus.sortingOrder = sortingOrder + 1;
                 }
 
@@ -204,9 +216,12 @@ namespace GameMechanics
 
         public void MissBall()
         {
-            if (_modelManager.ClassicGameModel.OnChangeLives(_modelManager.ClassicGameModel.CurLives - 1))
+            if (_curGameType == GameType.Classic)
             {
-                ProcessGameEnd();
+                if (_modelManager.ClassicGameModel.OnChangeLives(_modelManager.ClassicGameModel.CurLives - 1))
+                {
+                    ProcessGameEnd();
+                }
             }
         }
 

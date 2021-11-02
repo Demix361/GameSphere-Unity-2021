@@ -11,33 +11,38 @@ namespace GameMechanics
         [SerializeField] private Sprite[] sprites;
         [SerializeField] private Sprite[] imposterSprites;
         [SerializeField] public SpriteRenderer bonus;
-        [SerializeField] private ParticleSystem _particleSystem;
+        [SerializeField] private GameObject _particleSystemPrefab;
+
+        public enum AmogusType
+        {
+            Default,
+            Bonus,
+            Imposter
+        }
         
         private GameController _gameController;
-        public string _type;
-        private string _gameType;
+        public AmogusType _type;
         private float _popTime;
         private float _maxScale;
-        private bool _collected = false;
-        
-        public void SetAmogus(float time, float maxScale, string type, string gameType)
+
+        public void SetAmogus(float time, float maxScale, AmogusType type)
         {
-            _gameType = gameType;
             _popTime = time;
             _type = type;
             _maxScale = maxScale;
             _gameController = FindObjectOfType<GameController>();
 
-            if (_type == "Imposter")
+            if (_type == AmogusType.Imposter)
             {
                 GetComponent<SpriteRenderer>().sprite = imposterSprites[Random.Range(0, imposterSprites.Length)];
+                transform.localScale = new Vector3(1.1f, 1.1f, transform.localScale.z);
                 defaultCollider.enabled = false;
                 imposterCollider.enabled = true;
             }
             else
             {
                 GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
-                if (_type == "Bonus")
+                if (_type == AmogusType.Bonus)
                 {
                     bonus.gameObject.SetActive(true);
                 }
@@ -70,41 +75,23 @@ namespace GameMechanics
                 yield return null;
             }
             
-            if (_type == "Default" && _gameType == "Classic" && !_collected)
+            if (_type == AmogusType.Default)
             {
                 _gameController.MissBall();
             }
-
-            if (!_collected)
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        private IEnumerator ClickedCoroutine()
-        {
-            _collected = true;
-
-            var color = GetComponent<SpriteRenderer>().sprite.texture.GetPixel(300, 350);
-            var psMain = _particleSystem.main;
-            psMain.startColor = color;
-            
-            var em = _particleSystem.emission;
-            em.enabled = true;
-            _particleSystem.Play();
-            
-            defaultCollider.enabled = false;
-            imposterCollider.enabled = false;
-            GetComponent<SpriteRenderer>().enabled = false;
-
-            yield return new WaitForSeconds(0.7f);
             
             Destroy(gameObject);
         }
-        
+
         public void Clicked()
         {
-            StartCoroutine(ClickedCoroutine());
+            var color = GetComponent<SpriteRenderer>().sprite.texture.GetPixel(300, 350);
+            
+            Destroy(gameObject);
+
+            var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+            var psMain = particleSystem.main;
+            psMain.startColor = color;
         }
     }
 }
