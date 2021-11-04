@@ -62,7 +62,6 @@ namespace GameMechanics
         
         public void OnStartGame()
         {
-            Debug.Log("CGM OnStartGame");
             CurLives = Lives;
             Points = 0;
             StartGame?.Invoke();

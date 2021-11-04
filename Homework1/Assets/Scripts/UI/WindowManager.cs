@@ -18,6 +18,7 @@ namespace UI
         private ClassicGamePresenter _classicGamePresenter;
         private ArcadeGamePresenter _arcadeGamePresenter;
         private EndClassicPresenter _endClassicPresenter;
+        private EndArcadePresenter _endArcadePresenter;
         
         private void Start()
         {
@@ -41,8 +42,8 @@ namespace UI
                 _startPresenter.OnClose();
                 
                 _arcadeGameWindow.gameObject.SetActive(true);
-                _arcadeGamePresenter.OnOpen();
                 _modelManager.ArcadeGameModel.OnStartGame();
+                _arcadeGamePresenter.OnOpen();
             }, () =>
             {
                 _startWindow.gameObject.SetActive(false);
@@ -69,7 +70,11 @@ namespace UI
             _arcadeGamePresenter = new ArcadeGamePresenter(_modelManager.ArcadeGameModel, _arcadeGameWindow, () =>
             {
                 _arcadeGamePresenter.OnClose();
-                ShowStartWindow();
+                _arcadeGameWindow.gameObject.SetActive(false);
+                
+                _endWindow.gameObject.SetActive(true);
+                _endArcadePresenter.OnOpen();
+                //ShowStartWindow();
             });
 
             _endClassicPresenter = new EndClassicPresenter(_modelManager.PlayerModel, _modelManager.ClassicGameModel, _endWindow, 
@@ -84,6 +89,20 @@ namespace UI
                     _classicGameWindow.gameObject.SetActive(true);
                     _classicGamePresenter.OnOpen();
                     _endClassicPresenter.OnClose();
+                });
+            
+            _endArcadePresenter = new EndArcadePresenter(_modelManager.PlayerModel, _modelManager.ArcadeGameModel, _endWindow, 
+                () => 
+                {
+                    _endArcadePresenter.OnClose();
+                    ShowStartWindow();
+                }, () =>
+                {
+                    _endWindow.gameObject.SetActive(false);
+                    _modelManager.ArcadeGameModel.OnStartGame();
+                    _arcadeGameWindow.gameObject.SetActive(true);
+                    _arcadeGamePresenter.OnOpen();
+                    _endArcadePresenter.OnClose();
                 });
             
             ShowStartWindow();

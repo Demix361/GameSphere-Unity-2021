@@ -30,15 +30,22 @@ namespace GameMechanics
         public float DefaultChance { get; } = 0.8f;
         public float BonusChance { get; } = 0.1f;
         
-        
         public event Action EndGameEvent;
         public event Action<int> ChangePointsEvent;
         public event Action<float> ChangeTimeEvent;
         public event Action StartGame;
-
-
+        public event Action CloseEndAnimation;
+        
+        
+        public void OnCloseEndAnimation()
+        {
+            CloseEndAnimation?.Invoke();
+        }
+        
         public void OnStartGame()
         {
+            CurTimer = Timer;
+            Points = 0;
             StartGame?.Invoke();
         }
         
@@ -69,9 +76,6 @@ namespace GameMechanics
             {
                 _playerModel.HighScoreArcade = Points;
             }
-
-            CurTimer = Timer;
-            Points = 0;
 
             EndGameEvent?.Invoke();
         }
