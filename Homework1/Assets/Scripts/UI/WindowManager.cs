@@ -9,6 +9,7 @@ namespace UI
         [SerializeField] private SettingsWindow _settingsWindow;
         [SerializeField] private ClassicGameWindow _classicGameWindow;
         [SerializeField] private ArcadeGameWindow _arcadeGameWindow;
+        [SerializeField] private EndWindow _endWindow;
         
         [SerializeField] private ModelManager _modelManager;
         
@@ -16,7 +17,8 @@ namespace UI
         private SettingsPresenter _settingsPresenter;
         private ClassicGamePresenter _classicGamePresenter;
         private ArcadeGamePresenter _arcadeGamePresenter;
-
+        private EndClassicPresenter _endClassicPresenter;
+        
         private void Start()
         {
             _settingsPresenter = new SettingsPresenter(_modelManager.PlayerModel, _settingsWindow, () =>
@@ -31,8 +33,8 @@ namespace UI
                 _startPresenter.OnClose();
                 
                 _classicGameWindow.gameObject.SetActive(true);
-                _classicGamePresenter.OnOpen();
                 _modelManager.ClassicGameModel.OnStartGame();
+                _classicGamePresenter.OnOpen();
             }, () =>
             {
                 _startWindow.gameObject.SetActive(false);
@@ -57,7 +59,11 @@ namespace UI
             _classicGamePresenter = new ClassicGamePresenter(_modelManager.ClassicGameModel, _classicGameWindow, () =>
             {
                 _classicGamePresenter.OnClose();
-                ShowStartWindow();
+                _classicGameWindow.gameObject.SetActive(false);
+                
+                _endWindow.gameObject.SetActive(true);
+                _endClassicPresenter.OnOpen();
+                //ShowStartWindow();
             });
 
             _arcadeGamePresenter = new ArcadeGamePresenter(_modelManager.ArcadeGameModel, _arcadeGameWindow, () =>
@@ -65,6 +71,20 @@ namespace UI
                 _arcadeGamePresenter.OnClose();
                 ShowStartWindow();
             });
+
+            _endClassicPresenter = new EndClassicPresenter(_modelManager.PlayerModel, _modelManager.ClassicGameModel, _endWindow, 
+                () => 
+                {
+                    _endClassicPresenter.OnClose();
+                    ShowStartWindow();
+                }, () =>
+                {
+                    _endWindow.gameObject.SetActive(false);
+                    _modelManager.ClassicGameModel.OnStartGame();
+                    _classicGameWindow.gameObject.SetActive(true);
+                    _classicGamePresenter.OnOpen();
+                    _endClassicPresenter.OnClose();
+                });
             
             ShowStartWindow();
         }
@@ -76,6 +96,7 @@ namespace UI
             _classicGameWindow.gameObject.SetActive(false);
             _arcadeGameWindow.gameObject.SetActive(false);
             _settingsWindow.gameObject.SetActive(false);
+            _endWindow.gameObject.SetActive(false);
         }
     }
 }

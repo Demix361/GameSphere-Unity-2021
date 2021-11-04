@@ -35,7 +35,7 @@ namespace GameMechanics
             if (_type == AmogusType.Imposter)
             {
                 GetComponent<SpriteRenderer>().sprite = imposterSprites[Random.Range(0, imposterSprites.Length)];
-                transform.localScale = new Vector3(1.1f, 1.1f, transform.localScale.z);
+                transform.localScale = new Vector3(transform.localScale.x * 3.7f, transform.localScale.y * 3.7f, transform.localScale.z);
                 defaultCollider.enabled = false;
                 imposterCollider.enabled = true;
             }

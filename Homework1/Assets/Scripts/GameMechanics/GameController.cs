@@ -8,25 +8,26 @@ namespace GameMechanics
     {
         [SerializeField] private ModelManager _modelManager;
         [SerializeField] private GameObject _amogusPrefab;
+        [SerializeField] private GameObject _endGamePrefab;
         
         private Camera _cam;
         private float _height;
         private float _width;
         private Coroutine _spawnBallsCoroutine;
         private Coroutine _inputCoroutine;
-
+        private GameObject _endAnimation;
         private enum GameType
         {
             Classic,
             Arcade
         }
-
         private GameType _curGameType;
 
         private void Start()
         {
             _modelManager.ClassicGameModel.StartGame += StartClassic;
             _modelManager.ArcadeGameModel.StartGame += StartArcade;
+            _modelManager.ClassicGameModel.CloseEndAnimation += CloseEndAnimation;
         }
 
         public void StartClassic()
@@ -43,6 +44,7 @@ namespace GameMechanics
             
             _spawnBallsCoroutine = StartCoroutine(ClassicSpawnBalls());
             _inputCoroutine = StartCoroutine(ClassicInputCoroutine());
+            print("START CLASSIC");
         }
 
         private IEnumerator ClassicInputCoroutine()
@@ -66,6 +68,9 @@ namespace GameMechanics
                         else if (amogus._type == Ball.AmogusType.Imposter)
                         {
                             _modelManager.ClassicGameModel.OnEndGame();
+                            
+                            _endAnimation = Instantiate(_endGamePrefab, Vector3.zero, Quaternion.identity);
+                            
                             ProcessGameEnd();
                         }
                     }
@@ -122,7 +127,7 @@ namespace GameMechanics
             _width = (_cam.orthographicSize * Screen.width / Screen.height - amogusSR.sprite.rect.size.x / amogusSR.sprite.pixelsPerUnit / 2 * 
                 amogusSR.transform.localScale.x * _modelManager.ClassicGameModel.AmogusMaxScale);
             
-            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBalls());
+            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBallsPhysics());
             _inputCoroutine = StartCoroutine(ArcadeInputCoroutine());
         }
         
@@ -213,7 +218,52 @@ namespace GameMechanics
                 spawnInterval = _modelManager.ArcadeGameModel.ProgressSpawnInterval(timePassed);
             }
         }
+        
+        private IEnumerator ArcadeSpawnBallsPhysics()
+        {
+            var z = 0f;
+            var sortingOrder = 0;
+            var timePassed = 0f;
+            var spawnInterval = _modelManager.ArcadeGameModel.SpawnInterval;
+            var defaultC = _modelManager.ArcadeGameModel.DefaultChance;
+            var imposterC = _modelManager.ArcadeGameModel.ImposterChance;
+            var bonusC = _modelManager.ArcadeGameModel.BonusChance;
+            
+            while (true)
+            {
+                var pos = new Vector3(Random.Range(-_width, _width), -_height * 1.2f, z);
+                var ball = Instantiate(_amogusPrefab, pos, Quaternion.identity);
+                ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 500f));
+                ball.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 
+                var typeChance = Random.Range(0f, defaultC + imposterC + bonusC);
+                if (typeChance <= defaultC)
+                {
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Default);
+                }
+                else if (typeChance <= defaultC + imposterC)
+                {
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Imposter);
+                }
+                else
+                {
+                    ball.GetComponent<Ball>().SetAmogus(spawnInterval, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Bonus);
+                    ball.GetComponent<Ball>().bonus.sortingOrder = sortingOrder + 1;
+                }
+
+                ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
+
+                z -= 0.00001f;
+                sortingOrder += 2;
+
+                spawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
+                yield return new WaitForSeconds(spawnInterval);
+                timePassed += spawnInterval;
+
+                spawnInterval = _modelManager.ArcadeGameModel.ProgressSpawnInterval(timePassed);
+            }
+        }
+        
         public void MissBall()
         {
             if (_curGameType == GameType.Classic)
@@ -229,12 +279,17 @@ namespace GameMechanics
         {
             StopCoroutine(_spawnBallsCoroutine);
             StopCoroutine(_inputCoroutine);
-            
+
             var amoguses = FindObjectsOfType<Ball>();
             foreach (var a in amoguses)
             {
                 Destroy(a.gameObject);
             }
+        }
+        
+        private void CloseEndAnimation()
+        {
+            Destroy(_endAnimation);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GameMechanics
 {
@@ -50,11 +51,20 @@ namespace GameMechanics
         public event Action EndGameEvent;
         public event Action<int> ChangePointsEvent;
         public event Action<int> ChangeLivesEvent;
-
         public event Action StartGame;
+        public event Action CloseEndAnimation;
 
+
+        public void OnCloseEndAnimation()
+        {
+            CloseEndAnimation?.Invoke();
+        }
+        
         public void OnStartGame()
         {
+            Debug.Log("CGM OnStartGame");
+            CurLives = Lives;
+            Points = 0;
             StartGame?.Invoke();
         }
         
@@ -94,10 +104,7 @@ namespace GameMechanics
             {
                 _playerModel.HighScoreClassic = Points;
             }
-
-            CurLives = Lives;
-            Points = 0;
-
+            
             EndGameEvent?.Invoke();
         }
         
