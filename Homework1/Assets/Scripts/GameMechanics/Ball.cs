@@ -8,10 +8,9 @@ namespace GameMechanics
     {
         [SerializeField] private PolygonCollider2D defaultCollider;
         [SerializeField] private PolygonCollider2D imposterCollider;
-        [SerializeField] private Sprite[] sprites;
-        [SerializeField] private Sprite[] imposterSprites;
         [SerializeField] public SpriteRenderer bonus;
         [SerializeField] private GameObject _particleSystemPrefab;
+        [SerializeField] private AmogusInfo[] _amogusInfos;
 
         public enum AmogusType
         {
@@ -24,6 +23,7 @@ namespace GameMechanics
         public AmogusType _type;
         private float _popTime;
         private float _maxScale;
+        public AmogusInfo Info;
 
         public void SetAmogus(float time, float maxScale, AmogusType type)
         {
@@ -31,17 +31,18 @@ namespace GameMechanics
             _type = type;
             _maxScale = maxScale;
             _gameController = FindObjectOfType<GameController>();
-
+            Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
+            
             if (_type == AmogusType.Imposter)
             {
-                GetComponent<SpriteRenderer>().sprite = imposterSprites[Random.Range(0, imposterSprites.Length)];
+                GetComponent<SpriteRenderer>().sprite = Info.imposterSprite;
                 transform.localScale = new Vector3(transform.localScale.x * 3.7f, transform.localScale.y * 3.7f, transform.localScale.z);
                 defaultCollider.enabled = false;
                 imposterCollider.enabled = true;
             }
             else
             {
-                GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)];
+                GetComponent<SpriteRenderer>().sprite = Info.crewmateSprite;
                 if (_type == AmogusType.Bonus)
                 {
                     bonus.gameObject.SetActive(true);
@@ -85,13 +86,11 @@ namespace GameMechanics
 
         public void Clicked()
         {
-            var color = GetComponent<SpriteRenderer>().sprite.texture.GetPixel(300, 350);
-            
             Destroy(gameObject);
 
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
             var psMain = particleSystem.main;
-            psMain.startColor = color;
+            psMain.startColor = Info.color;
         }
     }
 }

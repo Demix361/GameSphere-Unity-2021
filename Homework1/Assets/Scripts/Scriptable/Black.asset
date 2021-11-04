@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30bfb4a07e54d80b0047a736d83c7fe, type: 3}
+  m_Name: Black
+  m_EditorClassIdentifier: 
+  colorName: Black
+  color: {r: 0.24705884, g: 0.2784314, b: 0.30588236, a: 1}
+  crewmateSprite: {fileID: 21300000, guid: af8ca5e4cf4926a4884c1795e4728572, type: 3}
+  imposterSprite: {fileID: 21300000, guid: 33b4087f9d47c0a4985d313516be9a04, type: 3}
+  alienKillAnimator: {fileID: 9100000, guid: 98e646e36fefd8d4ea8ed84649393d2c, type: 2}

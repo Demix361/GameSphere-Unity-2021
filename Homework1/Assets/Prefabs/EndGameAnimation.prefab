@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5292536604538341258}
+  - component: {fileID: 5464575608361366725}
   m_Layer: 0
   m_Name: EndGameAnimation
   m_TagString: Untagged
@@ -33,6 +34,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5464575608361366725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039113478762388715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7286e51c65875468684cb77119970a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ImpostorAnimator: {fileID: 8316710852150909293}
 --- !u!1 &8316710852049565002
 GameObject:
   m_ObjectHideFlags: 0

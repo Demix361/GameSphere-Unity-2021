@@ -9,7 +9,7 @@ namespace GameMechanics
         [SerializeField] private ModelManager _modelManager;
         [SerializeField] private GameObject _amogusPrefab;
         [SerializeField] private GameObject _endGamePrefab;
-        
+
         private Camera _cam;
         private float _height;
         private float _width;
@@ -70,7 +70,8 @@ namespace GameMechanics
                             _modelManager.ClassicGameModel.OnEndGame();
                             
                             _endAnimation = Instantiate(_endGamePrefab, Vector3.zero, Quaternion.identity);
-                            
+                            _endAnimation.GetComponent<EndKillAlien>().ImpostorAnimator.runtimeAnimatorController = amogus.Info.alienKillAnimator;
+
                             ProcessGameEnd();
                         }
                     }

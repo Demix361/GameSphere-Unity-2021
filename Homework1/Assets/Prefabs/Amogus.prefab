@@ -313,7 +313,27 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 667fa67f4a97ba242994a6f40156d84b, type: 3}
   bonus: {fileID: 4902485480555923472}
   _particleSystemPrefab: {fileID: 4057954203615078466, guid: b1b02ff1c5c65db479f9b135ee509901, type: 3}
+  _amogusInfos:
+  - {fileID: 11400000, guid: 2abe8c83b26b79b42aa900b2b9f0143b, type: 2}
+  - {fileID: 11400000, guid: 3397cae3142b0074d9c43d3dc39655b8, type: 2}
+  - {fileID: 11400000, guid: 7b1bf589b5f97a54c9e6368372f432bb, type: 2}
+  - {fileID: 11400000, guid: 1dc721e9b225d4740b848f9c80a91e23, type: 2}
+  - {fileID: 11400000, guid: 8f153edb0d1235646995010ac88cabc4, type: 2}
+  - {fileID: 11400000, guid: 25450e5e5c5730144b433dfb665d24c9, type: 2}
+  - {fileID: 11400000, guid: 401be19560b67df43810249923a4ea95, type: 2}
+  - {fileID: 11400000, guid: 83a2ec7ff2d32af4497d07c81ce5fd3f, type: 2}
+  - {fileID: 11400000, guid: e8170c73f2e9be0418b95ffd53565011, type: 2}
+  - {fileID: 11400000, guid: 5adc6a37a69d0db44a738b0bbef0adf5, type: 2}
+  - {fileID: 11400000, guid: ad43c279ed2406541b21b1320f3eb910, type: 2}
+  - {fileID: 11400000, guid: 220f5d0e94ced344bbcc11a23ce9c0e7, type: 2}
+  - {fileID: 11400000, guid: a990c7e4947f98840a8cd9e6bd988851, type: 2}
+  - {fileID: 11400000, guid: 9dde0504f6cf6d84a9d41988d18429de, type: 2}
+  - {fileID: 11400000, guid: f558b6d355d21754bba3bb282a66cf99, type: 2}
+  - {fileID: 11400000, guid: 20f21a8338116ef4888d0cee2541a480, type: 2}
+  - {fileID: 11400000, guid: d386cec6b690210458b9d1966b9e28d5, type: 2}
+  - {fileID: 11400000, guid: b55db456317b3b347a638bab4c28a3eb, type: 2}
   _type: 0
+  Info: {fileID: 0}
 --- !u!1 &8673625094134300615
 GameObject:
   m_ObjectHideFlags: 0
