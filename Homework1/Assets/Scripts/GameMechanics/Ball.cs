@@ -89,8 +89,8 @@ namespace GameMechanics
             Destroy(gameObject);
 
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-            var psMain = particleSystem.main;
-            psMain.startColor = Info.color;
+            var ps = particleSystem.textureSheetAnimation;
+            ps.SetSprite(0, Info.miniSprite);
         }
     }
 }

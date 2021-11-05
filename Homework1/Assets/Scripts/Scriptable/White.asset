@@ -16,4 +16,5 @@ MonoBehaviour:
   color: {r: 0.83921576, g: 0.87843144, b: 0.94117653, a: 1}
   crewmateSprite: {fileID: 21300000, guid: cb96457959ff372449c20cbf6c5455d7, type: 3}
   imposterSprite: {fileID: 21300000, guid: ca71f7b559e440f4ea8a8d05af7c4862, type: 3}
+  miniSprite: {fileID: 21300000, guid: 22c5be9301962a544acb093a3383d7ee, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: d9cbb6bbfacdd4947bff86c4778c2b51, type: 2}
