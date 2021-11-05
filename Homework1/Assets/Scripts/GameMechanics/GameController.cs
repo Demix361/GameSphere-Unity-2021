@@ -23,6 +23,7 @@ namespace GameMechanics
         }
         private GameType _curGameType;
 
+        
         private void Start()
         {
             _modelManager.ClassicGameModel.StartGame += StartClassic;
@@ -33,18 +34,12 @@ namespace GameMechanics
         public void StartClassic()
         {
             _curGameType = GameType.Classic;
-            
             _cam = Camera.main;
-            var amogusSR = _amogusPrefab.GetComponent<SpriteRenderer>();
-            
-            _height = (_cam.orthographicSize - amogusSR.sprite.rect.size.y / amogusSR.sprite.pixelsPerUnit / 2 * 
-                amogusSR.transform.localScale.y * _modelManager.ClassicGameModel.AmogusMaxScale);
-            _width = (_cam.orthographicSize * Screen.width / Screen.height - amogusSR.sprite.rect.size.x / amogusSR.sprite.pixelsPerUnit / 2 * 
-                amogusSR.transform.localScale.x * _modelManager.ClassicGameModel.AmogusMaxScale);
+            _height = _cam.orthographicSize;
+            _width = _cam.orthographicSize * _cam.aspect;
             
             _spawnBallsCoroutine = StartCoroutine(ClassicSpawnBalls());
             _inputCoroutine = StartCoroutine(ClassicInputCoroutine());
-            print("START CLASSIC");
         }
 
         private IEnumerator ClassicInputCoroutine()
@@ -60,12 +55,12 @@ namespace GameMechanics
                     {
                         var amogus = a.GetComponent<Ball>();
                         
-                        if (amogus._type == Ball.AmogusType.Default)
+                        if (amogus.Type == Ball.AmogusType.Default)
                         {
                             _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
                             amogus.Clicked();
                         }
-                        else if (amogus._type == Ball.AmogusType.Imposter)
+                        else if (amogus.Type == Ball.AmogusType.Imposter)
                         {
                             _modelManager.ClassicGameModel.OnEndGame();
                             
@@ -91,17 +86,19 @@ namespace GameMechanics
 
             while (true)
             {
-                var pos = new Vector3(Random.Range(-_width, _width), Random.Range(-_height, _height), z);
+                var pos = new Vector3(Random.Range(-_width, _width), -_height, z);
                 var ball = Instantiate(_amogusPrefab, pos, Quaternion.identity);
+                ball.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
+                ball.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 
                 var typeChance = Random.Range(0f, defaultC + imposterC);
                 if (typeChance <= imposterC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ClassicGameModel.AmogusMaxScale, Ball.AmogusType.Imposter);
+                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, Ball.AmogusType.Imposter, this);
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2,_modelManager.ClassicGameModel.AmogusMaxScale, Ball.AmogusType.Default);
+                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, Ball.AmogusType.Default, this);
                 }
 
                 ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
@@ -120,15 +117,11 @@ namespace GameMechanics
         public void StartArcade()
         {
             _curGameType = GameType.Arcade;
-            
             _cam = Camera.main;
-            var amogusSR = _amogusPrefab.GetComponent<SpriteRenderer>();
-            _height = (_cam.orthographicSize - amogusSR.sprite.rect.size.y / amogusSR.sprite.pixelsPerUnit / 2 * 
-                amogusSR.transform.localScale.y * _modelManager.ClassicGameModel.AmogusMaxScale);
-            _width = (_cam.orthographicSize * Screen.width / Screen.height - amogusSR.sprite.rect.size.x / amogusSR.sprite.pixelsPerUnit / 2 * 
-                amogusSR.transform.localScale.x * _modelManager.ClassicGameModel.AmogusMaxScale);
+            _height = _cam.orthographicSize;
+            _width = _cam.orthographicSize * _cam.aspect;
             
-            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBallsPhysics());
+            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBalls());
             _inputCoroutine = StartCoroutine(ArcadeInputCoroutine());
         }
         
@@ -155,18 +148,18 @@ namespace GameMechanics
                     {
                         var amogus = a.GetComponent<Ball>();
                         
-                        if (amogus._type == Ball.AmogusType.Default)
+                        if (amogus.Type == Ball.AmogusType.Default)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
                             amogus.Clicked();
                         }
-                        else if (amogus._type == Ball.AmogusType.Bonus)
+                        else if (amogus.Type == Ball.AmogusType.Bonus)
                         {
                             counter += 3;
                             _modelManager.ArcadeGameModel.OnChangeTime(counter);
                             amogus.Clicked();
                         }
-                        else if (amogus._type == Ball.AmogusType.Imposter)
+                        else if (amogus.Type == Ball.AmogusType.Imposter)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
                             Destroy(a.gameObject);
@@ -189,66 +182,23 @@ namespace GameMechanics
             
             while (true)
             {
-                var pos = new Vector3(Random.Range(-_width, _width), Random.Range(-_height, _height), z);
+                var pos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, z);
                 var ball = Instantiate(_amogusPrefab, pos, Quaternion.identity);
-
-                var typeChance = Random.Range(0f, defaultC + imposterC + bonusC);
-                if (typeChance <= defaultC)
-                {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Default);
-                }
-                else if (typeChance <= defaultC + imposterC)
-                {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Imposter);
-                }
-                else
-                {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Bonus);
-                    ball.GetComponent<Ball>().bonus.sortingOrder = sortingOrder + 1;
-                }
-
-                ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
-
-                z -= 0.00001f;
-                sortingOrder += 2;
-
-                spawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
-                yield return new WaitForSeconds(spawnInterval);
-                timePassed += spawnInterval;
-
-                spawnInterval = _modelManager.ArcadeGameModel.ProgressSpawnInterval(timePassed);
-            }
-        }
-        
-        private IEnumerator ArcadeSpawnBallsPhysics()
-        {
-            var z = 0f;
-            var sortingOrder = 0;
-            var timePassed = 0f;
-            var spawnInterval = _modelManager.ArcadeGameModel.SpawnInterval;
-            var defaultC = _modelManager.ArcadeGameModel.DefaultChance;
-            var imposterC = _modelManager.ArcadeGameModel.ImposterChance;
-            var bonusC = _modelManager.ArcadeGameModel.BonusChance;
-            
-            while (true)
-            {
-                var pos = new Vector3(Random.Range(-_width, _width), -_height * 1.2f, z);
-                var ball = Instantiate(_amogusPrefab, pos, Quaternion.identity);
-                ball.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 500f));
+                ball.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
                 ball.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 
                 var typeChance = Random.Range(0f, defaultC + imposterC + bonusC);
                 if (typeChance <= defaultC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Default);
+                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Default, this);
                 }
                 else if (typeChance <= defaultC + imposterC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval * 2, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Imposter);
+                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Imposter, this);
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetAmogus(spawnInterval, _modelManager.ArcadeGameModel.AmogusMaxScale, Ball.AmogusType.Bonus);
+                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Bonus, this);
                     ball.GetComponent<Ball>().bonus.sortingOrder = sortingOrder + 1;
                 }
 
@@ -291,6 +241,18 @@ namespace GameMechanics
         private void CloseEndAnimation()
         {
             Destroy(_endAnimation);
+        }
+
+        private Vector2 CalculateForce(Vector3 startPos)
+        {
+            var res = Vector2.zero;
+            
+            var endPos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, 0);
+
+            res.x = (endPos.x - startPos.x) * 2f;
+            res.y = Random.Range(450f, 630f);
+            
+            return res;
         }
     }
 }

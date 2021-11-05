@@ -12,7 +12,8 @@ namespace GameMechanics
         {
             _playerModel = playerModel;
         }
-        public float AmogusMaxScale { get; } = 2;
+        
+        public float ScaleSpeed { get; } = 0.0045f;
         public float CurTimer { get; set; } = Timer;
         public float SpawnInterval
         {

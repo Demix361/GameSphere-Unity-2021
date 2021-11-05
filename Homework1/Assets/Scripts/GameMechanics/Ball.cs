@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,21 +21,19 @@ namespace GameMechanics
             Imposter
         }
         
-        private GameController _gameController;
-        public AmogusType _type;
-        private float _popTime;
-        private float _maxScale;
+        public AmogusType Type;
         public AmogusInfo Info;
+        private GameController _gameController;
+        private float _scaleSpeed = 0.005f;
 
-        public void SetAmogus(float time, float maxScale, AmogusType type)
+        public void SetAmogus(float scaleSpeed, AmogusType type, GameController gameController)
         {
-            _popTime = time;
-            _type = type;
-            _maxScale = maxScale;
-            _gameController = FindObjectOfType<GameController>();
+            _scaleSpeed = scaleSpeed;
+            Type = type;
+            _gameController = gameController;
             Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
             
-            if (_type == AmogusType.Imposter)
+            if (Type == AmogusType.Imposter)
             {
                 GetComponent<SpriteRenderer>().sprite = Info.imposterSprite;
                 transform.localScale = new Vector3(transform.localScale.x * 3.7f, transform.localScale.y * 3.7f, transform.localScale.z);
@@ -43,7 +43,7 @@ namespace GameMechanics
             else
             {
                 GetComponent<SpriteRenderer>().sprite = Info.crewmateSprite;
-                if (_type == AmogusType.Bonus)
+                if (Type == AmogusType.Bonus)
                 {
                     bonus.gameObject.SetActive(true);
                 }
@@ -61,27 +61,29 @@ namespace GameMechanics
             StartCoroutine(LifeCycle());
         }
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("DeleteZone"))
+            {
+                if (Type == AmogusType.Default)
+                {
+                    _gameController.MissBall();
+                }
+                
+                Destroy(gameObject);
+            }
+        }
+
         private IEnumerator LifeCycle()
         {
-            var counter = 0f;
             var scale = transform.localScale;
-            var deltaScale = new Vector3(_maxScale * scale.x, _maxScale * scale.y, scale.z) - scale;
-        
-            while (counter < _popTime)
+            var deltaScale = new Vector3(scale.x * _scaleSpeed, scale.y * _scaleSpeed, scale.z);
+            
+            while (true)
             {
-                counter += Time.deltaTime;
-                
-                transform.localScale += deltaScale * Time.deltaTime / _popTime;
-
+                transform.localScale += deltaScale;
                 yield return null;
             }
-            
-            if (_type == AmogusType.Default)
-            {
-                _gameController.MissBall();
-            }
-            
-            Destroy(gameObject);
         }
 
         public void Clicked()

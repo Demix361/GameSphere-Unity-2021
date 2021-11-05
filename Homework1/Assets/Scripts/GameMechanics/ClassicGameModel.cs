@@ -10,10 +10,10 @@ namespace GameMechanics
         private int _restoreLifePoints = 100;
         private int _curLives = _lives;
         private PlayerModel _playerModel;
-        public float AmogusMaxScale { get; } = 2;
         public float ImposterChance { get; } = 0.1f;
         public float DefaultChance { get; } = 0.9f;
-
+        public float ScaleSpeed { get; } = 0.0045f;
+        
         public ClassicGameModel(PlayerModel playerModel)
         {
             _playerModel = playerModel;
