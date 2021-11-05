@@ -97,16 +97,18 @@ namespace GameMechanics
                 if (typeChance <= imposterC)
                 {
                     ball.GetComponent<Ball>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, Ball.AmogusType.Impostor, this);
+                    ball.GetComponent<Ball>().impostorOutline.sortingOrder = sortingOrder;
+                    ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder + 1;
+                    sortingOrder += 2;
                 }
                 else
                 {
                     ball.GetComponent<Ball>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, Ball.AmogusType.Default, this);
+                    ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
+                    sortingOrder += 1;
                 }
 
-                ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
-
                 z -= 0.00001f;
-                sortingOrder += 1;
 
                 spawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
                 yield return new WaitForSeconds(spawnInterval);
@@ -193,22 +195,26 @@ namespace GameMechanics
                 if (typeChance <= defaultC)
                 {
                     ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Default, this);
+                    ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
+                    sortingOrder += 1;
                 }
                 else if (typeChance <= defaultC + imposterC)
                 {
                     ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Impostor, this);
+                    ball.GetComponent<Ball>().impostorOutline.sortingOrder = sortingOrder;
+                    ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder + 1;
+                    sortingOrder += 2;
                 }
                 else
                 {
                     ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Bonus, this);
+                    ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
                     ball.GetComponent<Ball>().bonus.sortingOrder = sortingOrder + 1;
+                    sortingOrder += 2;
                 }
 
-                ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
-
                 z -= 0.00001f;
-                sortingOrder += 2;
-
+                
                 spawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
                 yield return new WaitForSeconds(spawnInterval);
                 timePassed += spawnInterval;

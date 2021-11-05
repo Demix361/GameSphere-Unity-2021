@@ -31,7 +31,7 @@ namespace UI
 
         private void OnChangePointsEvent(int points)
         {
-            _gameWindow.SetPoints("Points: " + Convert.ToString(points));
+            _gameWindow.SetPoints(Convert.ToString(points));
         }
 
         private void OnChangeLivesEvent(int lives)

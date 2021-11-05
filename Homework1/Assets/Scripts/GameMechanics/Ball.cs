@@ -14,7 +14,7 @@ namespace GameMechanics
         [SerializeField] public SpriteRenderer bonus;
         [SerializeField] private GameObject _particleSystemPrefab;
         [SerializeField] private AmogusInfo[] _amogusInfos;
-        [SerializeField] private SpriteRenderer _impostorOutline;
+        [SerializeField] public SpriteRenderer impostorOutline;
 
         public enum AmogusType
         {
@@ -42,7 +42,7 @@ namespace GameMechanics
                 transform.localScale = new Vector3(transform.localScale.x * 3.7f, transform.localScale.y * 3.7f, transform.localScale.z);
                 defaultCollider.enabled = false;
                 imposterCollider.enabled = true;
-                _impostorOutline.gameObject.SetActive(true);
+                impostorOutline.gameObject.SetActive(true);
             }
             else
             {
@@ -85,7 +85,7 @@ namespace GameMechanics
 
             if (Type == AmogusType.Impostor)
             {
-                _impostorFlashTween = DOTween.Sequence().Append(_impostorOutline.DOColor(Color.red, 10f).SetEase(Ease.Flash, 20, 0));
+                _impostorFlashTween = DOTween.Sequence().Append(impostorOutline.DOColor(Color.red, 10f).SetEase(Ease.Flash, 20, 0));
             }
             
             while (true)

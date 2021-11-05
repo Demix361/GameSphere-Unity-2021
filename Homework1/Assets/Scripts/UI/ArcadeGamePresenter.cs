@@ -31,12 +31,12 @@ namespace UI
 
         private void OnChangePointsEvent(int points)
         {
-            _gameWindow.SetPoints("Points: " + Convert.ToString(points));
+            _gameWindow.SetPoints(Convert.ToString(points));
         }
 
         private void OnChangeTimeEvent(float time)
         {
-            _gameWindow.SetTime("Time: " + Convert.ToString(Convert.ToInt32(time)));
+            _gameWindow.SetTime("0:" + Convert.ToString(Convert.ToInt32(time)));
         }
 
         public void OnClose()
