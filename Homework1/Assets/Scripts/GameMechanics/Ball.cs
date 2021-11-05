@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using  DG.Tweening;
+using DG.Tweening.Core;
 
 namespace GameMechanics
 {
@@ -13,19 +14,21 @@ namespace GameMechanics
         [SerializeField] public SpriteRenderer bonus;
         [SerializeField] private GameObject _particleSystemPrefab;
         [SerializeField] private AmogusInfo[] _amogusInfos;
+        [SerializeField] private SpriteRenderer _impostorOutline;
 
         public enum AmogusType
         {
             Default,
             Bonus,
-            Imposter
+            Impostor
         }
         
-        public AmogusType Type;
-        public AmogusInfo Info;
+        [NonSerialized] public AmogusType Type;
+        [NonSerialized] public AmogusInfo Info;
         private GameController _gameController;
         private float _scaleSpeed = 0.005f;
-
+        private Sequence _impostorFlashTween;
+        
         public void SetAmogus(float scaleSpeed, AmogusType type, GameController gameController)
         {
             _scaleSpeed = scaleSpeed;
@@ -33,12 +36,13 @@ namespace GameMechanics
             _gameController = gameController;
             Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
             
-            if (Type == AmogusType.Imposter)
+            if (Type == AmogusType.Impostor)
             {
                 GetComponent<SpriteRenderer>().sprite = Info.imposterSprite;
                 transform.localScale = new Vector3(transform.localScale.x * 3.7f, transform.localScale.y * 3.7f, transform.localScale.z);
                 defaultCollider.enabled = false;
                 imposterCollider.enabled = true;
+                _impostorOutline.gameObject.SetActive(true);
             }
             else
             {
@@ -69,8 +73,8 @@ namespace GameMechanics
                 {
                     _gameController.MissBall();
                 }
-                
-                Destroy(gameObject);
+
+                SafeDestroy();
             }
         }
 
@@ -78,6 +82,11 @@ namespace GameMechanics
         {
             var scale = transform.localScale;
             var deltaScale = new Vector3(scale.x * _scaleSpeed, scale.y * _scaleSpeed, scale.z);
+
+            if (Type == AmogusType.Impostor)
+            {
+                _impostorFlashTween = DOTween.Sequence().Append(_impostorOutline.DOColor(Color.red, 10f).SetEase(Ease.Flash, 20, 0));
+            }
             
             while (true)
             {
@@ -88,11 +97,17 @@ namespace GameMechanics
 
         public void Clicked()
         {
-            Destroy(gameObject);
+            SafeDestroy();
 
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
             var ps = particleSystem.textureSheetAnimation;
             ps.SetSprite(0, Info.miniSprite);
+        }
+
+        public void SafeDestroy()
+        {
+            _impostorFlashTween.Kill();
+            Destroy(gameObject);
         }
     }
 }

@@ -30,6 +30,7 @@ namespace GameMechanics
             _modelManager.ClassicGameModel.StartGame += StartClassic;
             _modelManager.ArcadeGameModel.StartGame += StartArcade;
             _modelManager.ClassicGameModel.CloseEndAnimation += CloseEndAnimation;
+            _modelManager.ArcadeGameModel.CloseEndAnimation += CloseEndAnimation;
         }
 
         public void StartClassic()
@@ -61,7 +62,7 @@ namespace GameMechanics
                             _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
                             amogus.Clicked();
                         }
-                        else if (amogus.Type == Ball.AmogusType.Imposter)
+                        else if (amogus.Type == Ball.AmogusType.Impostor)
                         {
                             _modelManager.ClassicGameModel.OnEndGame();
                             
@@ -95,7 +96,7 @@ namespace GameMechanics
                 var typeChance = Random.Range(0f, defaultC + imposterC);
                 if (typeChance <= imposterC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, Ball.AmogusType.Imposter, this);
+                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, Ball.AmogusType.Impostor, this);
                 }
                 else
                 {
@@ -160,7 +161,7 @@ namespace GameMechanics
                             _modelManager.ArcadeGameModel.OnChangeTime(counter);
                             amogus.Clicked();
                         }
-                        else if (amogus.Type == Ball.AmogusType.Imposter)
+                        else if (amogus.Type == Ball.AmogusType.Impostor)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
                             Destroy(a.gameObject);
@@ -195,7 +196,7 @@ namespace GameMechanics
                 }
                 else if (typeChance <= defaultC + imposterC)
                 {
-                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Imposter, this);
+                    ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Impostor, this);
                 }
                 else
                 {
@@ -240,7 +241,7 @@ namespace GameMechanics
             var amoguses = FindObjectsOfType<Ball>();
             foreach (var a in amoguses)
             {
-                Destroy(a.gameObject);
+                a.SafeDestroy();
             }
         }
         
@@ -255,7 +256,7 @@ namespace GameMechanics
             
             var endPos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, 0);
 
-            res.x = (endPos.x - startPos.x) * 2f;
+            res.x = (endPos.x - startPos.x) * 20f;
             res.y = Random.Range(450f, 630f);
             
             return res;
