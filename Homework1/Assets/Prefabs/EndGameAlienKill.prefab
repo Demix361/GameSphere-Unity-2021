@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5292536604538341258}
   - component: {fileID: 5464575608361366725}
   m_Layer: 0
-  m_Name: EndGameAnimation
+  m_Name: EndGameAlienKill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

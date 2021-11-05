@@ -2623,7 +2623,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _modelManager: {fileID: 1008474611}
   _amogusPrefab: {fileID: 7813806208777863385, guid: b83fbd3912fdede4e8ff6e9aa86e4a8e, type: 3}
-  _endGamePrefab: {fileID: 2039113478762388715, guid: a039c21a29a78674089297e59f6aed22, type: 3}
+  _endGameAlienPrefab: {fileID: 2039113478762388715, guid: a039c21a29a78674089297e59f6aed22, type: 3}
+  _endGameWalkPrefab: {fileID: 4810252127239303437, guid: 7db3c7e86d141084c9758d6471a163cb, type: 3}
 --- !u!4 &1340848972
 Transform:
   m_ObjectHideFlags: 0

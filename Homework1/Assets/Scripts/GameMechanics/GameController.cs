@@ -8,7 +8,8 @@ namespace GameMechanics
     {
         [SerializeField] private ModelManager _modelManager;
         [SerializeField] private GameObject _amogusPrefab;
-        [SerializeField] private GameObject _endGamePrefab;
+        [SerializeField] private GameObject _endGameAlienPrefab;
+        [SerializeField] private GameObject _endGameWalkPrefab;
 
         private Camera _cam;
         private float _height;
@@ -64,7 +65,7 @@ namespace GameMechanics
                         {
                             _modelManager.ClassicGameModel.OnEndGame();
                             
-                            _endAnimation = Instantiate(_endGamePrefab, Vector3.zero, Quaternion.identity);
+                            _endAnimation = Instantiate(_endGameAlienPrefab, Vector3.zero, Quaternion.identity);
                             _endAnimation.GetComponent<EndKillAlien>().ImpostorAnimator.runtimeAnimatorController = amogus.Info.alienKillAnimator;
 
                             ProcessGameEnd();
@@ -231,6 +232,11 @@ namespace GameMechanics
             StopCoroutine(_spawnBallsCoroutine);
             StopCoroutine(_inputCoroutine);
 
+            if (_endAnimation == null)
+            {
+                _endAnimation = Instantiate(_endGameWalkPrefab);
+            }
+            
             var amoguses = FindObjectsOfType<Ball>();
             foreach (var a in amoguses)
             {
