@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c30bfb4a07e54d80b0047a736d83c7fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c04aa87a93e0be439c15c15a57d9cbc, type: 3}
   m_Name: White
   m_EditorClassIdentifier: 
   colorName: White
   color: {r: 0.83921576, g: 0.87843144, b: 0.94117653, a: 1}
-  crewmateSprite: {fileID: 21300000, guid: cb96457959ff372449c20cbf6c5455d7, type: 3}
-  imposterSprite: {fileID: 21300000, guid: ca71f7b559e440f4ea8a8d05af7c4862, type: 3}
-  miniSprite: {fileID: 21300000, guid: 22c5be9301962a544acb093a3383d7ee, type: 3}
+  crewmateSprite: {fileID: 21300000, guid: 85a62d3a43067a244ae121536b09cb07, type: 3}
+  imposterSprite: {fileID: 21300000, guid: 3501bd69cfcda0947912f63e03368fca, type: 3}
+  miniSprite: {fileID: 21300000, guid: f9c35e3d6cf4d9540af54e728b5b5202, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: d9cbb6bbfacdd4947bff86c4778c2b51, type: 2}

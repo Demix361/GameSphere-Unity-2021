@@ -23,7 +23,7 @@ namespace GameMechanics
             _modelManager.MainMenuModel.StopSpawnEvent += StopSpawn;
         }
 
-        public void StartSpawn()
+        private void StartSpawn()
         {
             if (_spawnCoroutine == null)
             {
@@ -31,7 +31,7 @@ namespace GameMechanics
             }
         }
 
-        public void StopSpawn()
+        private void StopSpawn()
         {
             StopCoroutine(_spawnCoroutine);
             _spawnCoroutine = null;
