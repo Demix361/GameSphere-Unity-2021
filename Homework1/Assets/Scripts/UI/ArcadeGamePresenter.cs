@@ -36,7 +36,16 @@ namespace UI
 
         private void OnChangeTimeEvent(float time)
         {
-            _gameWindow.SetTime("0:" + Convert.ToString(Convert.ToInt32(time)));
+            var stringTime = Convert.ToString(Convert.ToInt32(time));
+
+            if (stringTime.Length == 1)
+            {
+                _gameWindow.SetTime("0:0" + stringTime);
+            }
+            else
+            {
+                _gameWindow.SetTime("0:" + stringTime);
+            }
         }
 
         public void OnClose()

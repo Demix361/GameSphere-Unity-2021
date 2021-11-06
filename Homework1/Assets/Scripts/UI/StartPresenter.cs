@@ -6,13 +6,14 @@ namespace UI
     public class StartPresenter
     {
         private PlayerModel _playerModel;
+        private MainMenuModel _mainMenuModel;
         private StartWindow _startWindow;
         private Action _onStartClassic;
         private Action _onStartArcade;
         private Action _onSettings;
         private Action _onExit;
 
-        public StartPresenter(PlayerModel playerModel, StartWindow startWindow, 
+        public StartPresenter(PlayerModel playerModel, MainMenuModel mainMenuModel, StartWindow startWindow, 
             Action onStartClassic, Action onStartArcade, Action onSettings, Action onExit)
         {
             _onExit = onExit;
@@ -21,6 +22,7 @@ namespace UI
             _onStartClassic = onStartClassic;
             _playerModel = playerModel;
             _startWindow = startWindow;
+            _mainMenuModel = mainMenuModel;
         }
 
         public void OnOpen()
@@ -28,6 +30,7 @@ namespace UI
             var scoreC = "Highscore: " + Convert.ToString(_playerModel.HighScoreClassic);
             var scoreA = "Highscore: " + Convert.ToString(_playerModel.HighScoreArcade);
             _startWindow.SetHighScores(scoreC, scoreA);
+            _mainMenuModel.StartSpawn();
             
             _startWindow.StartClassicEvent += OnStartWindowOnStartClassicEvent;
             _startWindow.StartArcadeEvent += OnStartWindowOnStartArcadeEvent;
@@ -48,11 +51,13 @@ namespace UI
         private void OnStartWindowOnStartArcadeEvent()
         {
             _onStartArcade?.Invoke();
+            _mainMenuModel.StopSpawn();
         }
 
         private void OnStartWindowOnStartClassicEvent()
         {
             _onStartClassic?.Invoke();
+            _mainMenuModel.StopSpawn();
         }
 
         public void OnClose()

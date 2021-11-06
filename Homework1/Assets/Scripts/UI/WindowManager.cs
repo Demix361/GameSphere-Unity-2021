@@ -28,7 +28,7 @@ namespace UI
                 ShowStartWindow();
             });
             
-            _startPresenter = new StartPresenter(_modelManager.PlayerModel, _startWindow, () =>
+            _startPresenter = new StartPresenter(_modelManager.PlayerModel, _modelManager.MainMenuModel, _startWindow, () =>
             {
                 _startWindow.gameObject.SetActive(false);
                 _startPresenter.OnClose();
