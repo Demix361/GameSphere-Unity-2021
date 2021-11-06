@@ -1,5 +1,4 @@
-﻿using UnityEditor.Animations;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameMechanics
 {
@@ -11,6 +10,6 @@ namespace GameMechanics
         [SerializeField] public Sprite crewmateSprite;
         [SerializeField] public Sprite imposterSprite;
         [SerializeField] public Sprite miniSprite;
-        [SerializeField] public AnimatorController alienKillAnimator;
+        [SerializeField] public RuntimeAnimatorController alienKillAnimator;
     }
 }

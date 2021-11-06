@@ -54,7 +54,11 @@ namespace UI
             }, () =>
             {
                 _startPresenter.OnClose();
-                Application.Quit();
+                #if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+                #else
+                     Application.Quit();
+                #endif
             });
 
             _classicGamePresenter = new ClassicGamePresenter(_modelManager.ClassicGameModel, _classicGameWindow, () =>
@@ -64,7 +68,6 @@ namespace UI
                 
                 _endWindow.gameObject.SetActive(true);
                 _endClassicPresenter.OnOpen();
-                //ShowStartWindow();
             });
 
             _arcadeGamePresenter = new ArcadeGamePresenter(_modelManager.ArcadeGameModel, _arcadeGameWindow, () =>
@@ -74,7 +77,6 @@ namespace UI
                 
                 _endWindow.gameObject.SetActive(true);
                 _endArcadePresenter.OnOpen();
-                //ShowStartWindow();
             });
 
             _endClassicPresenter = new EndClassicPresenter(_modelManager.PlayerModel, _modelManager.ClassicGameModel, _endWindow, 
