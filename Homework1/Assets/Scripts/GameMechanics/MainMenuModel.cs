@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace GameMechanics
 {
@@ -15,7 +14,6 @@ namespace GameMechanics
         public void StartSpawn()
         {
             StartSpawnEvent?.Invoke();
-            Debug.Log("invoke");
         }
 
         public void StopSpawn()

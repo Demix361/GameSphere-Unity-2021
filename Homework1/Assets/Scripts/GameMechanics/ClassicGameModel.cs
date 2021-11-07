@@ -12,7 +12,7 @@ namespace GameMechanics
         private PlayerModel _playerModel;
         public float ImposterChance { get; } = 0.1f;
         public float DefaultChance { get; } = 0.9f;
-        public float ScaleSpeed { get; } = 0.0045f;
+        public float ScaleSpeed { get; } = 0.4f;
         
         public ClassicGameModel(PlayerModel playerModel)
         {

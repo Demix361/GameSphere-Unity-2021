@@ -26,9 +26,10 @@ namespace GameMechanics
         [NonSerialized] public AmogusType Type;
         [NonSerialized] public AmogusInfo Info;
         private GameController _gameController;
-        private float _scaleSpeed = 0.005f;
+        private float _scaleSpeed;
         private Sequence _impostorFlashTween;
-        
+        private bool _destroyed;
+
         public void SetAmogus(float scaleSpeed, AmogusType type, GameController gameController)
         {
             _scaleSpeed = scaleSpeed;
@@ -65,9 +66,9 @@ namespace GameMechanics
             StartCoroutine(LifeCycle());
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.CompareTag("DeleteZone"))
+            if (!_destroyed && other.CompareTag("DeleteZone"))
             {
                 if (Type == AmogusType.Default)
                 {
@@ -81,7 +82,7 @@ namespace GameMechanics
         private IEnumerator LifeCycle()
         {
             var scale = transform.localScale;
-            var deltaScale = new Vector3(scale.x * _scaleSpeed, scale.y * _scaleSpeed, scale.z);
+            var deltaScale = new Vector3(scale.x * _scaleSpeed, scale.y * _scaleSpeed, 0);
 
             if (Type == AmogusType.Impostor)
             {
@@ -90,23 +91,24 @@ namespace GameMechanics
             
             while (true)
             {
-                transform.localScale += deltaScale;
+                transform.localScale += deltaScale * Time.deltaTime;
                 yield return null;
             }
         }
 
         public void Clicked()
         {
-            SafeDestroy();
-
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
             var ps = particleSystem.textureSheetAnimation;
             ps.SetSprite(0, Info.miniSprite);
+            
+            SafeDestroy();
         }
 
         public void SafeDestroy()
         {
             _impostorFlashTween.Kill();
+            _destroyed = true;
             Destroy(gameObject);
         }
     }
