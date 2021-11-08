@@ -19,9 +19,14 @@ namespace UI
         public void OnOpen()
         {
             _settingsWindow.SetPlayerName(_playerModel.PlayerName);
+            _settingsWindow.SetMusicSlider(_playerModel.MusicVolume);
+            _settingsWindow.SetEffectsSlider(_playerModel.EffectsVolume);
+            
             _settingsWindow.ApplyEvent += OnApply;
             _settingsWindow.CancelEvent += OnCancel;
             _settingsWindow.ResetProgressEvent += OnResetProgress;
+            _settingsWindow.ChangeMusicVolume += OnChangeMusicVolume;
+            _settingsWindow.ChangeEffectsVolume += OnChangeEffectsVolume;
         }
 
         private void OnCancel()
@@ -40,6 +45,16 @@ namespace UI
             _playerModel.HighScoreClassic = 0;
             _playerModel.HighScoreArcade = 0;
             _onExit?.Invoke();
+        }
+
+        private void OnChangeMusicVolume(float value)
+        {
+            _playerModel.MusicVolume = value;
+        }
+
+        private void OnChangeEffectsVolume(float value)
+        {
+            _playerModel.EffectsVolume = value;
         }
 
         public void OnClose()

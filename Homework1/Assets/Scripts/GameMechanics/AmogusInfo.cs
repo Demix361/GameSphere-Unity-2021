@@ -8,8 +8,9 @@ namespace GameMechanics
         [SerializeField] public string colorName;
         [SerializeField] public Color color;
         [SerializeField] public Sprite crewmateSprite;
-        [SerializeField] public Sprite imposterSprite;
+        [SerializeField] public Sprite impostorSprite;
         [SerializeField] public Sprite miniSprite;
         [SerializeField] public RuntimeAnimatorController alienKillAnimator;
+        [SerializeField] public Sprite miniBoneSprite;
     }
 }

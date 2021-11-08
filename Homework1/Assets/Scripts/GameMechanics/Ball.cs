@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using  DG.Tweening;
-using DG.Tweening.Core;
 
 namespace GameMechanics
 {
@@ -15,7 +14,9 @@ namespace GameMechanics
         [SerializeField] private GameObject _particleSystemPrefab;
         [SerializeField] private AmogusInfo[] _amogusInfos;
         [SerializeField] public SpriteRenderer impostorOutline;
-
+        [SerializeField] private GameObject _popSound;
+        [SerializeField] private AudioSource _imposterSound;
+        
         public enum AmogusType
         {
             Default,
@@ -36,14 +37,17 @@ namespace GameMechanics
             Type = type;
             _gameController = gameController;
             Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
-            
+
             if (Type == AmogusType.Impostor)
             {
-                GetComponent<SpriteRenderer>().sprite = Info.imposterSprite;
+                GetComponent<SpriteRenderer>().sprite = Info.impostorSprite;
                 transform.localScale = new Vector3(transform.localScale.x * 3.7f, transform.localScale.y * 3.7f, transform.localScale.z);
                 defaultCollider.enabled = false;
                 imposterCollider.enabled = true;
                 impostorOutline.gameObject.SetActive(true);
+                
+                _imposterSound.Play();
+                _imposterSound.DOFade(0, 3f);//.SetEase(Ease.InQuint);
             }
             else
             {
@@ -62,7 +66,7 @@ namespace GameMechanics
                 var bls = bonus.transform.localScale;
                 bonus.transform.localScale = new Vector3(-bls.x, bls.y, bls.z);
             }
-            
+
             StartCoroutine(LifeCycle());
         }
 
@@ -101,6 +105,8 @@ namespace GameMechanics
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
             var ps = particleSystem.textureSheetAnimation;
             ps.SetSprite(0, Info.miniSprite);
+
+            Instantiate(_popSound);
             
             SafeDestroy();
         }

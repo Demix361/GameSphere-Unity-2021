@@ -15,6 +15,7 @@ MonoBehaviour:
   colorName: Tan
   color: {r: 0.57254905, g: 0.5294118, b: 0.46274513, a: 1}
   crewmateSprite: {fileID: 21300000, guid: bae4672e7bd424141870ef079788ce9f, type: 3}
-  imposterSprite: {fileID: 21300000, guid: b828cc08ec5636c4c891d8900ddda046, type: 3}
+  impostorSprite: {fileID: 21300000, guid: b828cc08ec5636c4c891d8900ddda046, type: 3}
   miniSprite: {fileID: 21300000, guid: 6883fcb39245cd94da34b8faf9e5ace8, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: cab59724d18327242b28440bb0c8b737, type: 2}
+  miniBoneSprite: {fileID: 21300000, guid: bf9cdae2f06bc804bbe653f967558d9a, type: 3}

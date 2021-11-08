@@ -15,6 +15,7 @@ MonoBehaviour:
   colorName: Green
   color: {r: 0.06666667, g: 0.49803925, b: 0.17254902, a: 1}
   crewmateSprite: {fileID: 21300000, guid: ab999df9be569ee41b8e175ce3524e90, type: 3}
-  imposterSprite: {fileID: 21300000, guid: 7ee706bfc4dad5b4f941e0db72e8e93b, type: 3}
+  impostorSprite: {fileID: 21300000, guid: 7ee706bfc4dad5b4f941e0db72e8e93b, type: 3}
   miniSprite: {fileID: 21300000, guid: 85048ac17004f574abae1d4b1fb630b5, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: 390f387a774cb7c4ab91e546c155cab7, type: 2}
+  miniBoneSprite: {fileID: 21300000, guid: 53337bc7abd550f4e8d040b7c9a666cf, type: 3}

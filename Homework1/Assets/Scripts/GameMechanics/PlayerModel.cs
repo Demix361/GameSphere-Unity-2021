@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GameMechanics
 {
@@ -7,7 +8,42 @@ namespace GameMechanics
         private string playerName;
         private int highScoreClassic;
         private int highScoreArcade;
+        private float musicVolume;
+        private float effectsVolume;
 
+        public event Action<float> ChangeMusicVolume;
+        public event Action<float> ChangeEffectsVolume;
+        
+        public float MusicVolume
+        {
+            get
+            {
+                musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0f);
+                return musicVolume;
+            }
+            set
+            {
+                musicVolume = value;
+                PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+                ChangeMusicVolume?.Invoke(musicVolume);
+            }
+        }
+        
+        public float EffectsVolume
+        {
+            get
+            {
+                effectsVolume = PlayerPrefs.GetFloat("EffectsVolume", 0f);
+                return effectsVolume;
+            }
+            set
+            {
+                effectsVolume = value;
+                PlayerPrefs.SetFloat("EffectsVolume", effectsVolume);
+                ChangeEffectsVolume?.Invoke(effectsVolume);
+            }
+        }
+        
         public string PlayerName
         {
             get

@@ -15,6 +15,7 @@ MonoBehaviour:
   colorName: Rose
   color: {r: 0.92549026, g: 0.75294125, b: 0.82745105, a: 1}
   crewmateSprite: {fileID: 21300000, guid: 35ffeee8cd53ccd46ac852c3d12fe425, type: 3}
-  imposterSprite: {fileID: 21300000, guid: 36b9c12bd6632ae40a473b862e133ee1, type: 3}
+  impostorSprite: {fileID: 21300000, guid: 36b9c12bd6632ae40a473b862e133ee1, type: 3}
   miniSprite: {fileID: 21300000, guid: 1ea8cd95606d35c42a22050ba89fe4b6, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: e766789246cccaf4cb0e9a72f108d43d, type: 2}
+  miniBoneSprite: {fileID: 21300000, guid: 7e3c931fd67462840bf98679d20adaaa, type: 3}

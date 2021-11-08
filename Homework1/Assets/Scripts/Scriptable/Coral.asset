@@ -15,6 +15,7 @@ MonoBehaviour:
   colorName: Coral
   color: {r: 0.92549026, g: 0.45882356, b: 0.47058827, a: 1}
   crewmateSprite: {fileID: 21300000, guid: 7042c64a6ddb20740b93cdc642901644, type: 3}
-  imposterSprite: {fileID: 21300000, guid: 1c7352fac2b745843a3dea74aca4ab81, type: 3}
+  impostorSprite: {fileID: 21300000, guid: 1c7352fac2b745843a3dea74aca4ab81, type: 3}
   miniSprite: {fileID: 21300000, guid: 67ab9ed98b5f074449df24df58da3fc9, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: 307ce31905df0234684599251f2ecba0, type: 2}
+  miniBoneSprite: {fileID: 21300000, guid: 60d8fddf9f113ac4eb46678019e87a31, type: 3}

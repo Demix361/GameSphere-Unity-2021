@@ -15,6 +15,7 @@ MonoBehaviour:
   colorName: Pink
   color: {r: 0.9294118, g: 0.32941177, b: 0.7294118, a: 1}
   crewmateSprite: {fileID: 21300000, guid: 1d766d4d3a135c64297d8ec8f1543cc8, type: 3}
-  imposterSprite: {fileID: 21300000, guid: 74c2187e0ef8eab4c9eac3150ebcebdf, type: 3}
+  impostorSprite: {fileID: 21300000, guid: 74c2187e0ef8eab4c9eac3150ebcebdf, type: 3}
   miniSprite: {fileID: 21300000, guid: f88601990d7e3a749ac41391a3bc5fb7, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: a1afd37ea56691743a26f0280c4b2c3f, type: 2}
+  miniBoneSprite: {fileID: 21300000, guid: e58a08790964e424d80abad6618228f9, type: 3}
