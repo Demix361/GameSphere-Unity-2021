@@ -11,6 +11,8 @@ namespace GameMechanics
         [SerializeField] private GameObject _endGameWalkPrefab;
         [SerializeField] private GameObject _crewmatePrefab;
         [SerializeField] private GameObject _impostorPrefab;
+        [SerializeField] private GameObject _bonusPrefab;
+        [SerializeField] private AudioSource _missSound;
 
         private Camera _cam;
         private float _height;
@@ -156,14 +158,12 @@ namespace GameMechanics
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
                             amogus.Clicked();
                         }
-                        /*
                         else if (amogus.Type == IAmogus.AmogusType.Bonus)
                         {
                             counter += 3;
                             _modelManager.ArcadeGameModel.OnChangeTime(counter);
                             amogus.Clicked();
                         }
-                        */
                         else if (amogus.Type == IAmogus.AmogusType.Impostor)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
@@ -182,7 +182,7 @@ namespace GameMechanics
             var timePassed = 0f;
             var spawnInterval = _modelManager.ArcadeGameModel.SpawnInterval;
             var defaultC = _modelManager.ArcadeGameModel.DefaultChance;
-            var imposterC = _modelManager.ArcadeGameModel.ImposterChance;
+            var impostorC = _modelManager.ArcadeGameModel.ImposterChance;
             var bonusC = _modelManager.ArcadeGameModel.BonusChance;
             
             while (true)
@@ -192,26 +192,23 @@ namespace GameMechanics
 
                 var lastSortingOrder = sortingOrder;
                 
-                var typeChance = Random.Range(0f, defaultC + imposterC + bonusC);
+                var typeChance = Random.Range(0f, defaultC + impostorC + bonusC);
                 if (typeChance <= defaultC)
                 {
                     amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
                     sortingOrder += 1;
                 }
-                else
+                else if (typeChance <= defaultC + impostorC)
                 {
                     amogus = Instantiate(_impostorPrefab, pos, Quaternion.identity);
                     sortingOrder += 2;
                 }
-                /*
                 else
                 {
-                    //ball.GetComponent<Ball>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, Ball.AmogusType.Bonus, this);
-                    //ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
-                    //ball.GetComponent<Ball>().bonus.sortingOrder = sortingOrder + 1;
-                    //sortingOrder += 2;
+                    amogus = Instantiate(_bonusPrefab, pos, Quaternion.identity);
+                    sortingOrder += 2;
                 }
-                */
+                
                 amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, lastSortingOrder, this);
                 amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
                 amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
@@ -230,6 +227,7 @@ namespace GameMechanics
         {
             if (_curGameType == GameType.Classic)
             {
+                _missSound.Play();
                 if (_modelManager.ClassicGameModel.OnChangeLives(_modelManager.ClassicGameModel.CurLives - 1))
                 {
                     ProcessGameEnd();

@@ -18,6 +18,7 @@ namespace GameMechanics
         private float _scaleSpeed;
         private bool _destroyed;
         private Sequence _outlineFlashTween;
+        private RandomClipPlayer _appearClipPlayer;
 
         public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Impostor;
         public AmogusInfo Info { get; private set; }
@@ -28,7 +29,7 @@ namespace GameMechanics
             _gameController = gameController;
             Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
 
-            Instantiate(_imposterSound);
+            _appearClipPlayer = Instantiate(_imposterSound).GetComponent<RandomClipPlayer>();
 
             GetComponent<SpriteRenderer>().sprite = Info.impostorSprite;
             _outline.sortingOrder = minSortingOrder;
@@ -70,7 +71,8 @@ namespace GameMechanics
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
             var ps = particleSystem.textureSheetAnimation;
             ps.SetSprite(0, Info.miniBoneSprite);
-
+            
+            _appearClipPlayer.Stop();
             Instantiate(_popSound);
             
             SafeDestroy();

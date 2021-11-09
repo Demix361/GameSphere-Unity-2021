@@ -9,6 +9,7 @@ namespace GameMechanics
     {
         [SerializeField] private ModelManager _modelManager;
         [SerializeField] private GameObject amogusPrefab;
+        [SerializeField] private AudioSource _menuSong;
 
         private float halfHeight;
         private float halfWidth;
@@ -27,6 +28,7 @@ namespace GameMechanics
         {
             if (_spawnCoroutine == null)
             {
+                _menuSong.Play();
                 _spawnCoroutine = StartCoroutine(SpawnCoroutine());
             }
         }
@@ -39,6 +41,7 @@ namespace GameMechanics
             var amoguses = FindObjectsOfType<MainMenuAmogus>();
             foreach (var a in amoguses)
             {
+                _menuSong.Stop();
                 Destroy(a.gameObject);
             }
         }

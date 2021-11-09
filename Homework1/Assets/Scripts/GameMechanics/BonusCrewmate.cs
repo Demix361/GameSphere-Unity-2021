@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DG.Tweening;
+
 
 namespace GameMechanics
 {
-    public class Crewmate : MonoBehaviour, IAmogus
+    public class BonusCrewmate : MonoBehaviour, IAmogus
     {
+        [SerializeField] private SpriteRenderer bonus;
         [SerializeField] private GameObject _particleSystemPrefab;
         [SerializeField] private AmogusInfo[] _amogusInfos;
         [SerializeField] private GameObject _popSound;
@@ -13,8 +17,9 @@ namespace GameMechanics
         private GameController _gameController;
         private float _scaleSpeed;
         private bool _destroyed;
+        private Sequence _bonusFlashTween;
 
-        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Crewmate;
+        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Bonus;
         public AmogusInfo Info { get; private set; }
 
         public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController)
@@ -25,11 +30,14 @@ namespace GameMechanics
             
             GetComponent<SpriteRenderer>().sprite = Info.crewmateSprite;
             GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder;
+            bonus.sortingOrder = minSortingOrder + 1;
             
             if (Random.Range(0, 2) == 0)
             {
                 var ls = transform.localScale;
                 transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
+                var bls = bonus.transform.localScale;
+                bonus.transform.localScale = new Vector3(-bls.x, bls.y, bls.z);
             }
             
             StartCoroutine(LifeCycle());
@@ -49,6 +57,10 @@ namespace GameMechanics
             var scale = transform.localScale;
             var deltaScale = new Vector3(scale.x * _scaleSpeed, scale.y * _scaleSpeed, 0);
 
+            var endColor = Color.white - Info.color;
+            endColor.a = 1;
+            _bonusFlashTween = DOTween.Sequence().Append(bonus.DOColor(endColor, 10f).SetEase(Ease.Flash, 20, 0));
+            
             while (true)
             {
                 transform.localScale += deltaScale * Time.deltaTime;
@@ -69,6 +81,7 @@ namespace GameMechanics
 
         public void SafeDestroy()
         {
+            _bonusFlashTween.Kill();
             _destroyed = true;
             Destroy(gameObject);
         }

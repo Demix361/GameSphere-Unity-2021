@@ -9,7 +9,7 @@ namespace GameMechanics
         [SerializeField] private AudioClip[] clips;
         
         private AudioSource _audioSource;
-        
+
         private void Start()
         {
             _audioSource = GetComponent<AudioSource>();
@@ -24,6 +24,11 @@ namespace GameMechanics
             yield return new WaitForSeconds(_audioSource.clip.length);
             
             Destroy(gameObject);
+        }
+
+        public void Stop()
+        {
+            _audioSource.Stop();
         }
     }
 }
