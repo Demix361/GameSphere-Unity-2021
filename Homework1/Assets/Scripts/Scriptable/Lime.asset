@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c04aa87a93e0be439c15c15a57d9cbc, type: 3}
+  m_Name: Lime
+  m_EditorClassIdentifier: 
+  colorName: Lime
+  color: {r: 0.3137255, g: 0.93725497, b: 0.22352943, a: 1}
+  crewmateSprite: {fileID: 21300000, guid: dd7a7b0786dcf344db8f5147297c3519, type: 3}
+  impostorSprite: {fileID: 21300000, guid: 3f34e2be14f2a8c46953f93b893200be, type: 3}
+  miniSprite: {fileID: 21300000, guid: 0356f51dd8702be4b9b1a80638d3c767, type: 3}
+  alienKillAnimator: {fileID: 9100000, guid: 287d75e02322ceb47b21850742d99a3f, type: 2}
+  miniBoneSprite: {fileID: 21300000, guid: 6811816a3c1a5fd4aa276e92257727e0, type: 3}

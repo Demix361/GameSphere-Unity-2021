@@ -6,140 +6,267 @@ namespace GameMechanics
 {
     public class GameController : MonoBehaviour
     {
-        [SerializeField] private float spawnInterval;
-        [SerializeField] private GameObject ballPrefab;
-        [SerializeField] private UI.StatsPanel statsPanel;
-        [SerializeField] private UI.StartPanel startPanel;
-        
-        private int points = 0;
-        private int missed = 0;
-        private Camera cam;
-        private float height;
-        private float width;
-        private float originalSpawnInterval;
-        
+        [SerializeField] private ModelManager _modelManager;
+        [SerializeField] private GameObject _endGameAlienPrefab;
+        [SerializeField] private GameObject _endGameWalkPrefab;
+        [SerializeField] private GameObject _crewmatePrefab;
+        [SerializeField] private GameObject _impostorPrefab;
+        [SerializeField] private GameObject _bonusPrefab;
+        [SerializeField] private AudioSource _missSound;
+
+        private Camera _cam;
+        private float _height;
+        private float _width;
+        private Coroutine _spawnBallsCoroutine;
+        private Coroutine _inputCoroutine;
+        private GameObject _endAnimation;
+        private enum GameType
+        {
+            Classic,
+            Arcade
+        }
+        private GameType _curGameType;
+
         
         private void Start()
         {
-            originalSpawnInterval = spawnInterval;
-            cam = Camera.main;
-            var ballSR = ballPrefab.GetComponent<SpriteRenderer>();
+            _cam = Camera.main;
+            _height = _cam.orthographicSize;
+            _width = _cam.orthographicSize * _cam.aspect;
             
-            height = (cam.orthographicSize - ballSR.sprite.rect.size.y / ballSR.sprite.pixelsPerUnit / 2 * 
-                ballSR.transform.localScale.y * ballPrefab.GetComponent<Ball>().maxScale);
-            width = (cam.orthographicSize * Screen.width / Screen.height - ballSR.sprite.rect.size.x / ballSR.sprite.pixelsPerUnit / 2 * 
-                ballSR.transform.localScale.x * ballPrefab.GetComponent<Ball>().maxScale);
+            _modelManager.ClassicGameModel.StartGame += StartClassic;
+            _modelManager.ArcadeGameModel.StartGame += StartArcade;
+            _modelManager.ClassicGameModel.CloseEndAnimation += CloseEndAnimation;
+            _modelManager.ArcadeGameModel.CloseEndAnimation += CloseEndAnimation;
         }
-        
-        private void OnEnable()
+
+        private void StartClassic()
         {
-            points = 0;
-            missed = 0;
-            spawnInterval = originalSpawnInterval;
-            StartCoroutine(SpawnBalls());
+            _curGameType = GameType.Classic;
+
+            _spawnBallsCoroutine = StartCoroutine(ClassicSpawnBalls());
+            _inputCoroutine = StartCoroutine(ClassicInputCoroutine());
         }
-        
-        private void Update()
+
+        private IEnumerator ClassicInputCoroutine()
         {
-            if (Input.GetMouseButtonDown(0))
+            while (true)
             {
-                var pos = cam.ScreenToWorldPoint(Input.mousePosition);
-                var a = Physics2D.OverlapPoint(pos);
-
-                if (a != null && a.GetComponent<Ball>())
+                if (Input.GetMouseButtonDown(0))
                 {
-                    if (!a.GetComponent<Ball>().imposter)
+                    var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
+                    var a = Physics2D.OverlapPoint(pos);
+                    
+                    if (a != null && a.CompareTag("Amogus"))
                     {
-                        points += 1;
-                        statsPanel.ChangePointsText(points);
-                        Destroy(a.gameObject);
-
-                        if (points % 100 == 0 && missed > 0)
+                        var amogus = a.GetComponent<IAmogus>();
+                        
+                        if (amogus.Type == IAmogus.AmogusType.Crewmate)
                         {
-                            missed -= 1;
-                            statsPanel.DecreaseMissed();
+                            _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
+                            amogus.Clicked();
+                        }
+                        else if (amogus.Type == IAmogus.AmogusType.Impostor)
+                        {
+                            _modelManager.ClassicGameModel.OnEndGame();
+                            
+                            _endAnimation = Instantiate(_endGameAlienPrefab, Vector3.zero, Quaternion.identity);
+                            _endAnimation.GetComponent<EndKillAlien>().ImpostorAnimator.runtimeAnimatorController = amogus.Info.alienKillAnimator;
+
+                            ProcessGameEnd();
                         }
                     }
-                    else
-                    {
-                        EndGame();
-                    }
                 }
+                yield return null;
             }
         }
 
-        private IEnumerator SpawnBalls()
+        private IEnumerator ClassicSpawnBalls()
         {
             var z = 0f;
             var sortingOrder = 0;
             var timePassed = 0f;
-            var curSpawnInterval = spawnInterval;
-            
+            var spawnInterval = _modelManager.ClassicGameModel.SpawnInterval;
+            var defaultC = _modelManager.ClassicGameModel.DefaultChance;
+            var imposterC = _modelManager.ClassicGameModel.ImposterChance;
+
             while (true)
             {
-                var pos = new Vector3(Random.Range(-width, height), Random.Range(-height, height), z);
-                var ball = Instantiate(ballPrefab, pos, Quaternion.identity);
+                var pos = new Vector3(Random.Range(-_width, _width), -_height, z);
+                GameObject amogus;
+                
+                var lastSortingOrder = sortingOrder;
 
-                var imposterChance = Random.Range(0f, 1f);
-                if (imposterChance > 0.9f)
+                var typeChance = Random.Range(0f, defaultC + imposterC);
+                if (typeChance <= imposterC)
                 {
-                    ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2, true);
+                    amogus = Instantiate(_impostorPrefab, pos, Quaternion.identity);
+                    sortingOrder += 2;
                 }
                 else
                 {
-                    ball.GetComponent<Ball>().SetPopTime(spawnInterval * 2, false);
+                    amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
+                    sortingOrder += 1;
                 }
-
-                ball.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
+                amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, lastSortingOrder, this);
+                amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
+                amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 
                 z -= 0.00001f;
-                sortingOrder += 1;
 
-                curSpawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
-                yield return new WaitForSeconds(curSpawnInterval);
-                timePassed += curSpawnInterval;
+                spawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
+                yield return new WaitForSeconds(spawnInterval);
+                timePassed += spawnInterval;
 
-                spawnInterval = ProgressSpawnInterval(timePassed);
+                spawnInterval = _modelManager.ClassicGameModel.ProgressSpawnInterval(timePassed);
+            }
+        }
+        
+        private void StartArcade()
+        {
+            _curGameType = GameType.Arcade;
+
+            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBalls());
+            _inputCoroutine = StartCoroutine(ArcadeInputCoroutine());
+        }
+
+        private IEnumerator ArcadeInputCoroutine()
+        {
+            var counter = _modelManager.ArcadeGameModel.CurTimer;
+            
+            while (true)
+            {
+                counter -= Time.deltaTime;
+                _modelManager.ArcadeGameModel.OnChangeTime(counter);
+
+                if (counter <= 0)
+                {
+                    ProcessGameEnd();
+                }
+                
+                if (Input.GetMouseButtonDown(0))
+                {
+                    var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
+                    var a = Physics2D.OverlapPoint(pos);
+
+                    if (a != null && a.CompareTag("Amogus"))
+                    {
+                        var amogus = a.GetComponent<IAmogus>();
+                        
+                        if (amogus.Type == IAmogus.AmogusType.Crewmate)
+                        {
+                            _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
+                            amogus.Clicked();
+                        }
+                        else if (amogus.Type == IAmogus.AmogusType.Bonus)
+                        {
+                            counter += 3;
+                            _modelManager.ArcadeGameModel.OnChangeTime(counter);
+                            amogus.Clicked();
+                        }
+                        else if (amogus.Type == IAmogus.AmogusType.Impostor)
+                        {
+                            _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
+                            amogus.Clicked();
+                        }
+                    }
+                }
+                yield return null;
             }
         }
 
-        private float ProgressSpawnInterval(float value)
+        private IEnumerator ArcadeSpawnBalls()
         {
-            // парабола (1): Начальная точка относительно (4) (1 + 4);
-            // (2): Скорость уменьшения функции;
-            // (3): Смещение графика по X;
-            // (4): Предел к которому стремится функция;
-            return 0.7f / (0.015f * value + 1) + 0.3f;
+            var z = 0f;
+            var sortingOrder = 0;
+            var timePassed = 0f;
+            var spawnInterval = _modelManager.ArcadeGameModel.SpawnInterval;
+            var defaultC = _modelManager.ArcadeGameModel.DefaultChance;
+            var impostorC = _modelManager.ArcadeGameModel.ImposterChance;
+            var bonusC = _modelManager.ArcadeGameModel.BonusChance;
+            
+            while (true)
+            {
+                var pos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, z);
+                GameObject amogus;
+
+                var lastSortingOrder = sortingOrder;
+                
+                var typeChance = Random.Range(0f, defaultC + impostorC + bonusC);
+                if (typeChance <= defaultC)
+                {
+                    amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
+                    sortingOrder += 1;
+                }
+                else if (typeChance <= defaultC + impostorC)
+                {
+                    amogus = Instantiate(_impostorPrefab, pos, Quaternion.identity);
+                    sortingOrder += 2;
+                }
+                else
+                {
+                    amogus = Instantiate(_bonusPrefab, pos, Quaternion.identity);
+                    sortingOrder += 2;
+                }
+                
+                amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, lastSortingOrder, this);
+                amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
+                amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
+                
+                z -= 0.00001f;
+                
+                spawnInterval = Random.Range(spawnInterval * 0.5f, spawnInterval * 1.5f);
+                yield return new WaitForSeconds(spawnInterval);
+                timePassed += spawnInterval;
+
+                spawnInterval = _modelManager.ArcadeGameModel.ProgressSpawnInterval(timePassed);
+            }
         }
         
         public void MissBall()
         {
-            missed += 1;
-            statsPanel.IncreaseMissed();
-
-            if (missed >= 3)
+            if (_curGameType == GameType.Classic)
             {
-                EndGame();
+                _missSound.Play();
+                if (_modelManager.ClassicGameModel.OnChangeLives(_modelManager.ClassicGameModel.CurLives - 1))
+                {
+                    ProcessGameEnd();
+                }
             }
         }
 
-        private void EndGame()
+        private void ProcessGameEnd()
         {
-            var highscore = PlayerPrefs.GetInt("highscore", 0);
-            if (points > highscore)
+            StopCoroutine(_spawnBallsCoroutine);
+            StopCoroutine(_inputCoroutine);
+
+            if (_endAnimation == null)
             {
-                PlayerPrefs.SetInt("highscore", points);
+                _endAnimation = Instantiate(_endGameWalkPrefab);
             }
 
-            var amoguses = FindObjectsOfType<Ball>();
+            var amoguses = GameObject.FindGameObjectsWithTag("Amogus");
             foreach (var a in amoguses)
             {
-                Destroy(a.gameObject);
+                a.GetComponent<IAmogus>().SafeDestroy();
             }
+        }
+        
+        private void CloseEndAnimation()
+        {
+            Destroy(_endAnimation);
+        }
+
+        private Vector2 CalculateForce(Vector3 startPos)
+        {
+            var res = Vector2.zero;
             
-            statsPanel.gameObject.SetActive(false);
-            startPanel.gameObject.SetActive(true);
-            gameObject.SetActive(false);
+            var endPos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, 0);
+
+            res.x = (endPos.x - startPos.x) * 20f;
+            res.y = Random.Range(450f, 630f);
+            
+            return res;
         }
     }
 }
