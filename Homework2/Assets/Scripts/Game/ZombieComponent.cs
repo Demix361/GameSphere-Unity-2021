@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Game
 {
@@ -16,6 +18,9 @@ namespace Game
 
         private int _currentPoint = 0;
         private Vector3 _initPosition;
+        private GameObject _player;
+        private NavMeshPath _path;
+        public NavMeshSurface a;
 
         private void Awake()
         {
@@ -24,11 +29,14 @@ namespace Game
 
         private void OnEnable()
         {
+            _path = new NavMeshPath();
             SetState(true);
+            _player = FindObjectOfType<PlayerController>().gameObject;
         }
 
         private void Update()
         {
+            /*
             if (_deltaPath == null || _deltaPath.Length < 2)
                 return;
 
@@ -38,6 +46,31 @@ namespace Game
             if (direction.magnitude <= 0.1f)
             {
                 _currentPoint = (_currentPoint + 1) % _deltaPath.Length;
+            }
+            */
+            NavMesh.CalculatePath(transform.position, _player.transform.position, 1, _path);
+            
+            Vector3 direction;
+            if ((_path.corners[1] - transform.position).magnitude < 0.2f)
+            {
+                direction = (_path.corners[2] - transform.position);
+            }
+            else
+            {
+                direction = (_path.corners[1] - transform.position);
+            }
+            direction.y = transform.position.y;
+            
+            _rigidbody.velocity = IsAlive ? direction.normalized * _speed : Vector3.zero;
+        }
+
+        private void OnCollisionEnter(Collision other)
+        {
+            var playerController = other.gameObject.GetComponentInParent<PlayerController>();
+            
+            if (playerController && IsAlive)
+            {
+                playerController.Hitpoints = 0;
             }
         }
 

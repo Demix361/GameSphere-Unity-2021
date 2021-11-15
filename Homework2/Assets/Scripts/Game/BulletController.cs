@@ -5,7 +5,7 @@ namespace Game
 	public class BulletController : MonoBehaviour
 	{
 		public float LifeTime = 2f;
-		public float Speed = 20f;
+		public float Speed = 50f;
 
 		private Rigidbody _rigidbody;
 
