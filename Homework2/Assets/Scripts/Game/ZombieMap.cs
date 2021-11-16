@@ -21,6 +21,14 @@ namespace Game
         private float maxZ = 11f;
         private float deltaX;
         private float deltaZ;
+        
+        private NavMeshPath path;
+
+        
+        private void Start()
+        {
+            path = new NavMeshPath();
+        }
 
         private void Awake()
         {
@@ -58,7 +66,7 @@ namespace Game
                 }
             }
             
-            //DrawActivityMap();
+            DrawActivityMap();
             
             return activityMap;
         }
@@ -68,23 +76,23 @@ namespace Game
             var k = (float)amount / CountAlive();
             var res = 0;
             
-            if (k >= 0 && k < 0.1f)
+            if (k >= 0 && k < 0.05f)
             {
                 res = 0;
             }
-            else if (k >= 0.1f && k < 0.2f)
+            else if (k >= 0.05f && k < 0.1f)
             {
                 res = 1;
             }
-            else if (k >= 0.2f && k < 0.3f)
+            else if (k >= 0.1f && k < 0.15f)
             {
                 res = 2;
             }
-            else if (k >= 0.3f && k < 0.4f)
+            else if (k >= 0.15f && k < 0.2f)
             {
                 res = 3;
             }
-            else if (k >= 0.4f && k < 0.5f)
+            else if (k >= 0.2f && k < 0.3f)
             {
                 res = 4;
             }
@@ -124,7 +132,6 @@ namespace Game
 
         public bool GoodPosition(Vector3 pos)
         {
-            var res = true;
             int posX = 0, posZ = 0;
 
             for (int i = 0; i < activityMapN; i++)
@@ -140,12 +147,18 @@ namespace Game
                 }
             }
 
-            if (activityMap[posX, posZ] == mapLevels - 1)
+            for (int i = 0; i < activityMapN; i++)
             {
-                res = false;
+                for (int j = 0; j < activityMapN; j++)
+                {
+                    if (activityMap[i, j] < activityMap[posX, posZ])
+                    {
+                        return false;
+                    }
+                }
             }
 
-            return res;
+            return true;
         }
 
         public Vector3 ChangePosition(Vector3 pos)
@@ -166,7 +179,65 @@ namespace Game
                 }
             }
 
+            List<Vector2Int> higherPositions = new List<Vector2Int>();
+            
+            for (int i = 0; i < activityMapN; i++)
+            {
+                for (int j = 0; j < activityMapN; j++)
+                {
+                    if (activityMap[i, j] < activityMap[posX, posZ])
+                    {
+                        higherPositions.Add(new Vector2Int(i, j));
+                    }
+                }
+            }
+            
+            // сортируем массив подходящих позиций по их рейтингу
+            for (int i = 0; i < higherPositions.Count; i++)
+            {
+                for (int j = 0; j < higherPositions.Count - 1; j++)
+                {
+                    if (activityMap[higherPositions[j].x, higherPositions[j].y] <
+                        activityMap[higherPositions[j + 1].x, higherPositions[j + 1].y])
+                    {
+                        (higherPositions[j], higherPositions[j + 1]) = (higherPositions[j + 1], higherPositions[j]);
+                    }
+                }
+            }
+            print("HELLO");
+            print(higherPositions.Count);
+
+            NavMesh.CalculatePath(pos, GetPos(higherPositions[0].x, higherPositions[0].y), NavMesh.AllAreas, path);
+            var shortestPath = PathLength(path);
+            var shortestPathIndex = 0;
+
+            for (int i = 0; i < higherPositions.Count; i++)
+            {
+                NavMesh.CalculatePath(pos, GetPos(higherPositions[i].x, higherPositions[i].y), NavMesh.AllAreas, path);
+                var curPathLength = PathLength(path);
+
+                if (curPathLength < shortestPath)
+                {
+                    shortestPath = curPathLength;
+                    shortestPathIndex = i;
+                }
+            }
+
+            res = GetPos(higherPositions[shortestPathIndex].x, higherPositions[shortestPathIndex].y);
+            //res = GetPos(higherPositions[0].x, higherPositions[0].y);
+            res.y = pos.y;
+
             return res;
+        }
+
+        private Vector3 GetPos(int x, int z)
+        {
+            var sourcePos = new Vector3(minX + (x + 0.5f) * deltaX, 0, minZ + (z + 0.5f) * deltaZ);
+
+            NavMesh.SamplePosition(sourcePos, out var hit, deltaX, NavMesh.AllAreas);
+            
+            print(hit.position);
+            return hit.position;
         }
 
         public int CountAlive() => _zombieComponents.Count(z => z.IsAlive);
@@ -181,6 +252,16 @@ namespace Game
             .Select(z => z.gameObject)
             .ToList();
         
-        
+        private float PathLength(NavMeshPath newPath)
+        {
+            var res = 0f;
+            
+            for (int i = 0; i < newPath.corners.Length - 1; i++)
+            {
+                res += (newPath.corners[i] - newPath.corners[i + 1]).magnitude;
+            }
+
+            return res;
+        }
     }
 }

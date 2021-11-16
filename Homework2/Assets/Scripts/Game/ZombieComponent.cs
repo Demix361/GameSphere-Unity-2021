@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,30 +37,11 @@ namespace Game
 
         private void Update()
         {
-            /*
-            if (_deltaPath == null || _deltaPath.Length < 2)
-                return;
-
-            var direction = _initPosition + _deltaPath[_currentPoint] - transform.position;
-            _rigidbody.velocity = IsAlive ? direction.normalized * _speed : Vector3.zero;
-
-            if (direction.magnitude <= 0.1f)
-            {
-                _currentPoint = (_currentPoint + 1) % _deltaPath.Length;
-            }
-            */
             NavMesh.CalculatePath(transform.position, _player.transform.position, 1, _path);
             
             Vector3 direction;
-            if ((_path.corners[1] - transform.position).magnitude < 0.2f)
-            {
-                direction = (_path.corners[2] - transform.position);
-            }
-            else
-            {
-                direction = (_path.corners[1] - transform.position);
-            }
             direction.y = transform.position.y;
+            direction = (_path.corners[1] - transform.position);
             
             _rigidbody.velocity = IsAlive ? direction.normalized * _speed : Vector3.zero;
         }
@@ -74,10 +56,22 @@ namespace Game
             }
         }
 
+        private IEnumerator DissapearBody()
+        {
+            yield return new WaitForSeconds(2f);
+            
+            _diedView.SetActive(false);
+        }
+        
         public void SetState(bool alive)
         {
             _aliveView.SetActive(alive);
             _diedView.SetActive(!alive);
+
+            if (!alive)
+            {
+                StartCoroutine(DissapearBody());
+            }
         }
 
         public bool IsAlive => _aliveView.activeInHierarchy;

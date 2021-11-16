@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using Game;
+using UnityEditor;
 
 namespace Input
 {
@@ -14,6 +15,8 @@ namespace Input
         
         private NavMeshPath path;
         private ZombieComponent farEnemy = null;
+        private Vector3 movingTo;
+        private bool waiting = true;
         
         private void Start()
         {
@@ -51,7 +54,6 @@ namespace Input
                     longestIndex = i;
                 }
             }
-
             if (farEnemy == null || !farEnemy.IsAlive)
             {
                 farEnemy = aliveZombies[longestIndex].GetComponent<ZombieComponent>();
@@ -59,27 +61,69 @@ namespace Input
             
             
             //NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
-            NavMesh.CalculatePath(transform.position, farEnemy.transform.position, NavMesh.AllAreas, path);
+            //NavMesh.CalculatePath(transform.position, farEnemy.transform.position, NavMesh.AllAreas, path);
             Vector3 direction;
+            
+            
+            _zombieMap.GetActivityMap();
+            if (!waiting)
+            {
+                NavMesh.CalculatePath(transform.position, movingTo, NavMesh.AllAreas, path);
+                print("going to new point");
+                print(movingTo);
+                if ((path.corners[1] - transform.position).magnitude < 0.2f)
+                {
+                    direction = Vector3.zero;
+                    waiting = true;
+                }
+                else
+                {
+                    direction = (path.corners[1] - transform.position);
+                    direction.y = transform.position.y;
+                }
+            }
+            else
+            {
+                print("waiting");
+                if (!_zombieMap.GoodPosition(transform.position))
+                {
+                    waiting = false;
+                    movingTo = _zombieMap.ChangePosition(transform.position);
+                }
+                
+                direction = Vector3.zero;
+            }
+            
+            
+            /*
+             // Движение к waypoint
+            NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
             if ((path.corners[1] - transform.position).magnitude < 0.2f)
             {
-                direction = (path.corners[2] - transform.position);
+                //direction = alivePositions[targetIndex] - transform.position;
+                direction = Vector3.zero;
+                waiting = true;
             }
             else
             {
                 direction = (path.corners[1] - transform.position);
+                direction.y = transform.position.y;
             }
-            direction.y = transform.position.y;
-            
+            */
+
             for (int i = 0; i < path.corners.Length - 1; i++)
             {
                 Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
             }
 
+            var deltaPosition = direction;
+            
+            
             // avoiding zombies
             var numberOfRays = 30;
-            var deltaPosition = Vector3.zero;
+            deltaPosition = Vector3.zero;
             var angle = 270;
+            
             
             for (int i = 0; i < numberOfRays; i++)
             {
@@ -105,18 +149,16 @@ namespace Input
                     deltaPosition += (1f / numberOfRays) * dirr;
                 }
             }
+            
+            
 
-            _zombieMap.GetActivityMap();
-
-            var points = CalculateBulletTrajectory2();
+            var points = CalculateBulletTrajectory();
             var look = new Vector3(points[targetIndex].x - transform.position.x, transform.position.y, points[targetIndex].z - transform.position.z);
-            return (
-                deltaPosition,//new Vector3(UnityEngine.Input.GetAxis("Horizontal"), 0f, UnityEngine.Input.GetAxis("Vertical")),
-                Quaternion.LookRotation(look),
-                true); //UnityEngine.Input.GetButtonDown("Fire1"));
+            
+            return (deltaPosition, Quaternion.LookRotation(look), true);
         }
 
-        private List<Vector3> CalculateBulletTrajectory2()
+        private List<Vector3> CalculateBulletTrajectory()
         {
             var alivePositions = _zombieMap.AliveGameObjects();
             RaycastHit hit;
@@ -146,9 +188,7 @@ namespace Input
                         
                         Physics.Raycast(playerPos, playerPos + destination, out hit, Mathf.Infinity);
                         var firstHit = hit;
-                        
-                        // добавить прогнозирование движения врага по навмешу и  выбирать траекторию, которая столкнется с врагом через время полета пули
-                        
+
                         if (hit.collider.gameObject.CompareTag("Obstacle"))
                         {
                             Physics.Raycast(hit.point, Vector3.Reflect(destination, hit.normal), out hit, Mathf.Infinity);
