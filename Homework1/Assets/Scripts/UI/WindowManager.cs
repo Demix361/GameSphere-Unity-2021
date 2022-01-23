@@ -10,6 +10,7 @@ namespace UI
         [SerializeField] private ClassicGameWindow _classicGameWindow;
         [SerializeField] private ArcadeGameWindow _arcadeGameWindow;
         [SerializeField] private EndWindow _endWindow;
+        [SerializeField] private LanguageWindow _languageWindow;
         
         [SerializeField] private ModelManager _modelManager;
         
@@ -19,6 +20,7 @@ namespace UI
         private ArcadeGamePresenter _arcadeGamePresenter;
         private EndClassicPresenter _endClassicPresenter;
         private EndArcadePresenter _endArcadePresenter;
+        private LanguagePresenter _languagePresenter;
         
         private void Start()
         {
@@ -26,6 +28,23 @@ namespace UI
             {
                 _settingsPresenter.OnClose();
                 ShowStartWindow();
+            }, () =>
+            {
+                _settingsWindow.gameObject.SetActive(false);
+                _settingsPresenter.OnClose();
+                
+                _languageWindow.gameObject.SetActive(true);
+                _languagePresenter.OnOpen();
+            });
+
+            _languagePresenter = new LanguagePresenter(_modelManager.PlayerModel, _languageWindow, () =>
+            {
+                _languageWindow.gameObject.SetActive(false);
+                _languagePresenter.OnClose();
+                
+                //ShowSettingsWindow();
+                _settingsWindow.gameObject.SetActive(true);
+                _settingsPresenter.OnOpen();
             });
             
             _startPresenter = new StartPresenter(_modelManager.PlayerModel, _modelManager.MainMenuModel, _startWindow, () =>
@@ -118,6 +137,18 @@ namespace UI
             _arcadeGameWindow.gameObject.SetActive(false);
             _settingsWindow.gameObject.SetActive(false);
             _endWindow.gameObject.SetActive(false);
+            _languageWindow.gameObject.SetActive(false);
+        }
+
+        private void ShowSettingsWindow()
+        {
+            _settingsWindow.gameObject.SetActive(true);
+            _settingsPresenter.OnOpen();
+            _startWindow.gameObject.SetActive(false);
+            _classicGameWindow.gameObject.SetActive(false);
+            _arcadeGameWindow.gameObject.SetActive(false);
+            _endWindow.gameObject.SetActive(false);
+            _languageWindow.gameObject.SetActive(false);
         }
     }
 }

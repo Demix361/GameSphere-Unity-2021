@@ -10,10 +10,12 @@ namespace GameMechanics
         private int highScoreArcade;
         private float musicVolume;
         private float effectsVolume;
+        private int activeLanguage;
 
         public event Action<float> ChangeMusicVolume;
         public event Action<float> ChangeEffectsVolume;
-        
+        public event Action<int> ChangeLanguage;
+
         public float MusicVolume
         {
             get
@@ -83,6 +85,21 @@ namespace GameMechanics
             {
                 highScoreArcade = value;
                 PlayerPrefs.SetInt("highScoreArcade", highScoreArcade);
+            }
+        }
+        
+        public int ActiveLanguage
+        {
+            get
+            {
+                activeLanguage = PlayerPrefs.GetInt("activeLanguage", 2);
+                return activeLanguage;
+            }
+            set
+            {
+                activeLanguage = value;
+                PlayerPrefs.SetInt("activeLanguage", activeLanguage);
+                ChangeLanguage?.Invoke(activeLanguage);
             }
         }
     }

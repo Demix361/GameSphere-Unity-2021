@@ -15,7 +15,13 @@ namespace UI
         public event Action ResetProgressEvent;
         public event Action<float> ChangeMusicVolume;
         public event Action<float> ChangeEffectsVolume;
+        public event Action LanguageEvent;
 
+        public void OnLanguage()
+        {
+            LanguageEvent?.Invoke();
+        }
+        
         public void OnApply()
         {
             ApplyEvent?.Invoke(playerName.text);

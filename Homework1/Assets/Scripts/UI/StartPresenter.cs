@@ -27,8 +27,8 @@ namespace UI
 
         public void OnOpen()
         {
-            var scoreC = "Highscore: " + Convert.ToString(_playerModel.HighScoreClassic);
-            var scoreA = "Highscore: " + Convert.ToString(_playerModel.HighScoreArcade);
+            var scoreC = Convert.ToString(_playerModel.HighScoreClassic);
+            var scoreA = Convert.ToString(_playerModel.HighScoreArcade);
             _startWindow.SetHighScores(scoreC, scoreA);
             _mainMenuModel.StartSpawn();
             

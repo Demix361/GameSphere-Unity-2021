@@ -8,12 +8,14 @@ namespace UI
         private PlayerModel _playerModel;
         private SettingsWindow _settingsWindow;
         private Action _onExit;
+        private Action _onLanguage;
 
-        public SettingsPresenter(PlayerModel playerModel, SettingsWindow settingsWindow, Action onExit)
+        public SettingsPresenter(PlayerModel playerModel, SettingsWindow settingsWindow, Action onExit, Action onLanguage)
         {
             _playerModel = playerModel;
             _settingsWindow = settingsWindow;
             _onExit = onExit;
+            _onLanguage = onLanguage;
         }
 
         public void OnOpen()
@@ -21,7 +23,8 @@ namespace UI
             _settingsWindow.SetPlayerName(_playerModel.PlayerName);
             _settingsWindow.SetMusicSlider(_playerModel.MusicVolume);
             _settingsWindow.SetEffectsSlider(_playerModel.EffectsVolume);
-            
+
+            _settingsWindow.LanguageEvent += OnOpenLanguage;
             _settingsWindow.ApplyEvent += OnApply;
             _settingsWindow.CancelEvent += OnCancel;
             _settingsWindow.ResetProgressEvent += OnResetProgress;
@@ -55,6 +58,11 @@ namespace UI
         private void OnChangeEffectsVolume(float value)
         {
             _playerModel.EffectsVolume = value;
+        }
+
+        private void OnOpenLanguage()
+        {
+            _onLanguage?.Invoke();
         }
 
         public void OnClose()
