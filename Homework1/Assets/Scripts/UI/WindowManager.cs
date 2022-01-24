@@ -42,7 +42,6 @@ namespace UI
                 _languageWindow.gameObject.SetActive(false);
                 _languagePresenter.OnClose();
                 
-                //ShowSettingsWindow();
                 _settingsWindow.gameObject.SetActive(true);
                 _settingsPresenter.OnOpen();
             });

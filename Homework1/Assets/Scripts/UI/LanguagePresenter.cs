@@ -31,6 +31,7 @@ namespace UI
         private void OnChangeLanguage(int languageIndex)
         {
             _playerModel.ActiveLanguage = languageIndex;
+            _languageWindow.SetActiveLanguage(_playerModel.ActiveLanguage);
         }
 
         public void OnClose()
