@@ -34,5 +34,13 @@ MonoBehaviour:
     m_Localized: "L\xEDngua"
     m_Metadata:
       m_Items: []
+  - m_Id: 55416299520
+    m_Localized: Volume de efeitos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 108809789440
+    m_Localized: Redefinir progresso
+    m_Metadata:
+      m_Items: []
   references:
     version: 1

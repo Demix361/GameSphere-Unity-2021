@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-String-Tables-Chinese (Simplified)
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-String-Tables-Chinese (Simplified)
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 01fd9028a163af74e8bd13921483579a
+  m_SerializeEntries:
+  - m_GUID: c9914d194ea88ec49aafcd6311526747
+    m_Address: Settings_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    - Preload
+  - m_GUID: 573c90dc3e5e8c745ad2f436ce37f0c0
+    m_Address: Settings_zh-hans
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-hans
+    - Preload
+  - m_GUID: 71ac4b715c6b79647be47f7591dcd519
+    m_Address: MainMenu_zh-CN
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-CN
+    - Preload
+  - m_GUID: 9a5dbab41b2a6e240882b0ac9ba7bf01
+    m_Address: MainMenu_zh-hans
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-zh-hans
+    - Preload
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: e803c1c1e7d3a984ca6c090d988a2f3f, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fa0ac691673e48e4096563b76667e071, type: 2}
+    - {fileID: 11400000, guid: f929e2fa17187674da68253868ec09cb, type: 2}

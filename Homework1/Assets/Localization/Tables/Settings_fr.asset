@@ -34,5 +34,13 @@ MonoBehaviour:
     m_Localized: Langue
     m_Metadata:
       m_Items: []
+  - m_Id: 55416299520
+    m_Localized: Volume des effets
+    m_Metadata:
+      m_Items: []
+  - m_Id: 108809789440
+    m_Localized: "R\xE9initialiser la progression"
+    m_Metadata:
+      m_Items: []
   references:
     version: 1

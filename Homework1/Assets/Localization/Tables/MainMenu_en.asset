@@ -19,7 +19,7 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 220663488512
-    m_Localized: Quit
+    m_Localized: Exit
     m_Metadata:
       m_Items: []
   - m_Id: 189613056000
