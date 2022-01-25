@@ -5,7 +5,7 @@ namespace GameMechanics
     public class ArcadeGameModel
     {
         private PlayerModel _playerModel;
-        private const float Timer = 30;
+        private const float Timer = 5;
         private float _spawnInterval = 1f;
         
         public ArcadeGameModel(PlayerModel playerModel)

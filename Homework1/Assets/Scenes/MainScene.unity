@@ -210,7 +210,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -615,8 +615,8 @@ RectTransform:
   m_Father: {fileID: 2121902819}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 75, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3536,8 +3536,8 @@ RectTransform:
   m_Father: {fileID: 2091759248}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 75, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3744,7 +3744,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5768,6 +5768,7 @@ MonoBehaviour:
   _crewmatePrefab: {fileID: 7984957117268682624, guid: eb3ae3b230bfdf1459cd3dd7748850ca, type: 3}
   _impostorPrefab: {fileID: 4394183758847195485, guid: 69630e3b90880254d838f244c3d2c03f, type: 3}
   _bonusPrefab: {fileID: 7984957117268682624, guid: 2b1913c669e2d7341bed3b223d1f17df, type: 3}
+  _superCrewmatePrefab: {fileID: 6716350178332559034, guid: d435a3d3937c61243841be4080a4c959, type: 3}
   _missSound: {fileID: 5792091206773383846}
 --- !u!4 &5792091206773383845
 Transform:
@@ -5897,7 +5898,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &8588596035487708215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6407,7 +6408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!222 &8588596035944860482
 CanvasRenderer:
   m_ObjectHideFlags: 0

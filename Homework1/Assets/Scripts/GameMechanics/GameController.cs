@@ -12,6 +12,7 @@ namespace GameMechanics
         [SerializeField] private GameObject _crewmatePrefab;
         [SerializeField] private GameObject _impostorPrefab;
         [SerializeField] private GameObject _bonusPrefab;
+        [SerializeField] private GameObject _superCrewmatePrefab;
         [SerializeField] private AudioSource _missSound;
 
         private Camera _cam;
@@ -133,16 +134,30 @@ namespace GameMechanics
         private IEnumerator ArcadeInputCoroutine()
         {
             var counter = _modelManager.ArcadeGameModel.CurTimer;
+            var endProcessStarted = false;
             
             while (true)
             {
-                counter -= Time.deltaTime;
-                _modelManager.ArcadeGameModel.OnChangeTime(counter);
-
+                /*
                 if (counter <= 0)
                 {
                     ProcessGameEnd();
                 }
+                */
+                if (endProcessStarted == false && counter <= 2f)
+                {
+                    ProcessSpecialGameEnd();
+                    endProcessStarted = true;
+                }
+                
+                counter -= Time.deltaTime;
+                
+                if (endProcessStarted && counter <= 0)
+                {
+                    counter = 0.01f;
+                }
+                
+                _modelManager.ArcadeGameModel.OnChangeTime(counter);
                 
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -168,6 +183,11 @@ namespace GameMechanics
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
                             amogus.Clicked();
+                        }
+                        else if (amogus.Type == IAmogus.AmogusType.SuperCrewmate)
+                        {
+                            _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
+                            amogus.Clicked(pos);
                         }
                     }
                 }
@@ -251,6 +271,67 @@ namespace GameMechanics
                 a.GetComponent<IAmogus>().SafeDestroy();
             }
         }
+
+        private void ProcessSpecialGameEnd()
+        {
+            StartCoroutine(ProcessSpecialGameEndCoroutine(6.5f));
+        }
+
+        private IEnumerator ProcessSpecialGameEndCoroutine(float delayTime)
+        {
+            StopCoroutine(_spawnBallsCoroutine);
+
+            while (true)
+            {
+                if (GameObject.FindGameObjectsWithTag("Amogus").Length == 0)
+                {
+                    break;
+                }
+
+                yield return new WaitForSeconds(0.2f);
+            }
+            
+            yield return new WaitForSeconds(1f);
+
+            SpawnSuperCrewmate();
+            
+            while (true)
+            {
+                if (GameObject.FindGameObjectsWithTag("Amogus").Length == 0)
+                {
+                    break;
+                }
+
+                yield return new WaitForSeconds(0.2f);
+            }
+            
+            yield return new WaitForSeconds(1f);
+            
+            StopCoroutine(_inputCoroutine);
+            if (_endAnimation == null)
+            {
+                _endAnimation = Instantiate(_endGameWalkPrefab);
+            }
+
+            var amoguses = GameObject.FindGameObjectsWithTag("Amogus");
+            foreach (var a in amoguses)
+            {
+                a.GetComponent<IAmogus>().SafeDestroy();
+            }
+            
+            _modelManager.ArcadeGameModel.OnChangeTime(0f);
+        }
+
+        private void SpawnSuperCrewmate()
+        {
+            var pos = new Vector3(Random.Range(-_width, _width) * 0.15f, -_height, -1);
+            var amogus = Instantiate(_superCrewmatePrefab, pos, Quaternion.identity);
+            
+            amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, 0, this);
+            amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
+            amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
+        }
+        
         
         private void CloseEndAnimation()
         {

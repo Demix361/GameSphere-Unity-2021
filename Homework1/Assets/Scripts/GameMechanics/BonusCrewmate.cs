@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using DG.Tweening;
-
 
 namespace GameMechanics
 {
@@ -66,6 +64,11 @@ namespace GameMechanics
                 transform.localScale += deltaScale * Time.deltaTime;
                 yield return null;
             }
+        }
+        
+        public void Clicked(Vector3 pos)
+        {
+            
         }
         
         public void Clicked()

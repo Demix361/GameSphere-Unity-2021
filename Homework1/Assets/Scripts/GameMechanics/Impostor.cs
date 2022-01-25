@@ -66,6 +66,11 @@ namespace GameMechanics
             }
         }
         
+        public void Clicked(Vector3 pos)
+        {
+            
+        }
+        
         public void Clicked()
         {
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();

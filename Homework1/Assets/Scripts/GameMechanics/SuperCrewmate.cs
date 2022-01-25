@@ -1,25 +1,27 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace GameMechanics
 {
-    public class Crewmate : MonoBehaviour, IAmogus
+    public class SuperCrewmate : MonoBehaviour, IAmogus
     {
-        [SerializeField] private GameObject _particleSystemPrefab;
+        [FormerlySerializedAs("_particleSystemPrefab")] [SerializeField] private GameObject _popParticleSystemPrefab;
+        [SerializeField] private GameObject _destroyParticleSystemPrefab;
         [SerializeField] private AmogusInfo[] _amogusInfos;
         [SerializeField] private GameObject _popSound;
         
         private GameController _gameController;
-        private float _scaleSpeed;
+        private Vector3 _deltaScale;
         private bool _destroyed;
+        private int _touchCount = 0;
 
-        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Crewmate;
+        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.SuperCrewmate;
         public AmogusInfo Info { get; private set; }
 
         public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController)
         {
-            _scaleSpeed = scaleSpeed;
             _gameController = gameController;
             Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
             
@@ -31,8 +33,8 @@ namespace GameMechanics
                 var ls = transform.localScale;
                 transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
             }
-            
-            StartCoroutine(LifeCycle());
+
+            _deltaScale = transform.localScale * 0.02f;
         }
         
         private void OnTriggerExit2D(Collider2D other)
@@ -46,30 +48,35 @@ namespace GameMechanics
         
         private IEnumerator LifeCycle()
         {
-            var scale = transform.localScale;
-            var deltaScale = new Vector3(scale.x * _scaleSpeed, scale.y * _scaleSpeed, 0);
-
-            while (true)
-            {
-                transform.localScale += deltaScale * Time.deltaTime;
-                yield return null;
-            }
+            yield return new WaitForSeconds(4.5f);
+            Instantiate(_destroyParticleSystemPrefab, transform.position, Quaternion.identity);
+            SafeDestroy();
         }
 
-        public void Clicked(Vector3 pos)
+        public void Clicked()
         {
             
         }
         
-        public void Clicked()
+        public void Clicked(Vector3 pos)
         {
-            var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-            var ps = particleSystem.textureSheetAnimation;
-            ps.SetSprite(0, Info.miniSprite);
+            _touchCount += 1;
+            var psPos = new Vector3(pos.x, pos.y, transform.position.z);
+            Instantiate(_popParticleSystemPrefab, psPos, Quaternion.identity);
+
+            if (_touchCount == 1)
+            {
+                var rb = GetComponent<Rigidbody2D>();
+                rb.gravityScale = 0;
+                rb.velocity = new Vector2(0, 0);
+                
+                StartCoroutine(LifeCycle());
+            }
+
+            transform.position += (transform.position - psPos) * 0.06f;
+            transform.localScale += _deltaScale;
 
             Instantiate(_popSound);
-            
-            SafeDestroy();
         }
 
         public void SafeDestroy()

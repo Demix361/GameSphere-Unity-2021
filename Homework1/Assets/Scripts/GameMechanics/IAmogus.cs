@@ -1,4 +1,6 @@
-﻿namespace GameMechanics
+﻿using UnityEngine;
+
+namespace GameMechanics
 {
     public interface IAmogus
     {
@@ -10,11 +12,13 @@
         {
             Crewmate,
             Bonus,
-            Impostor
+            Impostor,
+            SuperCrewmate
         }
 
         public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController);
         public void Clicked();
+        public void Clicked(Vector3 pos);
         public void SafeDestroy();
     }
 }
