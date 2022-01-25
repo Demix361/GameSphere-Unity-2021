@@ -70,6 +70,9 @@ namespace UI
             _settingsWindow.ApplyEvent -= OnApply;
             _settingsWindow.CancelEvent -= OnCancel;
             _settingsWindow.ResetProgressEvent -= OnResetProgress;
+            _settingsWindow.LanguageEvent -= OnOpenLanguage;
+            _settingsWindow.ChangeMusicVolume -= OnChangeMusicVolume;
+            _settingsWindow.ChangeEffectsVolume -= OnChangeEffectsVolume;
         }
     }
 }
