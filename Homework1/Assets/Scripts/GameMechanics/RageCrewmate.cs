@@ -20,9 +20,6 @@ namespace GameMechanics
         public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController)
         {
             _gameController = gameController;
-            //Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
-            
-            //GetComponent<SpriteRenderer>().sprite = Info.crewmateSprite;
             GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder + 1;
             _bodySprite.sortingOrder = minSortingOrder;
             
@@ -30,11 +27,7 @@ namespace GameMechanics
             {
                 var ls = transform.localScale;
                 transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
-                //var bls = bonus.transform.localScale;
-                //bonus.transform.localScale = new Vector3(-bls.x, bls.y, bls.z);
             }
-            
-            //StartCoroutine(LifeCycle());
         }
         
         private void OnTriggerExit2D(Collider2D other)
@@ -48,18 +41,13 @@ namespace GameMechanics
 
         public void Clicked(Vector3 pos)
         {
-            
+            Clicked();
         }
         
         public void Clicked()
         {
-            print("CLICKED");
-            var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-            //var ps = particleSystem.textureSheetAnimation;
-            //ps.SetSprite(0, Info.miniSprite);
-
+            Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity);
             Instantiate(_popSound);
-            
             SafeDestroy();
         }
 

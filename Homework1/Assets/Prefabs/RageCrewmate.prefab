@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2069686741810383722}
   - component: {fileID: 2011316161868543859}
   m_Layer: 0
-  m_Name: RageAmogus
+  m_Name: RageCrewmate
   m_TagString: Amogus
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fd39aaec6d74ec0b6f5ae9f6ad6683f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _particleSystemPrefab: {fileID: 4057954203615078466, guid: ea3407efa5a86c341b681c42a45e3a09, type: 3}
+  _particleSystemPrefab: {fileID: 4057954203615078466, guid: a7a6cc61a8641954a8238990706c6cd4, type: 3}
   _popSound: {fileID: 1909859319568140973, guid: a85a9c3a72160034d9c71112a1f89183, type: 3}
   _bodySprite: {fileID: 8683420804717875880}
 --- !u!1 &8683420804717875887
