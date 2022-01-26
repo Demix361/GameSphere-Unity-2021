@@ -11,7 +11,7 @@ namespace GameMechanics
         [SerializeField] private GameObject _endGameWalkPrefab;
         [SerializeField] private GameObject _crewmatePrefab;
         [SerializeField] private GameObject _impostorPrefab;
-        [SerializeField] private GameObject _bonusPrefab;
+        [SerializeField] private GameObject _ragePrefab;
         [SerializeField] private GameObject _superCrewmatePrefab;
         [SerializeField] private AudioSource _missSound;
 
@@ -173,12 +173,12 @@ namespace GameMechanics
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
                             amogus.Clicked();
                         }
-                        else if (amogus.Type == IAmogus.AmogusType.Bonus)
+                        /* else if (amogus.Type == IAmogus.AmogusType.Bonus)
                         {
                             counter += 3;
                             _modelManager.ArcadeGameModel.OnChangeTime(counter);
                             amogus.Clicked();
-                        }
+                        }*/
                         else if (amogus.Type == IAmogus.AmogusType.Impostor)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
@@ -188,6 +188,11 @@ namespace GameMechanics
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
                             amogus.Clicked(pos);
+                        }
+                        else if (amogus.Type == IAmogus.AmogusType.Rage)
+                        {
+                            amogus.Clicked();
+                            StartRageSpawn();
                         }
                     }
                 }
@@ -204,29 +209,32 @@ namespace GameMechanics
             var defaultC = _modelManager.ArcadeGameModel.DefaultChance;
             var impostorC = _modelManager.ArcadeGameModel.ImposterChance;
             var bonusC = _modelManager.ArcadeGameModel.BonusChance;
+            var lastRageSpawn = _modelManager.ArcadeGameModel.CurTimer;
+            var lastName2Spawn = _modelManager.ArcadeGameModel.CurTimer;
+            var lastName3Spawn = _modelManager.ArcadeGameModel.CurTimer;
             
             while (true)
             {
                 var pos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, z);
                 GameObject amogus;
-
                 var lastSortingOrder = sortingOrder;
+                var newAmogusType = GetArcadeAmogus(lastRageSpawn, lastName2Spawn, lastName3Spawn);
                 
-                var typeChance = Random.Range(0f, defaultC + impostorC + bonusC);
-                if (typeChance <= defaultC)
-                {
-                    amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
-                    sortingOrder += 1;
-                }
-                else if (typeChance <= defaultC + impostorC)
+                if (newAmogusType == IAmogus.AmogusType.Impostor)
                 {
                     amogus = Instantiate(_impostorPrefab, pos, Quaternion.identity);
                     sortingOrder += 2;
                 }
+                else if (newAmogusType == IAmogus.AmogusType.Rage)
+                {
+                    amogus = Instantiate(_ragePrefab, pos, Quaternion.identity);
+                    sortingOrder += 2;
+                    lastRageSpawn = _modelManager.ArcadeGameModel.CurTimer;
+                }
                 else
                 {
-                    amogus = Instantiate(_bonusPrefab, pos, Quaternion.identity);
-                    sortingOrder += 2;
+                    amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
+                    sortingOrder += 1;
                 }
                 
                 amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, lastSortingOrder, this);
@@ -255,6 +263,11 @@ namespace GameMechanics
             }
         }
 
+        private void StartRageSpawn()
+        {
+            
+        }
+        
         private void ProcessGameEnd()
         {
             StopCoroutine(_spawnBallsCoroutine);
@@ -348,6 +361,37 @@ namespace GameMechanics
             res.y = Random.Range(450f, 630f);
             
             return res;
+        }
+
+        private IAmogus.AmogusType GetArcadeAmogus(float lastRageSpawn, float lastName2Spawn, float lastName3Spawn)
+        {
+            var typeChance = Random.Range(0f, 1f);
+            var imposterChance = _modelManager.ArcadeGameModel.ImposterChance;
+            var bonusChance = _modelManager.ArcadeGameModel.BonusChance;
+            
+            if (typeChance < imposterChance)
+            {
+                return IAmogus.AmogusType.Impostor;
+            }
+            else if (typeChance < imposterChance + bonusChance && _modelManager.ArcadeGameModel.CurTimer > 10f)
+            {
+                var bonusTypeValue = Random.Range(0, 3);
+
+                if (bonusTypeValue == 0 && lastRageSpawn - _modelManager.ArcadeGameModel.CurTimer > 10f)
+                {
+                    return IAmogus.AmogusType.Rage;
+                }
+                else if (bonusTypeValue == 1 && lastName2Spawn - _modelManager.ArcadeGameModel.CurTimer > 10f)
+                {
+                    return IAmogus.AmogusType.Rage;
+                }
+                else if (bonusTypeValue == 2 && lastName3Spawn - _modelManager.ArcadeGameModel.CurTimer > 10f)
+                {
+                    return IAmogus.AmogusType.Rage;
+                }
+            }
+            
+            return IAmogus.AmogusType.Crewmate;
         }
     }
 }

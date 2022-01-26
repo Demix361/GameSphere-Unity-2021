@@ -13,7 +13,8 @@ namespace GameMechanics
             Crewmate,
             Bonus,
             Impostor,
-            SuperCrewmate
+            SuperCrewmate,
+            Rage
         }
 
         public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController);

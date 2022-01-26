@@ -61,7 +61,7 @@ namespace GameMechanics
             
             while (true)
             {
-                transform.localScale += deltaScale * Time.deltaTime;
+                //transform.localScale += deltaScale * Time.deltaTime;
                 yield return null;
             }
         }

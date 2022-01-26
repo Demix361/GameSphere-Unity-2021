@@ -5767,7 +5767,7 @@ MonoBehaviour:
   _endGameWalkPrefab: {fileID: 4810252127239303437, guid: eeb5f14f915771248a4724b3f9aea73a, type: 3}
   _crewmatePrefab: {fileID: 7984957117268682624, guid: eb3ae3b230bfdf1459cd3dd7748850ca, type: 3}
   _impostorPrefab: {fileID: 4394183758847195485, guid: 69630e3b90880254d838f244c3d2c03f, type: 3}
-  _bonusPrefab: {fileID: 7984957117268682624, guid: 2b1913c669e2d7341bed3b223d1f17df, type: 3}
+  _ragePrefab: {fileID: 8683420804709069322, guid: 2164f76119bb38840bc7af154b40902b, type: 3}
   _superCrewmatePrefab: {fileID: 6716350178332559034, guid: d435a3d3937c61243841be4080a4c959, type: 3}
   _missSound: {fileID: 5792091206773383846}
 --- !u!4 &5792091206773383845
@@ -6408,7 +6408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &8588596035944860482
 CanvasRenderer:
   m_ObjectHideFlags: 0

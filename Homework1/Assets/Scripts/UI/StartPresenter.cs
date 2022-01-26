@@ -28,7 +28,6 @@ namespace UI
 
         public void OnOpen()
         {
-            Debug.Log("StartPresenter OnOpen");
             var scoreC = Convert.ToString(_playerModel.HighScoreClassic);
             var scoreA = Convert.ToString(_playerModel.HighScoreArcade);
             _startWindow.SetHighScores(scoreC, scoreA);
@@ -64,7 +63,6 @@ namespace UI
 
         public void OnClose()
         {
-            Debug.Log("StartPresenter OnClose");
             _startWindow.StartClassicEvent -= OnStartWindowOnStartClassicEvent;
             _startWindow.StartArcadeEvent -= OnStartWindowOnStartArcadeEvent;
             _startWindow.SettingsEvent -= OnStartWindowOnSettingsEvent;

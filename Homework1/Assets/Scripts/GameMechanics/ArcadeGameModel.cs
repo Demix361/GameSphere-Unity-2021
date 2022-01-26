@@ -5,7 +5,7 @@ namespace GameMechanics
     public class ArcadeGameModel
     {
         private PlayerModel _playerModel;
-        private const float Timer = 5;
+        private const float Timer = 60;
         private float _spawnInterval = 1f;
         
         public ArcadeGameModel(PlayerModel playerModel)
@@ -27,9 +27,9 @@ namespace GameMechanics
             }
         }
         public int Points { get; set; } = 0;
-        public float ImposterChance { get; } = 0.1f;
+        public float ImposterChance { get; } = 0.15f;
         public float DefaultChance { get; } = 0.8f;
-        public float BonusChance { get; } = 0.1f;
+        public float BonusChance { get; } = 0.15f;
         
         public event Action EndGameEvent;
         public event Action<int> ChangePointsEvent;
