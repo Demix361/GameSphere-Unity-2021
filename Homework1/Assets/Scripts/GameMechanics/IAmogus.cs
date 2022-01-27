@@ -13,7 +13,7 @@ namespace GameMechanics
             Crewmate,
             Bonus,
             Impostor,
-            SuperCrewmate,
+            Super,
             Rage,
             Frozen
         }

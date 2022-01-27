@@ -175,6 +175,9 @@ namespace GameMechanics
             var counter = _modelManager.ArcadeGameModel.CurTimer;
             var endProcessStarted = false;
             _stopTimer = false;
+            var comboStarted = false;
+            var lastComboHit = 0f;
+            var comboLength = 0;
             
             while (true)
             {
@@ -193,9 +196,33 @@ namespace GameMechanics
                 {
                     counter = 0.01f;
                 }
-                
                 _modelManager.ArcadeGameModel.OnChangeTime(counter);
 
+                if (comboStarted && lastComboHit - counter > 0.5f)
+                {
+                    // комбо закончилось
+                    if (comboLength >= 3)
+                    {
+                        _modelManager.ArcadeGameModel.OnShowNotification($"Комбо из {comboLength}!\n+{comboLength}",
+                            Color.yellow, new Vector2(0, 0));
+                        _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
+                    }
+
+                    comboStarted = false;
+                    comboLength = 0;
+                }
+                else if (comboStarted && comboLength >= 10)
+                {
+                    // принудительное завершение комбо на 10
+                    _modelManager.ArcadeGameModel.OnShowNotification($"Максимальное комбо!\n+{comboLength}",
+                        Color.red, new Vector2(0, 0));
+                    _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
+                    
+                    comboStarted = false;
+                    comboLength = 0;
+                }
+                
+                // mouse input
                 if (Input.GetMouseButtonDown(0))
                 {
                     var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
@@ -205,7 +232,22 @@ namespace GameMechanics
                     if (a != null && a.CompareTag("Amogus"))
                     {
                         var amogus = a.GetComponent<IAmogus>();
-                        
+
+                        if (amogus.Type == IAmogus.AmogusType.Impostor || amogus.Type == IAmogus.AmogusType.Super)
+                        {
+                            comboStarted = false;
+                            comboLength = 0;
+                        }
+                        else
+                        {
+                            if (!comboStarted)
+                            {
+                                comboStarted = true;
+                            }
+                            comboLength += 1;
+                            lastComboHit = counter;
+                        }
+
                         if (amogus.Type == IAmogus.AmogusType.Crewmate)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
@@ -217,7 +259,7 @@ namespace GameMechanics
                             _modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
                             amogus.Clicked();
                         }
-                        else if (amogus.Type == IAmogus.AmogusType.SuperCrewmate)
+                        else if (amogus.Type == IAmogus.AmogusType.Super)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
                             amogus.Clicked(pos);
@@ -257,7 +299,7 @@ namespace GameMechanics
                                 _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
                                 amogus.Clicked();
                             }
-                            else if (amogus.Type == IAmogus.AmogusType.SuperCrewmate)
+                            else if (amogus.Type == IAmogus.AmogusType.Super)
                             {
                                 _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
                                 amogus.Clicked(pos);

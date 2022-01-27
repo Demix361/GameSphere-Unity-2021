@@ -17,7 +17,7 @@ namespace GameMechanics
         private bool _destroyed;
         private int _touchCount = 0;
 
-        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.SuperCrewmate;
+        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Super;
         public AmogusInfo Info { get; private set; }
 
         public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController)
