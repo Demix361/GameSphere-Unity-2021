@@ -14,7 +14,8 @@ namespace GameMechanics
             Bonus,
             Impostor,
             SuperCrewmate,
-            Rage
+            Rage,
+            Frozen
         }
 
         public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController);

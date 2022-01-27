@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace UI
 {
@@ -22,6 +23,12 @@ namespace UI
             _gameModel.ChangePointsEvent += OnChangePointsEvent;
             _gameModel.ChangeTimeEvent += OnChangeTimeEvent;
             _gameModel.EndGameEvent += OnEndGameEvent;
+            _gameModel.ShowNotification += OnShowNotification;
+        }
+
+        private void OnShowNotification(string text, Color color, Vector2 pos)
+        {
+            _gameWindow.ShowNotification(text, color, pos);
         }
 
         private void OnEndGameEvent()
@@ -53,6 +60,7 @@ namespace UI
             _gameModel.ChangePointsEvent -= OnChangePointsEvent;
             _gameModel.ChangeTimeEvent -= OnChangeTimeEvent;
             _gameModel.EndGameEvent -= OnEndGameEvent;
+            _gameModel.ShowNotification -= OnShowNotification;
         }
     }
 }

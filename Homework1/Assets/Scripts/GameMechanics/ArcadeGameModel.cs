@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GameMechanics
 {
@@ -36,6 +37,7 @@ namespace GameMechanics
         public event Action<float> ChangeTimeEvent;
         public event Action StartGame;
         public event Action CloseEndAnimation;
+        public event Action<string, Color, Vector2> ShowNotification;
         
         
         public void OnCloseEndAnimation()
@@ -89,6 +91,11 @@ namespace GameMechanics
             // (3): Смещение графика по X;
             // (4): Предел к которому стремится функция;
             return (_spawnInterval - 0.3f) / (0.045f * value + 1) + 0.3f;
+        }
+
+        public void OnShowNotification(string text, Color color, Vector2 pos)
+        {
+            ShowNotification?.Invoke(text, color, pos);
         }
     }
 }

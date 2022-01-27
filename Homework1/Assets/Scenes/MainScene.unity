@@ -5768,6 +5768,7 @@ MonoBehaviour:
   _crewmatePrefab: {fileID: 7984957117268682624, guid: eb3ae3b230bfdf1459cd3dd7748850ca, type: 3}
   _impostorPrefab: {fileID: 4394183758847195485, guid: 69630e3b90880254d838f244c3d2c03f, type: 3}
   _ragePrefab: {fileID: 8683420804709069322, guid: 2164f76119bb38840bc7af154b40902b, type: 3}
+  _frozenPrefab: {fileID: 2506254002583536189, guid: 8358809e8893b674f8666019c4b3cda9, type: 3}
   _superCrewmatePrefab: {fileID: 6716350178332559034, guid: d435a3d3937c61243841be4080a4c959, type: 3}
   _missSound: {fileID: 5792091206773383846}
 --- !u!4 &5792091206773383845
@@ -7488,6 +7489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointsText: {fileID: 8588596036656122182}
   timeText: {fileID: 8588596037071188008}
+  notificationTextPrefab: {fileID: 3675240033877965374, guid: b7cfb2664d096e04c81af7465bc39450, type: 3}
 --- !u!224 &8588596036715369799
 RectTransform:
   m_ObjectHideFlags: 0

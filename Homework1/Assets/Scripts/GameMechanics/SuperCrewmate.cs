@@ -34,7 +34,7 @@ namespace GameMechanics
                 transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
             }
 
-            _deltaScale = transform.localScale * 0.02f;
+            _deltaScale = transform.localScale * 0.01f;
         }
         
         private void OnTriggerExit2D(Collider2D other)
@@ -73,7 +73,7 @@ namespace GameMechanics
                 StartCoroutine(LifeCycle());
             }
 
-            transform.position += (transform.position - psPos) * 0.06f;
+            transform.position += (transform.position - psPos) * 0.03f;
             transform.localScale += _deltaScale;
 
             Instantiate(_popSound);
