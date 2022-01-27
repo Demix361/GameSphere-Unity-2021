@@ -178,6 +178,9 @@ namespace GameMechanics
             var comboStarted = false;
             var lastComboHit = 0f;
             var comboLength = 0;
+            var comboLevel = 0;
+            var comboCount = 0;
+            var lastComboScored = 0f;
             
             while (true)
             {
@@ -206,6 +209,8 @@ namespace GameMechanics
                         _modelManager.ArcadeGameModel.OnShowNotification($"Комбо из {comboLength}!\n+{comboLength}",
                             Color.yellow, new Vector2(0, 0));
                         _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
+                        lastComboScored = counter;
+                        comboCount += 1;
                     }
 
                     comboStarted = false;
@@ -217,9 +222,32 @@ namespace GameMechanics
                     _modelManager.ArcadeGameModel.OnShowNotification($"Максимальное комбо!\n+{comboLength}",
                         Color.red, new Vector2(0, 0));
                     _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
+
+                    comboCount += 1;
                     
                     comboStarted = false;
                     comboLength = 0;
+                }
+                
+                /*
+                if (lastComboScored - counter > 3)
+                {
+                    comboCount = 0;
+                    comboLevel = 0;
+                }
+                */
+                
+                if (comboCount >= 3 && comboLevel < 5)
+                {
+                    // увеличение уровня комбо
+                    comboCount = 0;
+                    comboLevel += 1;
+
+                    var points = comboLevel * 10;
+                    
+                    _modelManager.ArcadeGameModel.OnShowNotification($"{comboLevel * 3} комбо подряд!\n+{points}",
+                        Color.green, new Vector2(0, 2));
+                    _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + points);
                 }
                 
                 // mouse input
@@ -237,6 +265,9 @@ namespace GameMechanics
                         {
                             comboStarted = false;
                             comboLength = 0;
+
+                            comboCount = 0;
+                            comboLevel = 0;
                         }
                         else
                         {
