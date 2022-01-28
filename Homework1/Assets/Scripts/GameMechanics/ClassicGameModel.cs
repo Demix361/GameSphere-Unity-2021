@@ -12,7 +12,7 @@ namespace GameMechanics
         private PlayerModel _playerModel;
         public float ImposterChance { get; } = 0.1f;
         public float DefaultChance { get; } = 0.9f;
-        public float ScaleSpeed { get; } = 0.4f;
+        public int MoneyForGame { get; set; } = 0;
         
         public ClassicGameModel(PlayerModel playerModel)
         {
@@ -124,6 +124,9 @@ namespace GameMechanics
             {
                 _playerModel.HighScoreClassic = Points;
             }
+            
+            MoneyForGame = Points / 5;
+            _playerModel.AddMoney(MoneyForGame);
             
             EndGameEvent?.Invoke();
         }

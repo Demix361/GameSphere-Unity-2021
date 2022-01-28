@@ -30,7 +30,9 @@ namespace UI
         {
             var scoreC = Convert.ToString(_playerModel.HighScoreClassic);
             var scoreA = Convert.ToString(_playerModel.HighScoreArcade);
+            var money = Convert.ToString(_playerModel.Money);
             _startWindow.SetHighScores(scoreC, scoreA);
+            _startWindow.SetMoney(money);
             _mainMenuModel.StartSpawn();
             
             _startWindow.StartClassicEvent += OnStartWindowOnStartClassicEvent;

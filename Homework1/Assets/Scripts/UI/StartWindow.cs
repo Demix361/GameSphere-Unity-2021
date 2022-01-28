@@ -8,6 +8,7 @@ namespace UI
     {
         [SerializeField] private Text highScoreClassicText;
         [SerializeField] private Text highScoreArcadeText;
+        [SerializeField] private Text moneyText;
 
         public event Action StartClassicEvent;
         public event Action StartArcadeEvent;
@@ -38,6 +39,11 @@ namespace UI
         {
             highScoreClassicText.text = newHighScoreC;
             highScoreArcadeText.text = newHighScoreA;
+        }
+
+        public void SetMoney(string money)
+        {
+            moneyText.text = money;
         }
     }
 }

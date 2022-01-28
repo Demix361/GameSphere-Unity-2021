@@ -30,6 +30,7 @@ namespace GameMechanics
         public float DefaultChance { get; } = 0.8f;
         public float BonusChance { get; } = 0.05f;
         public float MetalChance { get; } = 0.3f;
+        public int MoneyForGame { get; set; } = 0;
         
         public event Action EndGameEvent;
         public event Action<int> ChangePointsEvent;
@@ -96,6 +97,9 @@ namespace GameMechanics
             {
                 _playerModel.HighScoreArcade = Points;
             }
+
+            MoneyForGame = Points / 10;
+            _playerModel.AddMoney(MoneyForGame);
 
             EndGameEvent?.Invoke();
         }

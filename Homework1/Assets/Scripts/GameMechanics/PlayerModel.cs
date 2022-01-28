@@ -11,6 +11,7 @@ namespace GameMechanics
         private float musicVolume;
         private float effectsVolume;
         private int activeLanguage;
+        private int money;
 
         public event Action<float> ChangeMusicVolume;
         public event Action<float> ChangeEffectsVolume;
@@ -60,6 +61,20 @@ namespace GameMechanics
             }
         }
 
+        public int Money
+        {
+            get
+            {
+                money = PlayerPrefs.GetInt("money", 0);
+                return money;
+            }
+            set
+            {
+                money = value;
+                PlayerPrefs.SetInt("money", money);
+            }
+        }
+
         public int HighScoreClassic
         {
             get
@@ -101,6 +116,11 @@ namespace GameMechanics
                 PlayerPrefs.SetInt("activeLanguage", activeLanguage);
                 ChangeLanguage?.Invoke(activeLanguage);
             }
+        }
+
+        public void AddMoney(int add)
+        {
+            Money += add;
         }
     }
 }

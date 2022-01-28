@@ -24,6 +24,7 @@ namespace UI
         public void OnOpen()
         {
             OnSetPoints();
+            OnSetMoney();
             _endWindow.MainMenuEvent += OnMainMenu;
             _endWindow.RestartEvent += OnRestart;
         }
@@ -41,6 +42,11 @@ namespace UI
                 _endWindow.SetPoints("Points: " + Convert.ToString(points));
                 _endWindow.SetHighscore("Highscore: " + Convert.ToString(_playerModel.HighScoreClassic));
             }
+        }
+        
+        private void OnSetMoney()
+        {
+            _endWindow.SetMoney(_gameModel.MoneyForGame, _playerModel.Money);
         }
 
         private void OnMainMenu()
