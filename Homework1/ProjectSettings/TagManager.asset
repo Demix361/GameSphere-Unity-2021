@@ -43,3 +43,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Frozen
+    uniqueID: 1423031247
+    locked: 0
+  - name: Rage
+    uniqueID: 1309277437
+    locked: 0

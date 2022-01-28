@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 1356755005963032612}
   - component: {fileID: 5111784226936503133}
   - component: {fileID: 6713763257268358487}
+  - component: {fileID: 8785924725911757155}
   m_Layer: 0
   m_Name: FrozenCrewmate
   m_TagString: Amogus
@@ -339,3 +340,14 @@ MonoBehaviour:
   _particleSystemPrefab: {fileID: 4057954203615078466, guid: d0ce4c8dea83e164ba24b46bc8163af8, type: 3}
   _popSound: {fileID: 1909859319568140973, guid: a85a9c3a72160034d9c71112a1f89183, type: 3}
   _bodySprite: {fileID: 2506254002559984287}
+--- !u!210 &8785924725911757155
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506254002583536189}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0

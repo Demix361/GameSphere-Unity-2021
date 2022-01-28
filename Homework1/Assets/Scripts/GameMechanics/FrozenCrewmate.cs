@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
-using DG.Tweening;
+using UnityEngine.Rendering;
 
 namespace GameMechanics
 {
@@ -20,8 +19,9 @@ namespace GameMechanics
         public void SetAmogus(int minSortingOrder, GameController gameController)
         {
             _gameController = gameController;
-            GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder + 1;
-            _bodySprite.sortingOrder = minSortingOrder;
+            //GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder + 1;
+            //_bodySprite.sortingOrder = minSortingOrder;
+            GetComponent<SortingGroup>().sortingOrder = minSortingOrder;
             
             if (Random.Range(0, 2) == 0)
             {
