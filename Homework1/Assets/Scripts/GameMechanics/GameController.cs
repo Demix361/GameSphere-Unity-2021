@@ -253,15 +253,7 @@ namespace GameMechanics
                     comboStarted = false;
                     comboLength = 0;
                 }
-                
-                /*
-                if (lastComboScored - counter > 3)
-                {
-                    comboCount = 0;
-                    comboLevel = 0;
-                }
-                */
-                
+
                 if (comboCount >= 3 && comboLevel < 5)
                 {
                     // увеличение уровня комбо
@@ -314,6 +306,8 @@ namespace GameMechanics
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
                             _modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
                             amogus.Clicked();
+                            
+                            StopAllBonuses();
                         }
                         else if (amogus.Type == IAmogus.AmogusType.Super)
                         {
