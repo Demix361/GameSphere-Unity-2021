@@ -11,10 +11,17 @@ namespace UI
         [SerializeField] private Image[] crossImages;
         [SerializeField] private Sprite fullCross;
         [SerializeField] private Sprite emptyCross;
-
+        
+        public event Action PauseEvent;
+        
         public void SetPoints(string points)
         {
             pointsText.text = points;
+        }
+        
+        public void PauseGame()
+        {
+            PauseEvent?.Invoke();
         }
 
         public void SetCrosses(int failed)

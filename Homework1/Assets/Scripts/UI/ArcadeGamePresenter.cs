@@ -8,12 +8,14 @@ namespace UI
         private GameMechanics.ArcadeGameModel _gameModel;
         private ArcadeGameWindow _gameWindow;
         private Action _onExit;
+        private event Action _onPause;
 
-        public ArcadeGamePresenter(GameMechanics.ArcadeGameModel gameModel, ArcadeGameWindow gameWindow, Action onExit)
+        public ArcadeGamePresenter(GameMechanics.ArcadeGameModel gameModel, ArcadeGameWindow gameWindow, Action onExit, Action onPause)
         {
             _gameModel = gameModel;
             _gameWindow = gameWindow;
             _onExit = onExit;
+            _onPause = onPause;
         }
 
         public void OnOpen()
@@ -24,6 +26,12 @@ namespace UI
             _gameModel.ChangeTimeEvent += OnChangeTimeEvent;
             _gameModel.EndGameEvent += OnEndGameEvent;
             _gameModel.ShowNotification += OnShowNotification;
+            _gameWindow.PauseEvent += OnPause;
+        }
+
+        private void OnPause()
+        {
+            _onPause?.Invoke();
         }
 
         private void OnShowNotification(string text, Color color, Vector2 pos)
@@ -61,6 +69,7 @@ namespace UI
             _gameModel.ChangeTimeEvent -= OnChangeTimeEvent;
             _gameModel.EndGameEvent -= OnEndGameEvent;
             _gameModel.ShowNotification -= OnShowNotification;
+            _gameWindow.PauseEvent -= OnPause;
         }
     }
 }

@@ -60,7 +60,17 @@ namespace UI
         public void OnEffectsSliderChanged(float value)
         {
             ChangeEffectsVolume?.Invoke(value);
-            print("VIEW");
+        }
+
+        private void Update()
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                if (Input.GetKey(KeyCode.Escape))
+                {
+                    OnCancel();
+                }
+            }
         }
     }
 }

@@ -27,6 +27,10 @@ namespace GameMechanics
 
         private float z;
         private int sortingOrder;
+        private float curTimeScale;
+        private Coroutine _rageCoroutine;
+        private Coroutine _frozenCoroutine;
+        private Coroutine _endCoroutine;
         
         private enum GameType
         {
@@ -35,7 +39,7 @@ namespace GameMechanics
         }
         private GameType _curGameType;
 
-        
+        // Работает только один раз за все время жизни приложения
         private void Start()
         {
             _cam = Camera.main;
@@ -46,11 +50,31 @@ namespace GameMechanics
             _modelManager.ArcadeGameModel.StartGame += StartArcade;
             _modelManager.ClassicGameModel.CloseEndAnimation += CloseEndAnimation;
             _modelManager.ArcadeGameModel.CloseEndAnimation += CloseEndAnimation;
+
+            _modelManager.ArcadeGameModel.PauseGame += PauseGame;
+            _modelManager.ArcadeGameModel.UnpauseGame += UnpauseGame;
+            _modelManager.ArcadeGameModel.StopGame += StopGame;
+            
+            _modelManager.ClassicGameModel.PauseGame += PauseGame;
+            _modelManager.ClassicGameModel.UnpauseGame += UnpauseGame;
+            _modelManager.ClassicGameModel.StopGame += StopGame;
+        }
+
+        private void PauseGame()
+        {
+            curTimeScale = Time.timeScale;
+            Time.timeScale = 0;
+        }
+        
+        private void UnpauseGame()
+        {
+            Time.timeScale = curTimeScale;
         }
 
         private void StartClassic()
         {
             _curGameType = GameType.Classic;
+            Time.timeScale = 1f;
 
             _spawnBallsCoroutine = StartCoroutine(ClassicSpawnBalls());
             _inputCoroutine = StartCoroutine(ClassicInputCoroutine());
@@ -165,6 +189,7 @@ namespace GameMechanics
         private void StartArcade()
         {
             _curGameType = GameType.Arcade;
+            Time.timeScale = 1f;
 
             _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBalls());
             _inputCoroutine = StartCoroutine(ArcadeInputCoroutine());
@@ -361,8 +386,7 @@ namespace GameMechanics
             var spawnInterval = _modelManager.ArcadeGameModel.SpawnInterval;
             var lastRageSpawn = _modelManager.ArcadeGameModel.CurTimer;
             var lastFrozenSpawn = _modelManager.ArcadeGameModel.CurTimer;
-            //var lastName3Spawn = _modelManager.ArcadeGameModel.CurTimer;
-            
+
             while (true)
             {
                 var pos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, z);
@@ -421,7 +445,7 @@ namespace GameMechanics
 
         private void StartRageSpawn()
         {
-            StartCoroutine(RageSpawnCoroutine());
+            _rageCoroutine = StartCoroutine(RageSpawnCoroutine());
         }
 
         private IEnumerator RageSpawnCoroutine()
@@ -482,6 +506,48 @@ namespace GameMechanics
             Time.timeScale = 1;
         }
         
+        private void StopAllBonuses()
+        {
+            if (_rageCoroutine != null)
+            {
+                StopCoroutine(_rageCoroutine);
+            }
+
+            if (_frozenCoroutine != null)
+            {
+                StopCoroutine(_frozenCoroutine);
+            }
+            
+            Time.timeScale = 1;
+        }
+
+        private void StopGame()
+        {
+            if (_spawnBallsCoroutine != null)
+            {
+                StopCoroutine(_spawnBallsCoroutine);
+            }
+
+            if (_inputCoroutine != null)
+            {
+                StopCoroutine(_inputCoroutine);
+            }
+
+            if (_endCoroutine != null)
+            {
+                StopCoroutine(_endCoroutine);
+            }
+            
+            StopAllBonuses();
+
+            var amoguses = GameObject.FindGameObjectsWithTag("Amogus");
+            foreach (var a in amoguses)
+            {
+                a.GetComponent<IAmogus>().SafeDestroy();
+            }
+        }
+        
+        // Classic game ending
         private void ProcessGameEnd()
         {
             StopCoroutine(_spawnBallsCoroutine);
@@ -498,13 +564,14 @@ namespace GameMechanics
                 a.GetComponent<IAmogus>().SafeDestroy();
             }
         }
-
+        
+        // Arcade game ending
         private void ProcessSpecialGameEnd()
         {
-            StartCoroutine(ProcessSpecialGameEndCoroutine(6.5f));
+            _endCoroutine = StartCoroutine(ProcessSpecialGameEndCoroutine());
         }
 
-        private IEnumerator ProcessSpecialGameEndCoroutine(float delayTime)
+        private IEnumerator ProcessSpecialGameEndCoroutine()
         {
             StopCoroutine(_spawnBallsCoroutine);
 

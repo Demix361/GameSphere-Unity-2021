@@ -6,13 +6,15 @@ namespace UI
     {
         private GameMechanics.ClassicGameModel _gameModel;
         private ClassicGameWindow _gameWindow;
-        private Action _onExit;
+        private event Action _onExit;
+        private event Action _onPause;
 
-        public ClassicGamePresenter(GameMechanics.ClassicGameModel gameModel, ClassicGameWindow gameWindow, Action onExit)
+        public ClassicGamePresenter(GameMechanics.ClassicGameModel gameModel, ClassicGameWindow gameWindow, Action onExit, Action onPause)
         {
             _gameModel = gameModel;
             _gameWindow = gameWindow;
             _onExit = onExit;
+            _onPause = onPause;
         }
 
         public void OnOpen()
@@ -22,6 +24,12 @@ namespace UI
             _gameModel.ChangePointsEvent += OnChangePointsEvent;
             _gameModel.ChangeLivesEvent += OnChangeLivesEvent;
             _gameModel.EndGameEvent += OnEndGameEvent;
+            _gameWindow.PauseEvent += OnPause;
+        }
+        
+        private void OnPause()
+        {
+            _onPause?.Invoke();
         }
 
         private void OnEndGameEvent()
@@ -44,6 +52,7 @@ namespace UI
             _gameModel.ChangePointsEvent -= OnChangePointsEvent;
             _gameModel.ChangeLivesEvent -= OnChangeLivesEvent;
             _gameModel.EndGameEvent -= OnEndGameEvent;
+            _gameWindow.PauseEvent -= OnPause;
         }
     }
 }

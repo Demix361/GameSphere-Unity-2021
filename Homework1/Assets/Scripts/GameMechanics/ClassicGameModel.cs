@@ -53,7 +53,26 @@ namespace GameMechanics
         public event Action<int> ChangeLivesEvent;
         public event Action StartGame;
         public event Action CloseEndAnimation;
+        
+        public event Action PauseGame;
+        public event Action UnpauseGame;
+        
+        public event Action StopGame;
+        
+        public void OnStopGame()
+        {
+            StopGame?.Invoke();
+        }
 
+        public void OnPauseGame()
+        {
+            PauseGame?.Invoke();
+        }
+
+        public void OnUnpauseGame()
+        {
+            UnpauseGame?.Invoke();
+        }
 
         public void OnCloseEndAnimation()
         {
@@ -62,8 +81,10 @@ namespace GameMechanics
         
         public void OnStartGame()
         {
-            CurLives = Lives;
-            Points = 0;
+            //CurLives = Lives;
+            //Points = 0;
+            OnChangeLives(Lives);
+            OnChangePoints(0);
             StartGame?.Invoke();
         }
         

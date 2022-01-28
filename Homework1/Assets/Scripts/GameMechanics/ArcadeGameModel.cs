@@ -36,8 +36,11 @@ namespace GameMechanics
         public event Action<int> ChangePointsEvent;
         public event Action<float> ChangeTimeEvent;
         public event Action StartGame;
+        public event Action PauseGame;
+        public event Action UnpauseGame;
         public event Action CloseEndAnimation;
         public event Action<string, Color, Vector2> ShowNotification;
+        public event Action StopGame;
         
         
         public void OnCloseEndAnimation()
@@ -50,6 +53,21 @@ namespace GameMechanics
             CurTimer = Timer;
             Points = 0;
             StartGame?.Invoke();
+        }
+
+        public void OnStopGame()
+        {
+            StopGame?.Invoke();
+        }
+
+        public void OnPauseGame()
+        {
+            PauseGame?.Invoke();
+        }
+
+        public void OnUnpauseGame()
+        {
+            UnpauseGame?.Invoke();
         }
         
         public void OnChangePoints(int newValue)

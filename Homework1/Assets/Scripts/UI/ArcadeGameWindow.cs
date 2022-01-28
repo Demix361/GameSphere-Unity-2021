@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -10,6 +11,8 @@ namespace UI
         [SerializeField] private Text timeText;
         [SerializeField] private GameObject notificationTextPrefab;
 
+        public event Action PauseEvent;
+        
         public void SetPoints(string text)
         {
             pointsText.text = text;
@@ -29,6 +32,11 @@ namespace UI
             not.transform.position = pos;
 
             StartCoroutine(LifeCycle(not));
+        }
+
+        public void PauseGame()
+        {
+            PauseEvent?.Invoke();
         }
 
         private IEnumerator LifeCycle(GameObject notification)
