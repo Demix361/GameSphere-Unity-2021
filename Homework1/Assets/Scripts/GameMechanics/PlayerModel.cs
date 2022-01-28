@@ -107,7 +107,7 @@ namespace GameMechanics
         {
             get
             {
-                activeLanguage = PlayerPrefs.GetInt("activeLanguage", 2);
+                activeLanguage = PlayerPrefs.GetInt("activeLanguage", -1);
                 return activeLanguage;
             }
             set
