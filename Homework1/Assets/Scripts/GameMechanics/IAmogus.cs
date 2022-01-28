@@ -11,15 +11,15 @@ namespace GameMechanics
         public enum AmogusType
         {
             Crewmate,
-            Bonus,
             Impostor,
             Super,
             Rage,
-            Frozen
+            Frozen,
+            Metal
         }
 
-        public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController);
-        public void Clicked();
+        public void SetAmogus(int minSortingOrder, GameController gameController);
+        public bool Clicked();
         public void Clicked(Vector3 pos);
         public void SafeDestroy();
     }

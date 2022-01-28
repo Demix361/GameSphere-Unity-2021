@@ -6610,6 +6610,7 @@ MonoBehaviour:
   _impostorPrefab: {fileID: 4394183758847195485, guid: 69630e3b90880254d838f244c3d2c03f, type: 3}
   _ragePrefab: {fileID: 8683420804709069322, guid: 2164f76119bb38840bc7af154b40902b, type: 3}
   _frozenPrefab: {fileID: 2506254002583536189, guid: 8358809e8893b674f8666019c4b3cda9, type: 3}
+  _metalPrefab: {fileID: 1884206908338271253, guid: 3575db714b6c4e54593ac28135ea537a, type: 3}
   _superCrewmatePrefab: {fileID: 6716350178332559034, guid: d435a3d3937c61243841be4080a4c959, type: 3}
   _missSound: {fileID: 5792091206773383846}
 --- !u!4 &5792091206773383845

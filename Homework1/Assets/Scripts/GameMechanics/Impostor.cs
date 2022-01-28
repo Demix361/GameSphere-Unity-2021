@@ -15,7 +15,6 @@ namespace GameMechanics
         [SerializeField] private GameObject _imposterSound;
         
         private GameController _gameController;
-        private float _scaleSpeed;
         private bool _destroyed;
         private Sequence _outlineFlashTween;
         private RandomClipPlayer _appearClipPlayer;
@@ -23,9 +22,8 @@ namespace GameMechanics
         public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Impostor;
         public AmogusInfo Info { get; private set; }
 
-        public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController)
+        public void SetAmogus(int minSortingOrder, GameController gameController)
         {
-            _scaleSpeed = scaleSpeed;
             _gameController = gameController;
             Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
 
@@ -41,7 +39,7 @@ namespace GameMechanics
                 transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
             }
             
-            StartCoroutine(LifeCycle());
+            _outlineFlashTween = DOTween.Sequence().Append(_outline.DOColor(Color.red, 10f).SetEase(Ease.Flash, 20, 0));
         }
         
         private void OnTriggerExit2D(Collider2D other)
@@ -51,27 +49,13 @@ namespace GameMechanics
                 SafeDestroy();
             }
         }
-        
-        private IEnumerator LifeCycle()
-        {
-            var scale = transform.localScale;
-            var deltaScale = new Vector3(scale.x * _scaleSpeed, scale.y * _scaleSpeed, 0);
-            
-            _outlineFlashTween = DOTween.Sequence().Append(_outline.DOColor(Color.red, 10f).SetEase(Ease.Flash, 20, 0));
-            
-            while (true)
-            {
-                //transform.localScale += deltaScale * Time.deltaTime;
-                yield return null;
-            }
-        }
-        
+
         public void Clicked(Vector3 pos)
         {
             
         }
         
-        public void Clicked()
+        public bool Clicked()
         {
             var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
             var ps = particleSystem.textureSheetAnimation;
@@ -81,6 +65,7 @@ namespace GameMechanics
             Instantiate(_popSound);
             
             SafeDestroy();
+            return true;
         }
 
         public void SafeDestroy()

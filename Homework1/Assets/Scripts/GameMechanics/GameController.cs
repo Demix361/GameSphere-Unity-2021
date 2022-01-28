@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using Random = UnityEngine.Random;
 
 namespace GameMechanics
@@ -14,6 +13,7 @@ namespace GameMechanics
         [SerializeField] private GameObject _impostorPrefab;
         [SerializeField] private GameObject _ragePrefab;
         [SerializeField] private GameObject _frozenPrefab;
+        [SerializeField] private GameObject _metalPrefab;
         [SerializeField] private GameObject _superCrewmatePrefab;
         [SerializeField] private AudioSource _missSound;
 
@@ -85,7 +85,7 @@ namespace GameMechanics
             while (true)
             {
                 // for mouse input
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && Application.platform == RuntimePlatform.WindowsEditor)
                 {
                     var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
                     var a = Physics2D.OverlapPoint(pos);
@@ -172,7 +172,7 @@ namespace GameMechanics
                     amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
                     sortingOrder += 1;
                 }
-                amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ClassicGameModel.ScaleSpeed, lastSortingOrder, this);
+                amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
                 amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
                 amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 
@@ -268,7 +268,7 @@ namespace GameMechanics
                 }
                 
                 // mouse input
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && Application.platform == RuntimePlatform.WindowsEditor)
                 {
                     var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
                     
@@ -324,6 +324,14 @@ namespace GameMechanics
                             amogus.Clicked();
                             StartFrozen();
                         }
+                        else if (amogus.Type == IAmogus.AmogusType.Metal)
+                        {
+                            if (amogus.Clicked())
+                            {
+                                _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 5);
+                                _modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
+                            }
+                        }
                     }
                 }
 
@@ -338,7 +346,25 @@ namespace GameMechanics
                         if (a != null && a.CompareTag("Amogus"))
                         {
                             var amogus = a.GetComponent<IAmogus>();
-                        
+                            
+                            if (amogus.Type == IAmogus.AmogusType.Impostor || amogus.Type == IAmogus.AmogusType.Super)
+                            {
+                                comboStarted = false;
+                                comboLength = 0;
+
+                                comboCount = 0;
+                                comboLevel = 0;
+                            }
+                            else
+                            {
+                                if (!comboStarted)
+                                {
+                                    comboStarted = true;
+                                }
+                                comboLength += 1;
+                                lastComboHit = counter;
+                            }
+                            
                             if (amogus.Type == IAmogus.AmogusType.Crewmate)
                             {
                                 _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
@@ -347,7 +373,10 @@ namespace GameMechanics
                             else if (amogus.Type == IAmogus.AmogusType.Impostor)
                             {
                                 _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
+                                _modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
                                 amogus.Clicked();
+                            
+                                StopAllBonuses();
                             }
                             else if (amogus.Type == IAmogus.AmogusType.Super)
                             {
@@ -363,6 +392,14 @@ namespace GameMechanics
                             {
                                 amogus.Clicked();
                                 StartFrozen();
+                            }
+                            else if (amogus.Type == IAmogus.AmogusType.Metal)
+                            {
+                                if (amogus.Clicked())
+                                {
+                                    _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 5);
+                                    _modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
+                                }
                             }
                         }
                     }
@@ -405,13 +442,18 @@ namespace GameMechanics
                     sortingOrder += 2;
                     lastFrozenSpawn = _modelManager.ArcadeGameModel.CurTimer;
                 }
+                else if (newAmogusType == IAmogus.AmogusType.Metal)
+                {
+                    amogus = Instantiate(_metalPrefab, pos, Quaternion.identity);
+                    sortingOrder += 2;
+                }
                 else
                 {
                     amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
                     sortingOrder += 1;
                 }
                 
-                amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, lastSortingOrder, this);
+                amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
                 amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
                 amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
                 
@@ -468,7 +510,7 @@ namespace GameMechanics
                 sortingOrder += 1;
 
                 amogus.GetComponent<IAmogus>()
-                    .SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, lastSortingOrder, this);
+                    .SetAmogus(lastSortingOrder, this);
                 amogus.GetComponent<Rigidbody2D>().AddForce(force);
                 amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 
@@ -615,7 +657,7 @@ namespace GameMechanics
             var pos = new Vector3(Random.Range(-_width, _width) * 0.15f, -_height, -1);
             var amogus = Instantiate(_superCrewmatePrefab, pos, Quaternion.identity);
             
-            amogus.GetComponent<IAmogus>().SetAmogus(_modelManager.ArcadeGameModel.ScaleSpeed, 0, this);
+            amogus.GetComponent<IAmogus>().SetAmogus(0, this);
             amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
             amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
         }
@@ -654,12 +696,17 @@ namespace GameMechanics
             var typeChance = Random.Range(0f, 1f);
             var imposterChance = _modelManager.ArcadeGameModel.ImposterChance;
             var bonusChance = _modelManager.ArcadeGameModel.BonusChance;
+            var metalChance = _modelManager.ArcadeGameModel.MetalChance;
             
             if (typeChance < imposterChance)
             {
                 return IAmogus.AmogusType.Impostor;
             }
-            else if (typeChance < imposterChance + bonusChance && _modelManager.ArcadeGameModel.CurTimer > 10f)
+            else if (typeChance < imposterChance + metalChance)
+            {
+                return IAmogus.AmogusType.Metal;
+            }
+            else if (typeChance < imposterChance + metalChance + bonusChance && _modelManager.ArcadeGameModel.CurTimer > 10f)
             {
                 var bonusTypeValue = Random.Range(0, 2);
 

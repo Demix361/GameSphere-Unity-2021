@@ -4,17 +4,20 @@ using Random = UnityEngine.Random;
 
 namespace GameMechanics
 {
-    public class Crewmate : MonoBehaviour, IAmogus
+    public class MetalCrewmate : MonoBehaviour, IAmogus
     {
         [SerializeField] private GameObject _particleSystemPrefab;
+        [SerializeField] private GameObject _metalParticleSystem;
         [SerializeField] private AmogusInfo[] _amogusInfos;
         [SerializeField] private GameObject _popSound;
+        [SerializeField] private SpriteRenderer _armorSpriteRenderer;
+        [SerializeField] private Sprite _halfArmor;
         
         private GameController _gameController;
-        private float _scaleSpeed;
         private bool _destroyed;
+        private int _clickCount = 0;
 
-        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Crewmate;
+        public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Metal;
         public AmogusInfo Info { get; private set; }
 
         public void SetAmogus(int minSortingOrder, GameController gameController)
@@ -24,6 +27,7 @@ namespace GameMechanics
             
             GetComponent<SpriteRenderer>().sprite = Info.crewmateSprite;
             GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder;
+            _armorSpriteRenderer.sortingOrder = minSortingOrder + 1;
             
             if (Random.Range(0, 2) == 0)
             {
@@ -48,15 +52,32 @@ namespace GameMechanics
         
         public bool Clicked()
         {
-            var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-            var ps = particleSystem.textureSheetAnimation;
-            ps.SetSprite(0, Info.miniSprite);
-
-            Instantiate(_popSound);
+            if (_clickCount == 0)
+            {
+                Instantiate(_metalParticleSystem, transform.position, Quaternion.identity);
+                _armorSpriteRenderer.sprite = _halfArmor;
+                Instantiate(_popSound);
+            }
+            else if (_clickCount == 1)
+            {
+                Instantiate(_metalParticleSystem, transform.position, Quaternion.identity);
+                _armorSpriteRenderer.enabled = false;
+                Instantiate(_popSound);
+            }
+            else if (_clickCount == 2)
+            {
+                var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+                var ps = particleSystem.textureSheetAnimation;
+                ps.SetSprite(0, Info.miniSprite);
+                
+                Instantiate(_popSound);
+                            
+                SafeDestroy();
+                return true;
+            }
             
-            SafeDestroy();
-
-            return true;
+            _clickCount += 1;
+            return false;
         }
 
         public void SafeDestroy()

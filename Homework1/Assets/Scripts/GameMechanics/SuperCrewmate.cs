@@ -20,7 +20,7 @@ namespace GameMechanics
         public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Super;
         public AmogusInfo Info { get; private set; }
 
-        public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController)
+        public void SetAmogus(int minSortingOrder, GameController gameController)
         {
             _gameController = gameController;
             Info = _amogusInfos[Random.Range(0, _amogusInfos.Length)];
@@ -53,9 +53,9 @@ namespace GameMechanics
             SafeDestroy();
         }
 
-        public void Clicked()
+        public bool Clicked()
         {
-            
+            return false;
         }
         
         public void Clicked(Vector3 pos)

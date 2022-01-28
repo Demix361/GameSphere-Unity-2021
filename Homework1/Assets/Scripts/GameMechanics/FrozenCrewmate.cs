@@ -17,7 +17,7 @@ namespace GameMechanics
         public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Frozen;
         public AmogusInfo Info { get; private set; }
         
-        public void SetAmogus(float scaleSpeed, int minSortingOrder, GameController gameController)
+        public void SetAmogus(int minSortingOrder, GameController gameController)
         {
             _gameController = gameController;
             GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder + 1;
@@ -44,11 +44,13 @@ namespace GameMechanics
             Clicked();
         }
         
-        public void Clicked()
+        public bool Clicked()
         {
             Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity);
             Instantiate(_popSound);
             SafeDestroy();
+
+            return true;
         }
 
         public void SafeDestroy()

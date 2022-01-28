@@ -13,8 +13,6 @@ namespace GameMechanics
         {
             _playerModel = playerModel;
         }
-        
-        public float ScaleSpeed { get; } = 0.4f;
         public float CurTimer { get; set; } = Timer;
         public float SpawnInterval
         {
@@ -30,7 +28,8 @@ namespace GameMechanics
         public int Points { get; set; } = 0;
         public float ImposterChance { get; } = 0.15f;
         public float DefaultChance { get; } = 0.8f;
-        public float BonusChance { get; } = 0.15f;
+        public float BonusChance { get; } = 0.05f;
+        public float MetalChance { get; } = 0.3f;
         
         public event Action EndGameEvent;
         public event Action<int> ChangePointsEvent;
