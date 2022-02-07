@@ -85,7 +85,7 @@ namespace GameMechanics
             while (true)
             {
                 // for mouse input
-                if (Input.GetMouseButtonDown(0) && Application.platform == RuntimePlatform.WindowsEditor)
+                if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
                 {
                     var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
                     var a = Physics2D.OverlapPoint(pos);
@@ -231,8 +231,7 @@ namespace GameMechanics
                     // комбо закончилось
                     if (comboLength >= 3)
                     {
-                        _modelManager.ArcadeGameModel.OnShowNotification($"Комбо из {comboLength}!\n+{comboLength}",
-                            Color.yellow, new Vector2(0, 0));
+                        _modelManager.ArcadeGameModel.OnShowNotification(Notification.ComboOf, comboLength, comboLength);
                         _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
                         lastComboScored = counter;
                         comboCount += 1;
@@ -244,8 +243,9 @@ namespace GameMechanics
                 else if (comboStarted && comboLength >= 10)
                 {
                     // принудительное завершение комбо на 10
-                    _modelManager.ArcadeGameModel.OnShowNotification($"Максимальное комбо!\n+{comboLength}",
-                        Color.red, new Vector2(0, 0));
+                    //_modelManager.ArcadeGameModel.OnShowNotification($"Максимальное комбо!\n+{comboLength}",
+                    //    Color.red, Vector2.zero);
+                    _modelManager.ArcadeGameModel.OnShowNotification(Notification.MaxCombo, points: 10);
                     _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
 
                     comboCount += 1;
@@ -262,13 +262,14 @@ namespace GameMechanics
 
                     var points = comboLevel * 10;
                     
-                    _modelManager.ArcadeGameModel.OnShowNotification($"{comboLevel * 3} комбо подряд!\n+{points}",
-                        Color.green, new Vector2(0, 2));
+                    //_modelManager.ArcadeGameModel.OnShowNotification($"{comboLevel * 3} комбо подряд!\n+{points}",
+                    //    Color.green, new Vector2(0, 2));
+                    _modelManager.ArcadeGameModel.OnShowNotification(Notification.ComboInRow, comboLevel * 3, points, pos:new Vector2(0, 2f), delay:1f);
                     _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + points);
                 }
                 
                 // mouse input
-                if (Input.GetMouseButtonDown(0) && Application.platform == RuntimePlatform.WindowsEditor)
+                if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
                 {
                     var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
                     
@@ -304,7 +305,8 @@ namespace GameMechanics
                         else if (amogus.Type == IAmogus.AmogusType.Impostor)
                         {
                             _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
-                            _modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
+                           // _modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
+                            _modelManager.ArcadeGameModel.OnShowNotification(Notification.Minus, points: 10, pos:pos);
                             amogus.Clicked();
                             
                             StopAllBonuses();
@@ -329,12 +331,14 @@ namespace GameMechanics
                             if (amogus.Clicked())
                             {
                                 _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 5);
-                                _modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
+                                //_modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
+                                _modelManager.ArcadeGameModel.OnShowNotification(Notification.Plus, points: 5, pos:pos);
                             }
                         }
                     }
                 }
-
+                
+                /*
                 for (int i = 0; i < Input.touchCount; i++)
                 {
                     var touch = Input.GetTouch(i);
@@ -373,7 +377,7 @@ namespace GameMechanics
                             else if (amogus.Type == IAmogus.AmogusType.Impostor)
                             {
                                 _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
-                                _modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
+                                //_modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
                                 amogus.Clicked();
                             
                                 StopAllBonuses();
@@ -398,12 +402,12 @@ namespace GameMechanics
                                 if (amogus.Clicked())
                                 {
                                     _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 5);
-                                    _modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
+                                    //_modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
                                 }
                             }
                         }
                     }
-                }
+                } */
                 
                 yield return null;
             }

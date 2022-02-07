@@ -1,16 +1,17 @@
 ﻿using System;
+using GameMechanics;
 using UnityEngine;
 
 namespace UI
 {
     public class ArcadeGamePresenter
     {
-        private GameMechanics.ArcadeGameModel _gameModel;
+        private ArcadeGameModel _gameModel;
         private ArcadeGameWindow _gameWindow;
         private Action _onExit;
         private event Action _onPause;
 
-        public ArcadeGamePresenter(GameMechanics.ArcadeGameModel gameModel, ArcadeGameWindow gameWindow, Action onExit, Action onPause)
+        public ArcadeGamePresenter(ArcadeGameModel gameModel, ArcadeGameWindow gameWindow, Action onExit, Action onPause)
         {
             _gameModel = gameModel;
             _gameWindow = gameWindow;
@@ -34,9 +35,28 @@ namespace UI
             _onPause?.Invoke();
         }
 
-        private void OnShowNotification(string text, Color color, Vector2 pos)
+        private void OnShowNotification(Notification notification, int notValue, int points, Vector2 pos, float delay)
         {
-            _gameWindow.ShowNotification(text, color, pos);
+            if (notification == Notification.Minus)
+            {
+                _gameWindow.ShowDefaultNotification("-" + Convert.ToString(points), Color.magenta, pos);
+            }
+            else if (notification == Notification.Plus)
+            {
+                _gameWindow.ShowDefaultNotification("+" + Convert.ToString(points), Color.green, pos);
+            }
+            else if (notification == Notification.MaxCombo)
+            {
+                _gameWindow.ShowMaxComboNotification(Color.red, pos, Convert.ToString(points));
+            }
+            else if (notification == Notification.ComboOf)
+            {
+                _gameWindow.ShowComboOfNotification(Color.yellow, pos, Convert.ToString(notValue), Convert.ToString(points));
+            }
+            else if (notification == Notification.ComboInRow)
+            {
+                _gameWindow.ShowComboInRowNotification(new Color(1f, 0.5f, 0f), pos, Convert.ToString(notValue), Convert.ToString(points), delay);
+            }
         }
 
         private void OnEndGameEvent()

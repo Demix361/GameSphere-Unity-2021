@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: a19767675e2927d44b9d32af28a26fee
   m_SerializeEntries:
   - m_GUID: 98998002f8cbc5e42a59bedf3ac6576c
-    m_Address: MainMenu_zh-hant
+    m_Address: UI_zh-hant
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-zh-hant

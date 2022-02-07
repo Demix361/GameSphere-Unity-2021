@@ -30,13 +30,13 @@ MonoBehaviour:
     - Locale-zh-hans
     - Preload
   - m_GUID: 71ac4b715c6b79647be47f7591dcd519
-    m_Address: MainMenu_zh-CN
+    m_Address: UI_zh-CN
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-zh-CN
     - Preload
   - m_GUID: 9a5dbab41b2a6e240882b0ac9ba7bf01
-    m_Address: MainMenu_zh-hans
+    m_Address: UI_zh-hans
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-zh-hans

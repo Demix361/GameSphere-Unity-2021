@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en
   m_SharedData: {fileID: 11400000, guid: 1e0dfe6c2b9cc41449e80ea34d950090, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - id: 0
   m_TableData:
   - m_Id: 220663488512
     m_Localized: Exit
@@ -42,5 +43,50 @@ MonoBehaviour:
     m_Localized: High Score
     m_Metadata:
       m_Items: []
+  - m_Id: 4729269113692160
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4729425166966784
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4729814838779904
+    m_Localized: Pause
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4733119275048960
+    m_Localized: New high score!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4733659690147840
+    m_Localized: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4753675386986496
+    m_Localized: 'Combo of {values.tr1}!
+
+      +{values.tr2}'
+    m_Metadata:
+      m_Items:
+      - id: 0
+  - m_Id: 4753812368760832
+    m_Localized: '{values.tr1} combo in row!
+
+      +{values.tr2}'
+    m_Metadata:
+      m_Items:
+      - id: 0
+  - m_Id: 4753628939264000
+    m_Localized: 'Max combo!
+
+      +{values.tr1}'
+    m_Metadata:
+      m_Items:
+      - id: 0
   references:
     version: 1
+    00000000:
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00a0111c28de100000a0d14c71e3100000a0913191e3100000a0d1f85ce3100000a0517c66e31000

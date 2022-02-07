@@ -41,9 +41,9 @@ namespace UI
             _pointsText.text = text;
         }
 
-        public void SetHighscore(string text)
+        public void ShowHighscore(bool state)
         {
-            _highscoreText.text = text;
+            _highscoreText.gameObject.SetActive(state);
         }
 
         public void SetMoney(int added, int final)

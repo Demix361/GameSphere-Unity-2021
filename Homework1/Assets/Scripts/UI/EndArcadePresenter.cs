@@ -23,24 +23,21 @@ namespace UI
 
         public void OnOpen()
         {
-            OnSetPoints();
-            OnSetMoney();
             _endWindow.MainMenuEvent += OnMainMenu;
             _endWindow.RestartEvent += OnRestart;
+            _endWindow.ShowHighscore(false);
+            OnSetPoints();
+            OnSetMoney();
         }
 
         private void OnSetPoints()
         {
             var points = _gameModel.Points;
+            _endWindow.SetPoints(Convert.ToString(points));
+            
             if (points == _playerModel.HighScoreArcade)
             {
-                _endWindow.SetPoints("New Highscore: " + Convert.ToString(points));
-                _endWindow.SetHighscore("");
-            }
-            else
-            {
-                _endWindow.SetPoints("Points: " + Convert.ToString(points));
-                _endWindow.SetHighscore("Highscore: " + Convert.ToString(_playerModel.HighScoreArcade));
+                _endWindow.ShowHighscore(true);
             }
         }
 

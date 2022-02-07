@@ -39,7 +39,7 @@ namespace GameMechanics
         public event Action PauseGame;
         public event Action UnpauseGame;
         public event Action CloseEndAnimation;
-        public event Action<string, Color, Vector2> ShowNotification;
+        public event Action<Notification, int, int, Vector2, float> ShowNotification;
         public event Action StopGame;
         
         
@@ -113,10 +113,17 @@ namespace GameMechanics
             // (4): Предел к которому стремится функция;
             return (_spawnInterval - 0.3f) / (0.045f * value + 1) + 0.3f;
         }
-
+        
+        /*
         public void OnShowNotification(string text, Color color, Vector2 pos)
         {
             ShowNotification?.Invoke(text, color, pos);
+        }
+        */
+        
+        public void OnShowNotification(Notification notification, int notValue = 0, int points = 0, Vector2 pos = new Vector2(), float delay = 0f)
+        {
+            ShowNotification?.Invoke(notification, notValue, points, pos, delay);
         }
     }
 }
