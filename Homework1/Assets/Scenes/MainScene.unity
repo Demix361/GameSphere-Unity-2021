@@ -1172,7 +1172,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 388, y: -300}
+  m_AnchoredPosition: {x: 400, y: -300}
   m_SizeDelta: {x: 550, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &473268025
@@ -1550,7 +1550,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 402.99994, y: 150}
+  m_AnchoredPosition: {x: 400, y: 150}
   m_SizeDelta: {x: 550, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &552384848
@@ -3062,7 +3062,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 388.00003, y: -150}
+  m_AnchoredPosition: {x: 400, y: -150}
   m_SizeDelta: {x: 550, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &848695474
@@ -3865,7 +3865,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 402.99997, y: 0}
+  m_AnchoredPosition: {x: 400, y: 0}
   m_SizeDelta: {x: 550, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1194101574
@@ -3972,7 +3972,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -270.82, y: -100}
+  m_AnchoredPosition: {x: -270.82007, y: -100}
   m_SizeDelta: {x: 541.64, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1258413957
@@ -5415,7 +5415,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -270.82, y: -122}
+  m_AnchoredPosition: {x: -270.82007, y: -122}
   m_SizeDelta: {x: 541.64, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1566927865
@@ -7939,7 +7939,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -222.96}
+  m_AnchoredPosition: {x: 0, y: -222.96002}
   m_SizeDelta: {x: 1000, y: 123.91}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8588596035542370169
@@ -9267,8 +9267,6 @@ MonoBehaviour:
   maxComboNotificationPrefab: {fileID: 3675240033877965374, guid: 44f1b693888a56044b74edc42e51edfc, type: 3}
   comboOfNotificationPrefab: {fileID: 3675240033877965374, guid: 2dc17346008ad79458f1014774bc72b9, type: 3}
   comboInRowNotificationPrefab: {fileID: 3675240033877965374, guid: 64e2ac57e4390dc42938fcdac2d92401, type: 3}
-  tr1: 0
-  tr2: 0
 --- !u!224 &8588596036715369799
 RectTransform:
   m_ObjectHideFlags: 0

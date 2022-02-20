@@ -44,7 +44,7 @@ namespace GameMechanics
         {
             _cam = Camera.main;
             _height = _cam.orthographicSize;
-            _width = _cam.orthographicSize * _cam.aspect;
+            _width = _cam.orthographicSize * _cam.aspect * 0.9f;
             
             _modelManager.ClassicGameModel.StartGame += StartClassic;
             _modelManager.ArcadeGameModel.StartGame += StartArcade;
@@ -105,6 +105,7 @@ namespace GameMechanics
                             
                             _endAnimation = Instantiate(_endGameAlienPrefab, Vector3.zero, Quaternion.identity);
                             _endAnimation.GetComponent<EndKillAlien>().ImpostorAnimator.runtimeAnimatorController = amogus.Info.alienKillAnimator;
+                            _endAnimation.GetComponent<EndKillAlien>().SetBackgroundWidth(_cam.orthographicSize * _cam.aspect);
 
                             ProcessGameEnd();
                         }
