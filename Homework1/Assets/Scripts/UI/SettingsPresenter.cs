@@ -30,6 +30,9 @@ namespace UI
             _settingsWindow.ResetProgressEvent += OnResetProgress;
             _settingsWindow.ChangeMusicVolume += OnChangeMusicVolume;
             _settingsWindow.ChangeEffectsVolume += OnChangeEffectsVolume;
+
+            _settingsWindow.PlusMoneyEvent += OnPlusMoney;
+            _settingsWindow.ZeroMoneyEvent += OnZeroMoney;
         }
 
         private void OnCancel()
@@ -47,6 +50,8 @@ namespace UI
         {
             _playerModel.HighScoreClassic = 0;
             _playerModel.HighScoreArcade = 0;
+            _playerModel.Money = 0;
+            _playerModel.LockAllBackgrounds();
             _onExit?.Invoke();
         }
 
@@ -65,6 +70,16 @@ namespace UI
             _onLanguage?.Invoke();
         }
 
+        private void OnPlusMoney()
+        {
+            _playerModel.AddMoney(100);
+        }
+
+        private void OnZeroMoney()
+        {
+            _playerModel.Money = 0;
+        }
+
         public void OnClose()
         {
             _settingsWindow.ApplyEvent -= OnApply;
@@ -73,6 +88,9 @@ namespace UI
             _settingsWindow.LanguageEvent -= OnOpenLanguage;
             _settingsWindow.ChangeMusicVolume -= OnChangeMusicVolume;
             _settingsWindow.ChangeEffectsVolume -= OnChangeEffectsVolume;
+            
+            _settingsWindow.PlusMoneyEvent -= OnPlusMoney;
+            _settingsWindow.ZeroMoneyEvent -= OnZeroMoney;
         }
     }
 }

@@ -17,6 +17,9 @@ namespace UI
         public event Action<float> ChangeEffectsVolume;
         public event Action LanguageEvent;
 
+        public event Action PlusMoneyEvent;
+        public event Action ZeroMoneyEvent;
+
         public void OnLanguage()
         {
             LanguageEvent?.Invoke();
@@ -35,6 +38,16 @@ namespace UI
         public void OnResetProgress()
         {
             ResetProgressEvent?.Invoke();
+        }
+
+        public void OnPlusMoney()
+        {
+            PlusMoneyEvent?.Invoke();
+        }
+
+        public void OnZeroMoney()
+        {
+            ZeroMoneyEvent?.Invoke();
         }
 
         public void SetPlayerName(string newPlayerName)

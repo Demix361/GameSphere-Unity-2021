@@ -3,7 +3,7 @@ using Random = UnityEngine.Random;
 
 namespace GameMechanics
 {
-    public class Star : MonoBehaviour
+    public class Star1 : MonoBehaviour
     {
         private Vector3 _deltaSpeed = Vector3.zero;
         private float _border;

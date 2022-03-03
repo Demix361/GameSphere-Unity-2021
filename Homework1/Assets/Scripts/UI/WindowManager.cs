@@ -12,6 +12,7 @@ namespace UI
         [SerializeField] private EndWindow _endWindow;
         [SerializeField] private LanguageWindow _languageWindow;
         [SerializeField] private PauseWindow _pauseWindow;
+        [SerializeField] private ShopWindow _shopWindow;
         
         [SerializeField] private ModelManager _modelManager;
         
@@ -24,6 +25,7 @@ namespace UI
         private LanguagePresenter _languagePresenter;
         private PausePresenter _arcadePausePresenter;
         private PausePresenter _classicPausePresenter;
+        private ShopPresenter _shopPresenter;
         
         private void Start()
         {
@@ -47,6 +49,12 @@ namespace UI
                 
                 _settingsWindow.gameObject.SetActive(true);
                 _settingsPresenter.OnOpen();
+            });
+
+            _shopPresenter = new ShopPresenter(_modelManager.PlayerModel, _shopWindow, () =>
+            {
+                _shopPresenter.OnClose();
+                ShowStartWindow();
             });
             
             _startPresenter = new StartPresenter(_modelManager.PlayerModel, _modelManager.MainMenuModel, _startWindow, () =>
@@ -72,6 +80,13 @@ namespace UI
                 
                 _settingsWindow.gameObject.SetActive(true);
                 _settingsPresenter.OnOpen();
+            }, () =>
+            {
+                _startWindow.gameObject.SetActive(false);
+                _startPresenter.OnClose();
+                
+                _shopWindow.gameObject.SetActive(true);
+                _shopPresenter.OnOpen();
             }, () =>
             {
                 _startPresenter.OnClose();
@@ -197,6 +212,7 @@ namespace UI
             _endWindow.gameObject.SetActive(false);
             _languageWindow.gameObject.SetActive(false);
             _pauseWindow.gameObject.SetActive(false);
+            _shopWindow.gameObject.SetActive(false);
         }
 
         private void ShowSettingsWindow()

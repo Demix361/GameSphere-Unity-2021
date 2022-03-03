@@ -15,6 +15,7 @@ namespace UI
         public event Action StartArcadeEvent;
         public event Action SettingsEvent;
         public event Action QuitEvent;
+        public event Action ShopEvent;
 
         public void OnStartClassic()
         {
@@ -29,6 +30,11 @@ namespace UI
         public void OnSettings()
         {
             SettingsEvent?.Invoke();
+        }
+
+        public void OnShop()
+        {
+            ShopEvent?.Invoke();
         }
 
         public void OnQuit()

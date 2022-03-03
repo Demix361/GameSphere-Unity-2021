@@ -23,6 +23,7 @@ namespace GameMechanics
         private Coroutine _spawnBallsCoroutine;
         private Coroutine _inputCoroutine;
         private GameObject _endAnimation;
+        private Coroutine _comboCoroutine;
         private bool _stopTimer = false;
 
         private float z;
@@ -31,6 +32,12 @@ namespace GameMechanics
         private Coroutine _rageCoroutine;
         private Coroutine _frozenCoroutine;
         private Coroutine _endCoroutine;
+        
+        private bool comboStarted = false;
+        private float lastComboHit = 0f;
+        private int comboLength = 0;
+        private int comboLevel = 0;
+        private int comboCount = 0;
         
         private enum GameType
         {
@@ -84,65 +91,53 @@ namespace GameMechanics
         {
             while (true)
             {
-                // for mouse input
+                // mouse input
                 if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
                 {
                     var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
-                    var a = Physics2D.OverlapPoint(pos);
                     
-                    if (a != null && a.CompareTag("Amogus"))
-                    {
-                        var amogus = a.GetComponent<IAmogus>();
-                        
-                        if (amogus.Type == IAmogus.AmogusType.Crewmate)
-                        {
-                            _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
-                            amogus.Clicked();
-                        }
-                        else if (amogus.Type == IAmogus.AmogusType.Impostor)
-                        {
-                            _modelManager.ClassicGameModel.OnEndGame();
-                            
-                            _endAnimation = Instantiate(_endGameAlienPrefab, Vector3.zero, Quaternion.identity);
-                            _endAnimation.GetComponent<EndKillAlien>().ImpostorAnimator.runtimeAnimatorController = amogus.Info.alienKillAnimator;
-                            _endAnimation.GetComponent<EndKillAlien>().SetBackgroundWidth(_cam.orthographicSize * _cam.aspect);
-
-                            ProcessGameEnd();
-                        }
-                    }
+                    ClassicTouchHandler(pos);
                 }
-
+                
+                // touch input
                 for (int i = 0; i < Input.touchCount; i++)
                 {
                     var touch = Input.GetTouch(i);
                     if (touch.phase == TouchPhase.Began)
                     {
                         var pos = _cam.ScreenToWorldPoint(touch.position);
-                        var a = Physics2D.OverlapPoint(pos);
-                    
-                        if (a != null && a.CompareTag("Amogus"))
-                        {
-                            var amogus = a.GetComponent<IAmogus>();
                         
-                            if (amogus.Type == IAmogus.AmogusType.Crewmate)
-                            {
-                                _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
-                                amogus.Clicked();
-                            }
-                            else if (amogus.Type == IAmogus.AmogusType.Impostor)
-                            {
-                                _modelManager.ClassicGameModel.OnEndGame();
-                            
-                                _endAnimation = Instantiate(_endGameAlienPrefab, Vector3.zero, Quaternion.identity);
-                                _endAnimation.GetComponent<EndKillAlien>().ImpostorAnimator.runtimeAnimatorController = amogus.Info.alienKillAnimator;
-
-                                ProcessGameEnd();
-                            }
-                        }
+                        ClassicTouchHandler(pos);
                     }
                 }
 
                 yield return null;
+            }
+        }
+        
+        private void ClassicTouchHandler(Vector2 pos)
+        {
+            var a = Physics2D.OverlapPoint(pos);
+                    
+            if (a != null && a.CompareTag("Amogus"))
+            {
+                var amogus = a.GetComponent<IAmogus>();
+                        
+                if (amogus.Type == IAmogus.AmogusType.Crewmate)
+                {
+                    _modelManager.ClassicGameModel.OnChangePoints(_modelManager.ClassicGameModel.Points + 1);
+                    amogus.Clicked();
+                }
+                else if (amogus.Type == IAmogus.AmogusType.Impostor)
+                {
+                    _modelManager.ClassicGameModel.OnEndGame();
+                            
+                    _endAnimation = Instantiate(_endGameAlienPrefab, Vector3.zero, Quaternion.identity);
+                    _endAnimation.GetComponent<EndKillAlien>().ImpostorAnimator.runtimeAnimatorController = amogus.Info.alienKillAnimator;
+                    _endAnimation.GetComponent<EndKillAlien>().SetBackgroundWidth(_cam.orthographicSize * _cam.aspect);
+
+                    ProcessGameEnd();
+                }
             }
         }
 
@@ -191,9 +186,16 @@ namespace GameMechanics
         {
             _curGameType = GameType.Arcade;
             Time.timeScale = 1f;
+            
+            comboStarted = false;
+            lastComboHit = 0f;
+            comboLength = 0;
+            comboLevel = 0;
+            comboCount = 0;
 
             _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBalls());
             _inputCoroutine = StartCoroutine(ArcadeInputCoroutine());
+            _comboCoroutine = StartCoroutine(ArcadeComboCoroutine());
         }
 
         private IEnumerator ArcadeInputCoroutine()
@@ -201,13 +203,7 @@ namespace GameMechanics
             var counter = _modelManager.ArcadeGameModel.CurTimer;
             var endProcessStarted = false;
             _stopTimer = false;
-            var comboStarted = false;
-            var lastComboHit = 0f;
-            var comboLength = 0;
-            var comboLevel = 0;
-            var comboCount = 0;
-            var lastComboScored = 0f;
-            
+
             while (true)
             {
                 if (endProcessStarted == false && counter <= 2f)
@@ -227,14 +223,106 @@ namespace GameMechanics
                 }
                 _modelManager.ArcadeGameModel.OnChangeTime(counter);
 
-                if (comboStarted && lastComboHit - counter > 0.5f)
+                // mouse input
+                if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
+                {
+                    var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
+                    
+                    ArcadeTouchHandler(pos);
+                }
+                
+                // touch input
+                for (int i = 0; i < Input.touchCount; i++)
+                {
+                    var touch = Input.GetTouch(i);
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        var pos = _cam.ScreenToWorldPoint(touch.position);
+                        
+                        ArcadeTouchHandler(pos);
+                    }
+                }
+                
+                yield return null;
+            }
+        }
+
+        private void ArcadeTouchHandler(Vector2 pos)
+        {
+            var a = Physics2D.OverlapPoint(pos);
+
+            if (a != null && a.CompareTag("Amogus"))
+            {
+                var amogus = a.GetComponent<IAmogus>();
+
+                if (amogus.Type == IAmogus.AmogusType.Impostor || amogus.Type == IAmogus.AmogusType.Super)
+                {
+                    comboStarted = false;
+                    comboLength = 0;
+
+                    comboCount = 0;
+                    comboLevel = 0;
+                }
+                else
+                {
+                    if (!comboStarted)
+                    {
+                        comboStarted = true;
+                    }
+                    comboLength += 1;
+                    lastComboHit = _modelManager.ArcadeGameModel.CurTimer;
+                }
+
+                if (amogus.Type == IAmogus.AmogusType.Crewmate)
+                {
+                    _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
+                    amogus.Clicked();
+                }
+                else if (amogus.Type == IAmogus.AmogusType.Impostor)
+                {
+                    _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
+                    _modelManager.ArcadeGameModel.OnShowNotification(Notification.Minus, points: 10, pos:pos);
+                    amogus.Clicked();
+                            
+                    StopAllBonuses();
+                }
+                else if (amogus.Type == IAmogus.AmogusType.Super)
+                {
+                    _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
+                    amogus.Clicked(pos);
+                }
+                else if (amogus.Type == IAmogus.AmogusType.Rage)
+                {
+                    amogus.Clicked();
+                    StartRageSpawn();
+                }
+                else if (amogus.Type == IAmogus.AmogusType.Frozen)
+                {
+                    amogus.Clicked();
+                    StartFrozen();
+                }
+                else if (amogus.Type == IAmogus.AmogusType.Metal)
+                {
+                    if (amogus.Clicked())
+                    {
+                        _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 5);
+                        _modelManager.ArcadeGameModel.OnShowNotification(Notification.Plus, points: 5, pos:pos);
+                    }
+                }
+            }
+        }
+
+        private IEnumerator ArcadeComboCoroutine()
+        {
+            while (true)
+            {
+                if (comboStarted && lastComboHit - _modelManager.ArcadeGameModel.CurTimer > 0.5f)
                 {
                     // комбо закончилось
                     if (comboLength >= 3)
                     {
                         _modelManager.ArcadeGameModel.OnShowNotification(Notification.ComboOf, comboLength, comboLength);
                         _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
-                        lastComboScored = counter;
                         comboCount += 1;
                     }
 
@@ -244,8 +332,6 @@ namespace GameMechanics
                 else if (comboStarted && comboLength >= 10)
                 {
                     // принудительное завершение комбо на 10
-                    //_modelManager.ArcadeGameModel.OnShowNotification($"Максимальное комбо!\n+{comboLength}",
-                    //    Color.red, Vector2.zero);
                     _modelManager.ArcadeGameModel.OnShowNotification(Notification.MaxCombo, points: 10);
                     _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + comboLength);
 
@@ -263,152 +349,9 @@ namespace GameMechanics
 
                     var points = comboLevel * 10;
                     
-                    //_modelManager.ArcadeGameModel.OnShowNotification($"{comboLevel * 3} комбо подряд!\n+{points}",
-                    //    Color.green, new Vector2(0, 2));
                     _modelManager.ArcadeGameModel.OnShowNotification(Notification.ComboInRow, comboLevel * 3, points, pos:new Vector2(0, 2f), delay:1f);
                     _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + points);
                 }
-                
-                // mouse input
-                if (Input.GetMouseButtonDown(0) && (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer))
-                {
-                    var pos = _cam.ScreenToWorldPoint(Input.mousePosition);
-                    
-                    var a = Physics2D.OverlapPoint(pos);
-
-                    if (a != null && a.CompareTag("Amogus"))
-                    {
-                        var amogus = a.GetComponent<IAmogus>();
-
-                        if (amogus.Type == IAmogus.AmogusType.Impostor || amogus.Type == IAmogus.AmogusType.Super)
-                        {
-                            comboStarted = false;
-                            comboLength = 0;
-
-                            comboCount = 0;
-                            comboLevel = 0;
-                        }
-                        else
-                        {
-                            if (!comboStarted)
-                            {
-                                comboStarted = true;
-                            }
-                            comboLength += 1;
-                            lastComboHit = counter;
-                        }
-
-                        if (amogus.Type == IAmogus.AmogusType.Crewmate)
-                        {
-                            _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
-                            amogus.Clicked();
-                        }
-                        else if (amogus.Type == IAmogus.AmogusType.Impostor)
-                        {
-                            _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
-                           // _modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
-                            _modelManager.ArcadeGameModel.OnShowNotification(Notification.Minus, points: 10, pos:pos);
-                            amogus.Clicked();
-                            
-                            StopAllBonuses();
-                        }
-                        else if (amogus.Type == IAmogus.AmogusType.Super)
-                        {
-                            _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
-                            amogus.Clicked(pos);
-                        }
-                        else if (amogus.Type == IAmogus.AmogusType.Rage)
-                        {
-                            amogus.Clicked();
-                            StartRageSpawn();
-                        }
-                        else if (amogus.Type == IAmogus.AmogusType.Frozen)
-                        {
-                            amogus.Clicked();
-                            StartFrozen();
-                        }
-                        else if (amogus.Type == IAmogus.AmogusType.Metal)
-                        {
-                            if (amogus.Clicked())
-                            {
-                                _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 5);
-                                //_modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
-                                _modelManager.ArcadeGameModel.OnShowNotification(Notification.Plus, points: 5, pos:pos);
-                            }
-                        }
-                    }
-                }
-                
-                /*
-                for (int i = 0; i < Input.touchCount; i++)
-                {
-                    var touch = Input.GetTouch(i);
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        var pos = _cam.ScreenToWorldPoint(touch.position);
-                        var a = Physics2D.OverlapPoint(pos);
-
-                        if (a != null && a.CompareTag("Amogus"))
-                        {
-                            var amogus = a.GetComponent<IAmogus>();
-                            
-                            if (amogus.Type == IAmogus.AmogusType.Impostor || amogus.Type == IAmogus.AmogusType.Super)
-                            {
-                                comboStarted = false;
-                                comboLength = 0;
-
-                                comboCount = 0;
-                                comboLevel = 0;
-                            }
-                            else
-                            {
-                                if (!comboStarted)
-                                {
-                                    comboStarted = true;
-                                }
-                                comboLength += 1;
-                                lastComboHit = counter;
-                            }
-                            
-                            if (amogus.Type == IAmogus.AmogusType.Crewmate)
-                            {
-                                _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
-                                amogus.Clicked();
-                            }
-                            else if (amogus.Type == IAmogus.AmogusType.Impostor)
-                            {
-                                _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points - 10);
-                                //_modelManager.ArcadeGameModel.OnShowNotification("-10", Color.magenta, pos);
-                                amogus.Clicked();
-                            
-                                StopAllBonuses();
-                            }
-                            else if (amogus.Type == IAmogus.AmogusType.Super)
-                            {
-                                _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 1);
-                                amogus.Clicked(pos);
-                            }
-                            else if (amogus.Type == IAmogus.AmogusType.Rage)
-                            {
-                                amogus.Clicked();
-                                StartRageSpawn();
-                            }
-                            else if (amogus.Type == IAmogus.AmogusType.Frozen)
-                            {
-                                amogus.Clicked();
-                                StartFrozen();
-                            }
-                            else if (amogus.Type == IAmogus.AmogusType.Metal)
-                            {
-                                if (amogus.Clicked())
-                                {
-                                    _modelManager.ArcadeGameModel.OnChangePoints(_modelManager.ArcadeGameModel.Points + 5);
-                                    //_modelManager.ArcadeGameModel.OnShowNotification("+5", Color.yellow, pos);
-                                }
-                            }
-                        }
-                    }
-                } */
                 
                 yield return null;
             }
@@ -494,20 +437,12 @@ namespace GameMechanics
             var amogusNumber = Random.Range(20, 30);
             for (int i = 0; i < amogusNumber; i++)
             {
-                var chance = 0;//Random.Range(0, 2);
                 Vector3 pos;
                 Vector2 force;
-                if (chance == 0)
-                {
-                    pos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, z);
-                    force = CalculateForce(pos);
-                }
-                else
-                {
-                    pos = new Vector3(Random.Range(-_width, _width) * 0.85f, _height, z);
-                    force = CalculateReverseForce(pos);
-                }
                 
+                pos = new Vector3(Random.Range(-_width, _width) * 0.85f, -_height, z);
+                force = CalculateForce(pos);
+
                 GameObject amogus;
                 var lastSortingOrder = sortingOrder;
                 
@@ -519,11 +454,6 @@ namespace GameMechanics
                 amogus.GetComponent<Rigidbody2D>().AddForce(force);
                 amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 
-                if (chance == 1)
-                {
-                    amogus.GetComponent<Rigidbody2D>().gravityScale = -1;
-                }
-
                 z -= 0.00001f;
 
                 var spawnInterval = Random.Range(0.1f, 0.4f);
@@ -533,7 +463,7 @@ namespace GameMechanics
 
         private void StartFrozen()
         {
-            StartCoroutine(FrozenCoroutine());
+            _frozenCoroutine = StartCoroutine(FrozenCoroutine());
         }
 
         private IEnumerator FrozenCoroutine()
@@ -577,6 +507,11 @@ namespace GameMechanics
             if (_endCoroutine != null)
             {
                 StopCoroutine(_endCoroutine);
+            }
+
+            if (_comboCoroutine != null)
+            {
+                StopCoroutine(_comboCoroutine);
             }
             
             StopAllBonuses();
@@ -627,7 +562,9 @@ namespace GameMechanics
             }
             
             yield return new WaitForSeconds(1f);
-
+            
+            StopCoroutine(_comboCoroutine);
+            
             SpawnSuperCrewmate();
             
             while (true)
@@ -683,18 +620,6 @@ namespace GameMechanics
             
             return res;
         }
-        
-        private Vector2 CalculateReverseForce(Vector3 startPos)
-        {
-            var res = Vector2.zero;
-            
-            var endPos = new Vector3(Random.Range(-_width, _width) * 0.85f, _height, 0);
-
-            res.x = (endPos.x - startPos.x) * 20f;
-            res.y = Random.Range(-450f, -630f);
-            
-            return res;
-        }
 
         private IAmogus.AmogusType GetArcadeAmogus(float lastRageSpawn, float lastFrozenSpawn)
         {
@@ -707,11 +632,13 @@ namespace GameMechanics
             {
                 return IAmogus.AmogusType.Impostor;
             }
-            else if (typeChance < imposterChance + metalChance)
+            
+            if (typeChance < imposterChance + metalChance)
             {
                 return IAmogus.AmogusType.Metal;
             }
-            else if (typeChance < imposterChance + metalChance + bonusChance && _modelManager.ArcadeGameModel.CurTimer > 10f)
+            
+            if (typeChance < imposterChance + metalChance + bonusChance && _modelManager.ArcadeGameModel.CurTimer > 10f)
             {
                 var bonusTypeValue = Random.Range(0, 2);
 
@@ -719,7 +646,8 @@ namespace GameMechanics
                 {
                     return IAmogus.AmogusType.Rage;
                 }
-                else if (bonusTypeValue == 1 && lastFrozenSpawn - _modelManager.ArcadeGameModel.CurTimer > 10f)
+                
+                if (bonusTypeValue == 1 && lastFrozenSpawn - _modelManager.ArcadeGameModel.CurTimer > 10f)
                 {
                     return IAmogus.AmogusType.Frozen;
                 }

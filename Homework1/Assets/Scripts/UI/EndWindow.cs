@@ -62,6 +62,8 @@ namespace UI
                 yield return new WaitForSeconds(0.1f);
                 _moneyText.text = Convert.ToString(a);
             }
+            
+            _moneyText.text = Convert.ToString(a);
         }
     }
 }

@@ -27,9 +27,8 @@ namespace GameMechanics
         }
         public int Points { get; set; } = 0;
         public float ImposterChance { get; } = 0.15f;
-        public float DefaultChance { get; } = 0.8f;
         public float BonusChance { get; } = 0.05f;
-        public float MetalChance { get; } = 0.3f;
+        public float MetalChance { get; } = 0.2f;
         public int MoneyForGame { get; set; } = 0;
         
         public event Action EndGameEvent;
@@ -113,14 +112,7 @@ namespace GameMechanics
             // (4): Предел к которому стремится функция;
             return (_spawnInterval - 0.3f) / (0.045f * value + 1) + 0.3f;
         }
-        
-        /*
-        public void OnShowNotification(string text, Color color, Vector2 pos)
-        {
-            ShowNotification?.Invoke(text, color, pos);
-        }
-        */
-        
+
         public void OnShowNotification(Notification notification, int notValue = 0, int points = 0, Vector2 pos = new Vector2(), float delay = 0f)
         {
             ShowNotification?.Invoke(notification, notValue, points, pos, delay);

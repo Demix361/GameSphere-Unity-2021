@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 namespace GameMechanics
 {
-    public class StarsBackground : MonoBehaviour
+    public class Background1 : MonoBehaviour
     {
         [SerializeField] private GameObject starPrefab;
         [SerializeField] private int starAmount;

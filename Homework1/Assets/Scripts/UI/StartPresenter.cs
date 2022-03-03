@@ -12,10 +12,11 @@ namespace UI
         private Action _onStartClassic;
         private Action _onStartArcade;
         private Action _onSettings;
+        private Action _onShop;
         private Action _onExit;
 
         public StartPresenter(PlayerModel playerModel, MainMenuModel mainMenuModel, StartWindow startWindow, 
-            Action onStartClassic, Action onStartArcade, Action onSettings, Action onExit)
+            Action onStartClassic, Action onStartArcade, Action onSettings, Action onShop, Action onExit)
         {
             _onExit = onExit;
             _onSettings = onSettings;
@@ -24,6 +25,7 @@ namespace UI
             _playerModel = playerModel;
             _startWindow = startWindow;
             _mainMenuModel = mainMenuModel;
+            _onShop = onShop;
         }
 
         public void OnOpen()
@@ -38,6 +40,7 @@ namespace UI
             _startWindow.StartClassicEvent += OnStartWindowOnStartClassicEvent;
             _startWindow.StartArcadeEvent += OnStartWindowOnStartArcadeEvent;
             _startWindow.SettingsEvent += OnStartWindowOnSettingsEvent;
+            _startWindow.ShopEvent += OnShopEvent;
             _startWindow.QuitEvent += OnStartWindowOnQuitEvent;
         }
 
@@ -63,12 +66,18 @@ namespace UI
             _mainMenuModel.StopSpawn();
         }
 
+        private void OnShopEvent()
+        {
+            _onShop?.Invoke();
+        }
+
         public void OnClose()
         {
             _startWindow.StartClassicEvent -= OnStartWindowOnStartClassicEvent;
             _startWindow.StartArcadeEvent -= OnStartWindowOnStartArcadeEvent;
             _startWindow.SettingsEvent -= OnStartWindowOnSettingsEvent;
             _startWindow.QuitEvent -= OnStartWindowOnQuitEvent;
+            _startWindow.ShopEvent -= OnShopEvent;
         }
     }
 }
