@@ -20,12 +20,10 @@ namespace UI
 
         public void OnOpen()
         {
-            _settingsWindow.SetPlayerName(_playerModel.PlayerName);
             _settingsWindow.SetMusicSlider(_playerModel.MusicVolume);
             _settingsWindow.SetEffectsSlider(_playerModel.EffectsVolume);
 
             _settingsWindow.LanguageEvent += OnOpenLanguage;
-            _settingsWindow.ApplyEvent += OnApply;
             _settingsWindow.CancelEvent += OnCancel;
             _settingsWindow.ResetProgressEvent += OnResetProgress;
             _settingsWindow.ChangeMusicVolume += OnChangeMusicVolume;
@@ -37,12 +35,6 @@ namespace UI
 
         private void OnCancel()
         {
-            _onExit?.Invoke();
-        }
-
-        private void OnApply(string newPlayerName)
-        {
-            _playerModel.PlayerName = newPlayerName;
             _onExit?.Invoke();
         }
 
@@ -82,7 +74,6 @@ namespace UI
 
         public void OnClose()
         {
-            _settingsWindow.ApplyEvent -= OnApply;
             _settingsWindow.CancelEvent -= OnCancel;
             _settingsWindow.ResetProgressEvent -= OnResetProgress;
             _settingsWindow.LanguageEvent -= OnOpenLanguage;

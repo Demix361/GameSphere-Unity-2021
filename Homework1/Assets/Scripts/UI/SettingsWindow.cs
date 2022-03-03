@@ -6,11 +6,9 @@ namespace UI
 {
     public class SettingsWindow : MonoBehaviour
     {
-        [SerializeField] private InputField playerName;
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider effectsSlider;
         
-        public event Action<string> ApplyEvent;
         public event Action CancelEvent;
         public event Action ResetProgressEvent;
         public event Action<float> ChangeMusicVolume;
@@ -23,11 +21,6 @@ namespace UI
         public void OnLanguage()
         {
             LanguageEvent?.Invoke();
-        }
-        
-        public void OnApply()
-        {
-            ApplyEvent?.Invoke(playerName.text);
         }
 
         public void OnCancel()
@@ -48,11 +41,6 @@ namespace UI
         public void OnZeroMoney()
         {
             ZeroMoneyEvent?.Invoke();
-        }
-
-        public void SetPlayerName(string newPlayerName)
-        {
-            playerName.text = newPlayerName;
         }
 
         public void SetMusicSlider(float value)

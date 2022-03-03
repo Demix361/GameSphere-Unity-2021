@@ -24,7 +24,7 @@ namespace UI
 
         public void SetMainPanel(int amount)
         {
-            _bgPanelsParent.sizeDelta = new Vector2(600 * amount + 60 * (amount - 1), _bgPanelsParent.sizeDelta.y);
+            _bgPanelsParent.sizeDelta = new Vector2(650 * amount + 60 * (amount - 1), _bgPanelsParent.sizeDelta.y);
             _bgPanelsParent.anchoredPosition =
                 new Vector2(_bgPanelsParent.sizeDelta.x / 2, _bgPanelsParent.anchoredPosition.y);
         }

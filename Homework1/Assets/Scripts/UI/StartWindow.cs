@@ -16,6 +16,7 @@ namespace UI
         public event Action SettingsEvent;
         public event Action QuitEvent;
         public event Action ShopEvent;
+        public event Action LanguageEvent;
 
         public void OnStartClassic()
         {
@@ -35,6 +36,11 @@ namespace UI
         public void OnShop()
         {
             ShopEvent?.Invoke();
+        }
+        
+        public void OnLanguage()
+        {
+            LanguageEvent?.Invoke();
         }
 
         public void OnQuit()

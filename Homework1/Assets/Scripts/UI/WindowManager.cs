@@ -44,11 +44,8 @@ namespace UI
 
             _languagePresenter = new LanguagePresenter(_modelManager.PlayerModel, _languageWindow, () =>
             {
-                _languageWindow.gameObject.SetActive(false);
                 _languagePresenter.OnClose();
-                
-                _settingsWindow.gameObject.SetActive(true);
-                _settingsPresenter.OnOpen();
+                ShowStartWindow();
             });
 
             _shopPresenter = new ShopPresenter(_modelManager.PlayerModel, _shopWindow, () =>
@@ -87,6 +84,13 @@ namespace UI
                 
                 _shopWindow.gameObject.SetActive(true);
                 _shopPresenter.OnOpen();
+            }, () =>
+            {
+                _startWindow.gameObject.SetActive(false);
+                _startPresenter.OnClose();
+                
+                _languageWindow.gameObject.SetActive(true);
+                _languagePresenter.OnOpen();
             }, () =>
             {
                 _startPresenter.OnClose();
