@@ -85,6 +85,7 @@ namespace UI
                     _playerModel.BuyBackground(id);
                     
                     _shopWindow.RemoveMoney(_playerModel.BackgroundInfos[id].price, _playerModel.Money);
+                    _shopWindow.Buy(id);
                 }
                 else
                 {
@@ -100,6 +101,7 @@ namespace UI
 
         public void OnClose()
         {
+            _shopWindow.DestroyBgPanels();
             _shopWindow.CloseEvent -= OnExit;
             _shopWindow.BgButtonEvent -= OnBgButton;
         }

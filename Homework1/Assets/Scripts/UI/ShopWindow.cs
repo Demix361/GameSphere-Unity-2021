@@ -13,7 +13,6 @@ namespace UI
         public event Action CloseEvent;
         public event Action<int> BgButtonEvent;
         private List<BackgroundPanel> _backgroundPanels = new List<BackgroundPanel>();
-        [SerializeField] private Color _priceColor;
         [SerializeField] private Text _moneyText;
         [SerializeField] private GameObject _notEnoughMoneyWindow;
         [SerializeField] private GameObject _confirmWindow;
@@ -34,6 +33,11 @@ namespace UI
             BgButtonEvent?.Invoke(id);
         }
 
+        public void Buy(int id)
+        {
+            _backgroundPanels[id].RunParticleSystem();
+        }
+
         public void SpawnBgPanel(BackgroundInfo bgInfo)
         {
             var panel = Instantiate(_bgPanelPrefab, _bgPanelsParent);
@@ -41,8 +45,18 @@ namespace UI
             var bgPanel = panel.GetComponent<BackgroundPanel>();
             _backgroundPanels.Add(bgPanel);
             
-            //bgPanel.SetNameText(Convert.ToString(bgInfo.id));
+            bgPanel.SetNameText(Convert.ToString(bgInfo.id + 1));
             bgPanel.SetPreviewImage(bgInfo.preview);
+        }
+
+        public void DestroyBgPanels()
+        {
+            foreach (var panel in _backgroundPanels)
+            {
+                Destroy(panel.gameObject);
+            }
+
+            _backgroundPanels = new List<BackgroundPanel>();
         }
 
         public void ShowNotEnoughMoneyWindow(bool state)
@@ -57,19 +71,17 @@ namespace UI
         
         public void SetButtonLocked(int id, int price)
         {
-            _backgroundPanels[id].SetButtonText(Convert.ToString(price), _priceColor);
+            _backgroundPanels[id].SetBuyButton(Convert.ToString(price));
         }
 
         public void SetButtonUnlocked(int id)
         {
-            _backgroundPanels[id].RemoveMoneyImage();
-            _backgroundPanels[id].SetButtonText("V", Color.white);
+            _backgroundPanels[id].SetSelectButton(false);
         }
         
         public void SetButtonSelected(int id)
         {
-            _backgroundPanels[id].RemoveMoneyImage();
-            _backgroundPanels[id].SetButtonText("V", Color.green);
+            _backgroundPanels[id].SetSelectButton(true);
         }
 
         public void SetMoney(int money)

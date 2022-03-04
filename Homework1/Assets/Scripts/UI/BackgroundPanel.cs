@@ -6,33 +6,42 @@ namespace UI
     public class BackgroundPanel : MonoBehaviour
     {
         [SerializeField] private Image previewImage;
-        [SerializeField] private Image moneyImage;
         [SerializeField] private Text buttonText;
         [SerializeField] private Text nameText;
+        [SerializeField] private GameObject buyPS;
+        [SerializeField] private GameObject buttonBuyPanel;
+        [SerializeField] private GameObject buttonSelectPanel;
+        [SerializeField] private Image checkImage;
+        [SerializeField] private Color moneyColor;
+        [SerializeField] private Transform particleSystemSpawnPoint;
 
-        public void RemoveMoneyImage()
+        public void RunParticleSystem()
         {
-            if (moneyImage)
+            Instantiate(buyPS, particleSystemSpawnPoint);
+        }
+
+        public void SetSelectButton(bool state)
+        {
+            buttonBuyPanel.SetActive(false);
+            buttonSelectPanel.SetActive(true);
+            
+            if (state)
             {
-                Destroy(moneyImage.gameObject);
-                buttonText.rectTransform.anchorMin = new Vector2(0, 0);
-                buttonText.rectTransform.anchorMax = new Vector2(1, 1);
-                buttonText.rectTransform.localPosition = Vector3.zero;
-                buttonText.rectTransform.anchoredPosition = Vector2.zero;
-                buttonText.rectTransform.sizeDelta = Vector2.zero;
-                
+                checkImage.color = Color.green;
+            }
+            else
+            {
+                checkImage.color = Color.white;
             }
         }
-        
-        public void SetButtonText(string text)
+
+        public void SetBuyButton(string text)
         {
+            buttonBuyPanel.SetActive(true);
+            buttonSelectPanel.SetActive(false);
+            
             buttonText.text = text;
-        }
-        
-        public void SetButtonText(string text, Color color)
-        {
-            buttonText.text = text;
-            buttonText.color = color;
+            buttonText.color = moneyColor;
         }
 
         public void SetNameText(string text)
