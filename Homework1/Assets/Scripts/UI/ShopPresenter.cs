@@ -20,20 +20,62 @@ namespace UI
         public void OnOpen()
         {
             _shopWindow.CloseEvent += OnExit;
+            _shopWindow.OpenSkinsEvent += OnOpenSkins;
+            _shopWindow.OpenBackgroundsEvent += OnOpenBackgrounds;
             _shopWindow.BgButtonEvent += OnBgButton;
+            _shopWindow.SkinButtonEvent += OnSkinButton;
+            
+            OnOpenSkins();
+        }
+
+        private void OnOpenSkins()
+        {
+            _shopWindow.ShowSkinWindow();
+            _shopWindow.DestroyBgPanels();
+            
+            SpawnSkinPanels();
+
+            var c = 0;
+            foreach (var skin in _playerModel.SkinInfos)
+            {
+                if (!_playerModel.GetSkinStatus(skin.id))
+                {
+                    c += 1;
+                }
+            }
+            
+            _shopWindow.SetMainSkinPanel((c + 1) / 2);
+            _shopWindow.SetMoney(_playerModel.Money);
+        }
+
+        private void OnOpenBackgrounds()
+        {
+            _shopWindow.ShowBackgroundWindow();
+            _shopWindow.DestroySkins();
             
             SpawnBgPanels();
             SetBgButtons();
             
-            _shopWindow.SetMainPanel(_playerModel.BackgroundInfos.Length);
+            _shopWindow.SetMainBgPanel(_playerModel.BackgroundInfos.Length);
             _shopWindow.SetMoney(_playerModel.Money);
+        }
+
+        private void SpawnSkinPanels()
+        {
+            foreach (var panel in _playerModel.SkinInfos)
+            {
+                if (!_playerModel.GetSkinStatus(panel.id))
+                {
+                    _shopWindow.SpawnSkinPanel(panel);
+                }
+            }
         }
 
         private void SpawnBgPanels()
         {
-            for (int i = 0; i < _playerModel.BackgroundInfos.Length; i++)
+            foreach (var panel in _playerModel.BackgroundInfos)
             {
-                _shopWindow.SpawnBgPanel(_playerModel.BackgroundInfos[i]);
+                _shopWindow.SpawnBgPanel(panel);
             }
         }
 
@@ -61,6 +103,22 @@ namespace UI
             }
         }
 
+        private void OnSkinButton(int id)
+        {
+            if (_playerModel.Money - _playerModel.SkinInfos[id].price >= 0)
+            {
+                _playerModel.BuySkin(id);
+                    
+                _shopWindow.RemoveMoney(_playerModel.SkinInfos[id].price, _playerModel.Money);
+                _shopWindow.BuySkin(id);
+                _shopWindow.RemoveSkin(id);
+            }
+            else
+            {
+                _shopWindow.ShowNotEnoughMoneyWindow(true);
+            }
+        }
+        
         private void OnBgButton(int id)
         {
             if (id == _playerModel.Background)
@@ -85,7 +143,7 @@ namespace UI
                     _playerModel.BuyBackground(id);
                     
                     _shopWindow.RemoveMoney(_playerModel.BackgroundInfos[id].price, _playerModel.Money);
-                    _shopWindow.Buy(id);
+                    _shopWindow.BuyBg(id);
                 }
                 else
                 {
@@ -101,9 +159,14 @@ namespace UI
 
         public void OnClose()
         {
+            _shopWindow.DestroySkins();
             _shopWindow.DestroyBgPanels();
+
+            _shopWindow.OpenSkinsEvent -= OnOpenSkins;
+            _shopWindow.OpenBackgroundsEvent -= OnOpenBackgrounds;
             _shopWindow.CloseEvent -= OnExit;
             _shopWindow.BgButtonEvent -= OnBgButton;
+            _shopWindow.SkinButtonEvent -= OnSkinButton;
         }
     }
 }

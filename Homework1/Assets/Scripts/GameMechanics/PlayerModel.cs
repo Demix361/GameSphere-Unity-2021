@@ -5,7 +5,6 @@ namespace GameMechanics
 {
     public class PlayerModel
     {
-        private string playerName;
         private int highScoreClassic;
         private int highScoreArcade;
         private float musicVolume;
@@ -14,6 +13,7 @@ namespace GameMechanics
         private int money;
         private int background;
         private BackgroundInfo[] backgroundInfos;
+        private SkinInfo[] skinInfos;
 
         public event Action<float> ChangeMusicVolume;
         public event Action<float> ChangeEffectsVolume;
@@ -39,6 +39,18 @@ namespace GameMechanics
             }
         }
 
+        public SkinInfo[] SkinInfos
+        {
+            get
+            {
+                return skinInfos;
+            }
+            set
+            {
+                skinInfos = value;
+            }
+        }
+
         public int Background
         {
             get
@@ -51,30 +63,6 @@ namespace GameMechanics
                 background = value;
                 ChangeBackground?.Invoke(background);
                 PlayerPrefs.SetInt("CurrentBackground", background);
-            }
-        }
-
-        public BackgroundStatus GetBgStatus(int id)
-        {
-            var status = PlayerPrefs.GetString("Background" + Convert.ToString(id), "Locked");
-            
-            if (status == "Unlocked" || id == 0)
-            {
-                return BackgroundStatus.Unlocked;
-            }
-
-            return BackgroundStatus.Locked;
-        }
-
-        public void SetBgStatus(int id, BackgroundStatus status)
-        {
-            if (status == BackgroundStatus.Unlocked)
-            {
-                PlayerPrefs.SetString("Background" + Convert.ToString(id), "Unlocked");
-            }
-            else if (status == BackgroundStatus.Locked)
-            {
-                PlayerPrefs.SetString("Background" + Convert.ToString(id), "Locked");
             }
         }
 
@@ -105,20 +93,6 @@ namespace GameMechanics
                 effectsVolume = value;
                 PlayerPrefs.SetFloat("EffectsVolume", effectsVolume);
                 ChangeEffectsVolume?.Invoke(effectsVolume);
-            }
-        }
-        
-        public string PlayerName
-        {
-            get
-            {
-                playerName = PlayerPrefs.GetString("playerName", "Player1");
-                return playerName;
-            }
-            set
-            {
-                playerName = value;
-                PlayerPrefs.SetString("playerName", playerName);
             }
         }
 
@@ -183,6 +157,30 @@ namespace GameMechanics
         {
             Money += add;
         }
+        
+        public BackgroundStatus GetBgStatus(int id)
+        {
+            var status = PlayerPrefs.GetString("Background" + Convert.ToString(id), "Locked");
+            
+            if (status == "Unlocked" || id == 0)
+            {
+                return BackgroundStatus.Unlocked;
+            }
+
+            return BackgroundStatus.Locked;
+        }
+
+        public void SetBgStatus(int id, BackgroundStatus status)
+        {
+            if (status == BackgroundStatus.Unlocked)
+            {
+                PlayerPrefs.SetString("Background" + Convert.ToString(id), "Unlocked");
+            }
+            else if (status == BackgroundStatus.Locked)
+            {
+                PlayerPrefs.SetString("Background" + Convert.ToString(id), "Locked");
+            }
+        }
 
         public void BuyBackground(int id)
         {
@@ -197,6 +195,44 @@ namespace GameMechanics
             {
                 SetBgStatus(i, BackgroundStatus.Locked);
                 Background = 0;
+            }
+        }
+        
+        public bool GetSkinStatus(int id)
+        {
+            var status = PlayerPrefs.GetInt("Skin" + Convert.ToString(id), 0);
+
+            if (status == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void SetSkinStatus(int id, bool status)
+        {
+            if (status)
+            {
+                PlayerPrefs.SetInt("Skin" + Convert.ToString(id), 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Skin" + Convert.ToString(id), 0);
+            }
+        }
+
+        public void BuySkin(int id)
+        {
+            Money -= SkinInfos[id].price;
+            SetSkinStatus(id, true);
+        }
+
+        public void LockAllSkins()
+        {
+            for (int i = 0; i < SkinInfos.Length; i++)
+            {
+                SetSkinStatus(i, false);
             }
         }
     }

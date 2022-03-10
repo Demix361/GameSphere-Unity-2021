@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-
+﻿using UnityEngine;
 
 namespace GameMechanics
 {
@@ -9,6 +6,7 @@ namespace GameMechanics
     {
         [SerializeField] private ModelManager modelManager;
         [SerializeField] private BackgroundInfo[] backgroundInfos;
+        [SerializeField] private SkinInfo[] skinInfos;
 
         private GameObject _background;
 
@@ -17,6 +15,7 @@ namespace GameMechanics
             var curBg = modelManager.PlayerModel.Background;
 
             modelManager.PlayerModel.BackgroundInfos = backgroundInfos;
+            modelManager.PlayerModel.SkinInfos = skinInfos;
 
             modelManager.PlayerModel.ChangeBackground += ChangeBackground;
             

@@ -14,8 +14,8 @@ namespace GameMechanics
         private void Start()
         {
             transform.localScale *= Random.Range(0.025f, 0.08f);
-            _deltaSpeed = transform.position.normalized * Random.Range(1f, 2f);
-            _deltaSize = transform.localScale * Random.Range(1f, 2f);
+            _deltaSpeed = transform.position.normalized * Random.Range(1f, 3f);
+            _deltaSize = transform.localScale * Random.Range(1f, 3f);
 
             _borderY = Camera.main.orthographicSize * 1.1f;
             _borderX = _borderY * Camera.main.aspect;

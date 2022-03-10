@@ -44,6 +44,7 @@ namespace UI
             _playerModel.HighScoreArcade = 0;
             _playerModel.Money = 0;
             _playerModel.LockAllBackgrounds();
+            _playerModel.LockAllSkins();
             _onExit?.Invoke();
         }
 
