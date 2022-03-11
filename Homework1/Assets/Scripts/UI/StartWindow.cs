@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +16,7 @@ namespace UI
         public event Action QuitEvent;
         public event Action ShopEvent;
         public event Action LanguageEvent;
+        public event Action SkinEvent;
 
         public void OnStartClassic()
         {
@@ -41,6 +41,11 @@ namespace UI
         public void OnLanguage()
         {
             LanguageEvent?.Invoke();
+        }
+
+        public void OnSkin()
+        {
+            SkinEvent?.Invoke();
         }
 
         public void OnQuit()

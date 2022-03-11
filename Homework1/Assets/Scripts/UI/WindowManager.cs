@@ -13,6 +13,7 @@ namespace UI
         [SerializeField] private LanguageWindow _languageWindow;
         [SerializeField] private PauseWindow _pauseWindow;
         [SerializeField] private ShopWindow _shopWindow;
+        [SerializeField] private SkinWindow _skinWindow;
         
         [SerializeField] private ModelManager _modelManager;
         
@@ -26,6 +27,7 @@ namespace UI
         private PausePresenter _arcadePausePresenter;
         private PausePresenter _classicPausePresenter;
         private ShopPresenter _shopPresenter;
+        private SkinPresenter _skinPresenter;
         
         private void Start()
         {
@@ -51,6 +53,12 @@ namespace UI
             _shopPresenter = new ShopPresenter(_modelManager.PlayerModel, _shopWindow, () =>
             {
                 _shopPresenter.OnClose();
+                ShowStartWindow();
+            });
+
+            _skinPresenter = new SkinPresenter(_modelManager.PlayerModel, _skinWindow, () =>
+            {
+                _skinPresenter.OnClose();
                 ShowStartWindow();
             });
             
@@ -92,6 +100,13 @@ namespace UI
                 _languageWindow.gameObject.SetActive(true);
                 _languagePresenter.OnOpen();
             }, () =>
+            {
+                _startWindow.gameObject.SetActive(false);
+                _startPresenter.OnClose();
+                
+                _skinWindow.gameObject.SetActive(true);
+                _skinPresenter.OnOpen();
+            },() => 
             {
                 _startPresenter.OnClose();
                 #if UNITY_EDITOR
@@ -217,17 +232,7 @@ namespace UI
             _languageWindow.gameObject.SetActive(false);
             _pauseWindow.gameObject.SetActive(false);
             _shopWindow.gameObject.SetActive(false);
-        }
-
-        private void ShowSettingsWindow()
-        {
-            _settingsWindow.gameObject.SetActive(true);
-            _settingsPresenter.OnOpen();
-            _startWindow.gameObject.SetActive(false);
-            _classicGameWindow.gameObject.SetActive(false);
-            _arcadeGameWindow.gameObject.SetActive(false);
-            _endWindow.gameObject.SetActive(false);
-            _languageWindow.gameObject.SetActive(false);
+            _skinWindow.gameObject.SetActive(false);
         }
     }
 }

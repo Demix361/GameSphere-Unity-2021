@@ -31,7 +31,7 @@ namespace UI
         [SerializeField] private Button _bgPanelButton;
         
         private List<BackgroundPanel> _backgroundPanels = new List<BackgroundPanel>();
-        private List<SkinPanel> _skinPanels = new List<SkinPanel>();
+        private List<ShopSkinCard> _skinPanels = new List<ShopSkinCard>();
         private Coroutine _moneyCoroutine;
 
         public void OpenSkins()
@@ -108,7 +108,7 @@ namespace UI
         {
             var panel = Instantiate(_skinPanelPrefab, _skinPanelsParent);
             panel.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnSkinPress(skinInfo.id); });
-            var skinPanelComponent = panel.GetComponent<SkinPanel>();
+            var skinPanelComponent = panel.GetComponent<ShopSkinCard>();
             _skinPanels.Add(skinPanelComponent);
 
             skinPanelComponent.Id = skinInfo.id;

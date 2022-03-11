@@ -14,6 +14,7 @@ namespace GameMechanics
         private int background;
         private BackgroundInfo[] backgroundInfos;
         private SkinInfo[] skinInfos;
+        private AmogusInfo[] amogusInfos;
 
         public event Action<float> ChangeMusicVolume;
         public event Action<float> ChangeEffectsVolume;
@@ -48,6 +49,18 @@ namespace GameMechanics
             set
             {
                 skinInfos = value;
+            }
+        }
+        
+        public AmogusInfo[] AmogusInfos
+        {
+            get
+            {
+                return amogusInfos;
+            }
+            set
+            {
+                amogusInfos = value;
             }
         }
 
@@ -153,6 +166,11 @@ namespace GameMechanics
             }
         }
 
+        public void DeletePlayerPrefs()
+        {
+            PlayerPrefs.DeleteAll();
+        }
+
         public void AddMoney(int add)
         {
             Money += add;
@@ -222,6 +240,11 @@ namespace GameMechanics
             }
         }
 
+        public SkinInfo GetSkin(int id)
+        {
+            return skinInfos[id];
+        }
+
         public void BuySkin(int id)
         {
             Money -= SkinInfos[id].price;
@@ -234,6 +257,64 @@ namespace GameMechanics
             {
                 SetSkinStatus(i, false);
             }
+        }
+        
+        // SKINS
+        
+    
+        
+        public int GetSelectedSkin(string colorId)
+        {
+            return PlayerPrefs.GetInt("SelectedSkin" + colorId, -1);
+        }
+        
+        public void SetSelectedSkin(string colorId, int skinId)
+        {
+            PlayerPrefs.SetInt("SelectedSkin" + colorId, skinId);
+        }
+        
+  
+        // Возвращает спрайт выбранного скина для данного цвета
+        public Sprite GetSelectedSkinSprite(string colorId)
+        {
+            var a = PlayerPrefs.GetInt("SelectedSkin" + colorId, -1);
+
+            if (a == -1)
+            {
+                foreach (var info in amogusInfos)
+                {
+                    if (info.colorName == colorId)
+                    {
+                        return info.crewmateSprite;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var info in skinInfos)
+                {
+                    if (info.id == a)
+                    {
+                        return info.skin;
+                    }
+                }
+            }
+
+            return null;
+        }
+        
+        // Возвращает цвет (если выбран) для данного скина
+        public string GetColorBySkin(int skinId)
+        {
+            foreach (var info in amogusInfos)
+            {
+                if (PlayerPrefs.GetInt("SelectedSkin" + info.colorName, -1) == skinId)
+                {
+                    return info.colorName;
+                }
+            }
+            
+            return null;
         }
     }
 }

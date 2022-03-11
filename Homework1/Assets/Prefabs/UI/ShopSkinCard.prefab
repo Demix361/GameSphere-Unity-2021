@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2664747265558876029}
   - component: {fileID: 3378944294673649623}
   m_Layer: 5
-  m_Name: SkinCard
+  m_Name: ShopSkinCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

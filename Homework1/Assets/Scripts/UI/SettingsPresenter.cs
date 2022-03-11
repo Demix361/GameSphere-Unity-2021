@@ -45,6 +45,7 @@ namespace UI
             _playerModel.Money = 0;
             _playerModel.LockAllBackgrounds();
             _playerModel.LockAllSkins();
+            _playerModel.DeletePlayerPrefs();
             _onExit?.Invoke();
         }
 
@@ -65,7 +66,7 @@ namespace UI
 
         private void OnPlusMoney()
         {
-            _playerModel.AddMoney(100);
+            _playerModel.AddMoney(1000);
         }
 
         private void OnZeroMoney()

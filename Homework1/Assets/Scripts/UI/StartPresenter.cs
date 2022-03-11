@@ -14,10 +14,11 @@ namespace UI
         private Action _onSettings;
         private Action _onShop;
         private Action _onLanguage;
+        private Action _onSkin;
         private Action _onExit;
 
         public StartPresenter(PlayerModel playerModel, MainMenuModel mainMenuModel, StartWindow startWindow, 
-            Action onStartClassic, Action onStartArcade, Action onSettings, Action onShop, Action onLanguage, Action onExit)
+            Action onStartClassic, Action onStartArcade, Action onSettings, Action onShop, Action onLanguage, Action onSkin, Action onExit)
         {
             _onExit = onExit;
             _onSettings = onSettings;
@@ -28,6 +29,7 @@ namespace UI
             _mainMenuModel = mainMenuModel;
             _onShop = onShop;
             _onLanguage = onLanguage;
+            _onSkin = onSkin;
         }
 
         public void OnOpen()
@@ -44,6 +46,7 @@ namespace UI
             _startWindow.SettingsEvent += OnStartWindowOnSettingsEvent;
             _startWindow.ShopEvent += OnShopEvent;
             _startWindow.LanguageEvent += OnLanguageEvent;
+            _startWindow.SkinEvent += OnSkinEvent;
             _startWindow.QuitEvent += OnStartWindowOnQuitEvent;
         }
 
@@ -79,6 +82,11 @@ namespace UI
             _onLanguage?.Invoke();
         }
 
+        private void OnSkinEvent()
+        {
+            _onSkin?.Invoke();
+        }
+
         public void OnClose()
         {
             _startWindow.StartClassicEvent -= OnStartWindowOnStartClassicEvent;
@@ -87,6 +95,7 @@ namespace UI
             _startWindow.QuitEvent -= OnStartWindowOnQuitEvent;
             _startWindow.ShopEvent -= OnShopEvent;
             _startWindow.LanguageEvent -= OnLanguageEvent;
+            _startWindow.SkinEvent -= OnSkinEvent;
         }
     }
 }

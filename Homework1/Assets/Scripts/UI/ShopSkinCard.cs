@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class SkinPanel : MonoBehaviour
+    public class ShopSkinCard : MonoBehaviour
     {
         [SerializeField] private Image skinImage;
         [SerializeField] private Text buttonText;

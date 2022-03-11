@@ -7,6 +7,7 @@ namespace GameMechanics
         [SerializeField] private ModelManager modelManager;
         [SerializeField] private BackgroundInfo[] backgroundInfos;
         [SerializeField] private SkinInfo[] skinInfos;
+        [SerializeField] private AmogusInfo[] amogusInfos;
 
         private GameObject _background;
 
@@ -16,6 +17,7 @@ namespace GameMechanics
 
             modelManager.PlayerModel.BackgroundInfos = backgroundInfos;
             modelManager.PlayerModel.SkinInfos = skinInfos;
+            modelManager.PlayerModel.AmogusInfos = amogusInfos;
 
             modelManager.PlayerModel.ChangeBackground += ChangeBackground;
             
