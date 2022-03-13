@@ -15,6 +15,8 @@ namespace UI
         public event Action OpenBackgroundsEvent;
         public event Action<int> BgButtonEvent;
         public event Action<int> SkinButtonEvent;
+        public event Action NoSkinsLeftEvent;
+        
         
         [SerializeField] private Text _moneyText;
         [SerializeField] private GameObject _notEnoughMoneyWindow;
@@ -29,6 +31,8 @@ namespace UI
         [SerializeField] private GameObject _bgPanelPrefab;
         [SerializeField] private RectTransform _bgPanelsParent;
         [SerializeField] private Button _bgPanelButton;
+
+        [SerializeField] private GameObject _noSkinsPanel;
         
         private List<BackgroundPanel> _backgroundPanels = new List<BackgroundPanel>();
         private List<ShopSkinCard> _skinPanels = new List<ShopSkinCard>();
@@ -61,6 +65,11 @@ namespace UI
             
             _skinPanelButton.GetComponent<Image>().color = Color.green;
             _bgPanelButton.GetComponent<Image>().color = Color.white;
+        }
+
+        public void ShowNoSkinsPanel(bool state)
+        {
+            _noSkinsPanel.SetActive(state);
         }
         
         public void ShowBackgroundWindow()
@@ -136,6 +145,11 @@ namespace UI
                     Destroy(panel.gameObject);
                     break;
                 }
+            }
+
+            if (_skinPanels.Count == 0)
+            {
+                NoSkinsLeftEvent?.Invoke();
             }
         }
 

@@ -24,8 +24,14 @@ namespace UI
             _shopWindow.OpenBackgroundsEvent += OnOpenBackgrounds;
             _shopWindow.BgButtonEvent += OnBgButton;
             _shopWindow.SkinButtonEvent += OnSkinButton;
+            _shopWindow.NoSkinsLeftEvent += OnNoSkinsLeft;
             
             OnOpenSkins();
+        }
+
+        private void OnNoSkinsLeft()
+        {
+            _shopWindow.ShowNoSkinsPanel(true);
         }
 
         private void OnOpenSkins()
@@ -55,12 +61,18 @@ namespace UI
             
             _shopWindow.SetMainSkinPanel((c + 1) / 2);
             _shopWindow.SetMoney(_playerModel.Money);
+
+            if (c == 0)
+            {
+                _shopWindow.ShowNoSkinsPanel(true);
+            }
         }
 
         private void OnOpenBackgrounds()
         {
             _shopWindow.ShowBackgroundWindow();
             _shopWindow.DestroySkins();
+            _shopWindow.ShowNoSkinsPanel(false);
             
             SpawnBgPanels();
             SetBgButtons();
@@ -183,12 +195,14 @@ namespace UI
         {
             _shopWindow.DestroySkins();
             _shopWindow.DestroyBgPanels();
+            _shopWindow.ShowNoSkinsPanel(false);
 
             _shopWindow.OpenSkinsEvent -= OnOpenSkins;
             _shopWindow.OpenBackgroundsEvent -= OnOpenBackgrounds;
             _shopWindow.CloseEvent -= OnExit;
             _shopWindow.BgButtonEvent -= OnBgButton;
             _shopWindow.SkinButtonEvent -= OnSkinButton;
+            _shopWindow.NoSkinsLeftEvent -= OnNoSkinsLeft;
         }
     }
 }
