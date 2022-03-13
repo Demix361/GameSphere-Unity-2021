@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41d02c09fda42188d17fd6d4de3cbff, type: 3}
   m_Name: 1
   m_EditorClassIdentifier: 
-  price: 100
+  price: 80
   id: 1
   rarity: 0
   skin: {fileID: 21300000, guid: 7739c16f9ac11d34391312be254440a0, type: 3}

@@ -137,15 +137,16 @@ namespace UI
             }
         }
 
-        private void OnSkinButton(int id)
+        private void OnSkinButton(int skinId)
         {
-            if (_playerModel.Money - _playerModel.SkinInfos[id].price >= 0)
+            var price = _playerModel.GetSkin(skinId).price;
+            if (_playerModel.Money - price >= 0)
             {
-                _playerModel.BuySkin(id);
+                _playerModel.BuySkin(skinId);
                     
-                _shopWindow.RemoveMoney(_playerModel.SkinInfos[id].price, _playerModel.Money);
-                _shopWindow.BuySkin(id);
-                _shopWindow.RemoveSkin(id);
+                _shopWindow.RemoveMoney(price, _playerModel.Money);
+                _shopWindow.BuySkin(skinId);
+                _shopWindow.RemoveSkin(skinId);
             }
             else
             {

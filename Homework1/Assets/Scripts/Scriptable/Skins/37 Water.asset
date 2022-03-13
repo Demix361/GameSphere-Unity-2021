@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f41d02c09fda42188d17fd6d4de3cbff, type: 3}
-  m_Name: 13
+  m_Name: 37 Water
   m_EditorClassIdentifier: 
-  price: 300
-  id: 13
+  price: 150
+  id: 37
   rarity: 1
-  skin: {fileID: 21300000, guid: 0874b34cc7830af4bbdc503a6c0b7cb7, type: 3}
+  skin: {fileID: 21300000, guid: 56ee69880cacade498900cd2b11d5ba5, type: 3}
   particles:
-  - {fileID: 7600118404072590661, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
-  - {fileID: 2019495752837558412, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
-  - {fileID: -2002386212924303557, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -9022243130530355514, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -5222132430435819675, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}

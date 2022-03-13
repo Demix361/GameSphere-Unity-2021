@@ -244,7 +244,7 @@ namespace GameMechanics
 
         public void BuySkin(int id)
         {
-            Money -= SkinInfos[id].price;
+            Money -= GetSkin(id).price;
             SetSkinStatus(id, true);
         }
 
@@ -321,6 +321,19 @@ namespace GameMechanics
                 if (skin.id == skinId)
                 {
                     return skin;
+                }
+            }
+
+            return null;
+        }
+
+        public SkinInfo GetSkin(int skinId)
+        {
+            foreach (var skinInfo in skinInfos)
+            {
+                if (skinInfo.id == skinId)
+                {
+                    return skinInfo;
                 }
             }
 

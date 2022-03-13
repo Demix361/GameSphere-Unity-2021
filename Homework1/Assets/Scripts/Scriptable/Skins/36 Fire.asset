@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f41d02c09fda42188d17fd6d4de3cbff, type: 3}
-  m_Name: 3
+  m_Name: 36 Fire
   m_EditorClassIdentifier: 
-  price: 80
-  id: 3
-  rarity: 0
-  skin: {fileID: 21300000, guid: aa7fcf98eb8e61a48a03d76a6f5769ca, type: 3}
+  price: 150
+  id: 36
+  rarity: 1
+  skin: {fileID: 21300000, guid: d198cf44175ddf64b8517596e6b21538, type: 3}
   particles:
-  - {fileID: 6990639500755084194, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
-  - {fileID: 2019495752837558412, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -9060353977925383715, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -7612072944198459068, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}

@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f41d02c09fda42188d17fd6d4de3cbff, type: 3}
-  m_Name: 10
+  m_Name: 10 Cheese
   m_EditorClassIdentifier: 
-  price: 300
+  price: 500
   id: 10
-  rarity: 1
-  skin: {fileID: 21300000, guid: e3884e981ab85994eaa694e6355fde91, type: 3}
+  rarity: 2
+  skin: {fileID: 21300000, guid: 3e68c3f9ec03f5443bcbe6583f2d0d75, type: 3}
   particles:
   - {fileID: 6990639500755084194, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -9060353977925383715, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -4335818254600010919, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}

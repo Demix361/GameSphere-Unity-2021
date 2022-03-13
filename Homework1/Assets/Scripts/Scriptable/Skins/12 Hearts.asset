@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f41d02c09fda42188d17fd6d4de3cbff, type: 3}
-  m_Name: 3
+  m_Name: 12 Hearts
   m_EditorClassIdentifier: 
-  price: 80
-  id: 3
-  rarity: 0
-  skin: {fileID: 21300000, guid: aa7fcf98eb8e61a48a03d76a6f5769ca, type: 3}
+  price: 500
+  id: 12
+  rarity: 2
+  skin: {fileID: 21300000, guid: f0699380cf42b1e4589f64e1d2cf0c04, type: 3}
   particles:
-  - {fileID: 6990639500755084194, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
-  - {fileID: 2019495752837558412, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -7170899847689938732, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: -1399448034902123842, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
+  - {fileID: 2346258075988756099, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}
