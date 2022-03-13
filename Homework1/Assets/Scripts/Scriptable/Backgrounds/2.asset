@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d46dfb219e483aa1dc27300a6a6fe1, type: 3}
   m_Name: 2
   m_EditorClassIdentifier: 
-  price: 100
+  price: 150
   id: 2
   preview: {fileID: 21300000, guid: 7a7e6a9033b00ea45b0f33f242c8764a, type: 3}
   prefab: {fileID: 1154010792960037277, guid: 49d0da93cab8af944820f7a1e54fdae3, type: 3}

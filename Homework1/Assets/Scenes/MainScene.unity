@@ -13000,9 +13000,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d61a28e1f1bcf2d449b83c6329ccd346, type: 2}
   - {fileID: 11400000, guid: 2e15df1889174c84384a8c5cc83ce12a, type: 2}
   - {fileID: 11400000, guid: 08c5dd12d245c294db775eed1b750a3b, type: 2}
-  - {fileID: 11400000, guid: 9440b0d48b3740f4b83fd3686e96db31, type: 2}
-  - {fileID: 11400000, guid: 325ba0602775eb0428fecfdcd02676c1, type: 2}
-  - {fileID: 11400000, guid: 6f98616430e882f40945accda5280366, type: 2}
   skinInfos:
   - {fileID: 11400000, guid: fd71d6abd518df044b7c5f967ae1447d, type: 2}
   - {fileID: 11400000, guid: ff243432f9612eb40bd7e488356db8c3, type: 2}
@@ -13845,7 +13842,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!222 &8588596035944860482
 CanvasRenderer:
   m_ObjectHideFlags: 0
