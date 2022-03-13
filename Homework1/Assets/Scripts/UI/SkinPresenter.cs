@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GameMechanics;
 using UnityEngine;
 
@@ -32,26 +33,20 @@ namespace UI
         {
             _skinWindow.SetShowPanel((_playerModel.AmogusInfos.Length + 1) / 2);
             
-            foreach (var info in _playerModel.AmogusInfos)
+            foreach (var amogusInfo in _playerModel.AmogusInfos)
             {
-                _skinWindow.SpawnShowCard(info.colorName, info.crewmateSprite, _playerModel.GetSelectedSkinSprite(info.colorName));
+                var skinInfo = _playerModel.GetSkinInfoByColor(amogusInfo.colorName);
+                _skinWindow.SpawnShowCard(amogusInfo.colorName, amogusInfo.crewmateSprite,
+                    skinInfo.skin,
+                    _playerModel.GetBorderColor(skinInfo.rarity));
             }
         }
 
         private void SpawnSelectCards(string colorId)
         {
-            var count = 0;
-            
-            foreach (var info in _playerModel.AmogusInfos)
-            {
-                if (info.colorName == colorId)
-                {
-                    _skinWindow.SpawnSelectCard(colorId, -1, info.crewmateSprite, _playerModel.GetSelectedSkin(colorId) == -1);
-                    count += 1;
-                    break;
-                }
-            }
+            var skinList = new List<SkinInfo>();
 
+            skinList.Add(_playerModel.GetAmogusInfoByColor(colorId).defaultSkin);
             foreach (var skin in _playerModel.SkinInfos)
             {
                 var selectedInColor = _playerModel.GetColorBySkin(skin.id);
@@ -59,29 +54,40 @@ namespace UI
                 
                 if (bought && (selectedInColor == null || selectedInColor == colorId))
                 {
-                    _skinWindow.SpawnSelectCard(colorId, skin.id, skin.skin, selectedInColor == colorId);
-                    count += 1;
+                    skinList.Add(skin);
                 }
             }
             
-            _skinWindow.SetSelectPanel(count);
+            IComparer<SkinInfo> skinComparer = new PlayerModel.ReverseSkinRarityComparer();
+            skinList.Sort(skinComparer);
+
+            foreach (var skin in skinList)
+            {
+                var selectedInColor = _playerModel.GetColorBySkin(skin.id);
+                _skinWindow.SpawnSelectCard(colorId, skin.id, skin.skin, _playerModel.GetBorderColor(skin.rarity), selectedInColor == colorId);
+            }
+
+            _skinWindow.SetSelectPanel(skinList.Count);
         }
 
         private void OnShowSkin(string colorId)
         {
+            var currentSkin = _playerModel.GetSkinInfoByColor(colorId);
+            
             _skinWindow.ShowSelectPanel();
             _skinWindow.DestroyShowCards();
-            _skinWindow.SetCurrentSkin(_playerModel.GetSelectedSkinSprite(colorId));
+            _skinWindow.SetCurrentSkin(currentSkin.skin, _playerModel.GetBorderColor(currentSkin.rarity));
             
             SpawnSelectCards(colorId);
         }
         
         private void OnSelectSkin(string colorId, int skinId)
         {
-            Debug.Log(123);
-            _skinWindow.ChangeSelectedSkin(_playerModel.GetSelectedSkin(colorId), skinId);
+            _skinWindow.ChangeSelectedSkin(_playerModel.GetSkinIdByColor(colorId), skinId);
             _playerModel.SetSelectedSkin(colorId, skinId);
-            _skinWindow.SetCurrentSkin(_playerModel.GetSelectedSkinSprite(colorId));
+            
+            var currentSkin = _playerModel.GetSkinInfoByColor(colorId);
+            _skinWindow.SetCurrentSkin(currentSkin.skin, _playerModel.GetBorderColor(currentSkin.rarity));
         }
 
         private void OnExitSelectPanel()

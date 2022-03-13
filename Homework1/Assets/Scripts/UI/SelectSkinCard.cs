@@ -7,13 +7,15 @@ namespace UI
     {
         [SerializeField] private Image skinImage;
         [SerializeField] private Image buttonImage;
+        [SerializeField] private Image borderImage;
 
         public int Id;
 
-        public void Set(int id, Sprite skinSprite, bool selected)
+        public void Set(int id, Sprite skinSprite, Color borderColor, bool selected)
         {
             skinImage.sprite = skinSprite;
             Id = id;
+            borderImage.color = borderColor;
             SetSelected(selected);
         }
 

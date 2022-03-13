@@ -94,6 +94,7 @@ MonoBehaviour:
   buttonText: {fileID: 6290024376610880285}
   buyPS: {fileID: 4057954203615078466, guid: bb91d700dcbd7fb4b9677d1cf65795cd, type: 3}
   particleSystemSpawnPoint: {fileID: 6290024376082849778}
+  borderImage: {fileID: 2664747265558876029}
   Id: 0
 --- !u!1 &2664747265639244541
 GameObject:

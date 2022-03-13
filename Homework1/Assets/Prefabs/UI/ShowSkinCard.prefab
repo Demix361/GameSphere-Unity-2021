@@ -287,4 +287,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinImage: {fileID: 2255964874159423773}
   defaultImage: {fileID: 2255964873386229875}
+  cardSpriteRenderer: {fileID: 2255964874919563818}
   Id: 0

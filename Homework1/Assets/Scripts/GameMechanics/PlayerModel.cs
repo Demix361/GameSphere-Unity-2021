@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameMechanics
@@ -240,11 +242,6 @@ namespace GameMechanics
             }
         }
 
-        public SkinInfo GetSkin(int id)
-        {
-            return skinInfos[id];
-        }
-
         public void BuySkin(int id)
         {
             Money -= SkinInfos[id].price;
@@ -261,11 +258,41 @@ namespace GameMechanics
         
         // SKINS
         
-    
-        
-        public int GetSelectedSkin(string colorId)
+        public class SkinPriceComparer : IComparer<SkinInfo>
         {
-            return PlayerPrefs.GetInt("SelectedSkin" + colorId, -1);
+            public int Compare(SkinInfo x, SkinInfo y)
+            {
+                return (new CaseInsensitiveComparer()).Compare(x.price, y.price);
+            }
+        }
+        
+        public class ReverseSkinPriceComparer : IComparer<SkinInfo>
+        {
+            public int Compare(SkinInfo x, SkinInfo y)
+            {
+                return (new CaseInsensitiveComparer()).Compare(y.price, x.price);
+            }
+        }
+        
+        public class ReverseSkinRarityComparer : IComparer<SkinInfo>
+        {
+            public int Compare(SkinInfo x, SkinInfo y)
+            {
+                return (new CaseInsensitiveComparer()).Compare(y.rarity, x.rarity);
+            }
+        }
+
+        public AmogusInfo GetAmogusInfoByColor(string colorId)
+        {
+            foreach (var info in amogusInfos)
+            {
+                if (info.colorName == colorId)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
         
         public void SetSelectedSkin(string colorId, int skinId)
@@ -273,34 +300,36 @@ namespace GameMechanics
             PlayerPrefs.SetInt("SelectedSkin" + colorId, skinId);
         }
         
-  
-        // Возвращает спрайт выбранного скина для данного цвета
-        public Sprite GetSelectedSkinSprite(string colorId)
+        public int GetSkinIdByColor(string colorId)
         {
-            var a = PlayerPrefs.GetInt("SelectedSkin" + colorId, -1);
+            var skinId = PlayerPrefs.GetInt("SelectedSkin" + colorId, -1);
 
-            if (a == -1)
+            if (skinId == -1)
             {
-                foreach (var info in amogusInfos)
-                {
-                    if (info.colorName == colorId)
-                    {
-                        return info.crewmateSprite;
-                    }
-                }
+                skinId = GetAmogusInfoByColor(colorId).defaultSkin.id;
+                SetSelectedSkin(colorId, skinId);
             }
-            else
+
+            return skinId;
+        }
+
+        public SkinInfo GetSkinInfoByColor(string colorId)
+        {
+            var skinId = GetSkinIdByColor(colorId);
+            foreach (var skin in skinInfos)
             {
-                foreach (var info in skinInfos)
+                if (skin.id == skinId)
                 {
-                    if (info.id == a)
-                    {
-                        return info.skin;
-                    }
+                    return skin;
                 }
             }
 
             return null;
+        }
+        
+        public Sprite GetSkinSpriteByColor(string colorId)
+        {
+            return GetSkinInfoByColor(colorId).skin;
         }
         
         // Возвращает цвет (если выбран) для данного скина
@@ -315,6 +344,26 @@ namespace GameMechanics
             }
             
             return null;
+        }
+
+        public Color GetBorderColor(SkinInfo.RarityClass rarity)
+        {
+            var color = Color.white;
+            
+            if (rarity == SkinInfo.RarityClass.Rare)
+            {
+                color = new Color(0f, 0.5f, 1f, 1f);
+            }
+            else if (rarity == SkinInfo.RarityClass.Epic)
+            {
+                color = new Color(0.6f, 0f, 1f, 1f);
+            }
+            else if (rarity == SkinInfo.RarityClass.Legendary)
+            {
+                color = new Color(1f, 0.4f, 0f, 1f);
+            }
+
+            return color;
         }
     }
 }

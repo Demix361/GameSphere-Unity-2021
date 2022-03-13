@@ -19,3 +19,4 @@ MonoBehaviour:
   miniSprite: {fileID: 21300000, guid: 1ea8cd95606d35c42a22050ba89fe4b6, type: 3}
   alienKillAnimator: {fileID: 9100000, guid: e766789246cccaf4cb0e9a72f108d43d, type: 2}
   miniBoneSprite: {fileID: 21300000, guid: 7e3c931fd67462840bf98679d20adaaa, type: 3}
+  defaultSkin: {fileID: 11400000, guid: c5e8c56139c0aea489ad9257a8f06c1c, type: 2}

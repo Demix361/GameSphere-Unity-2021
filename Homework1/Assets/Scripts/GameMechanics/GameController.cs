@@ -83,7 +83,7 @@ namespace GameMechanics
             _curGameType = GameType.Classic;
             Time.timeScale = 1f;
 
-            _spawnBallsCoroutine = StartCoroutine(ClassicSpawnBalls());
+            _spawnBallsCoroutine = StartCoroutine(ClassicSpawnCoroutine());
             _inputCoroutine = StartCoroutine(ClassicInputCoroutine());
         }
 
@@ -141,7 +141,7 @@ namespace GameMechanics
             }
         }
 
-        private IEnumerator ClassicSpawnBalls()
+        private IEnumerator ClassicSpawnCoroutine()
         {
             var z = 0f;
             var sortingOrder = 0;
@@ -149,6 +149,7 @@ namespace GameMechanics
             var spawnInterval = _modelManager.ClassicGameModel.SpawnInterval;
             var defaultC = _modelManager.ClassicGameModel.DefaultChance;
             var imposterC = _modelManager.ClassicGameModel.ImposterChance;
+            var amogusInfos = _modelManager.PlayerModel.AmogusInfos;
 
             while (true)
             {
@@ -162,13 +163,16 @@ namespace GameMechanics
                 {
                     amogus = Instantiate(_impostorPrefab, pos, Quaternion.identity);
                     sortingOrder += 2;
+                    amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
                 }
                 else
                 {
                     amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
+                    var amogusInfo = amogusInfos[Random.Range(0, amogusInfos.Length)];
+                    amogus.GetComponent<Crewmate>().SetAmogus(lastSortingOrder, this, amogusInfo, _modelManager.PlayerModel.GetSkinSpriteByColor(amogusInfo.colorName));
                     sortingOrder += 1;
                 }
-                amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
+                
                 amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
                 amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
 

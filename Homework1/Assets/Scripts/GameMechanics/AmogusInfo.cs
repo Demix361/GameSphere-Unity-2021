@@ -12,5 +12,6 @@ namespace GameMechanics
         [SerializeField] public Sprite miniSprite;
         [SerializeField] public RuntimeAnimatorController alienKillAnimator;
         [SerializeField] public Sprite miniBoneSprite;
+        [SerializeField] public SkinInfo defaultSkin;
     }
 }

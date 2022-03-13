@@ -104,16 +104,15 @@ namespace UI
             _backgroundPanels[id].RunParticleSystem();
         }
         
-        public void SpawnSkinPanel(SkinInfo skinInfo)
+        public void SpawnSkinCard(int skinId, string price, Sprite sprite, Color borderColor)
         {
             var panel = Instantiate(_skinPanelPrefab, _skinPanelsParent);
-            panel.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnSkinPress(skinInfo.id); });
+            panel.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnSkinPress(skinId); });
             var skinPanelComponent = panel.GetComponent<ShopSkinCard>();
             _skinPanels.Add(skinPanelComponent);
 
-            skinPanelComponent.Id = skinInfo.id;
-            skinPanelComponent.SetPrice(Convert.ToString(skinInfo.price));
-            skinPanelComponent.SetSkinImage(skinInfo.skin);
+            skinPanelComponent.Id = skinId;
+            skinPanelComponent.Set(price, sprite, borderColor);
         }
 
         public void SpawnBgPanel(BackgroundInfo bgInfo)

@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   price: 100
   id: 6
+  rarity: 0
   skin: {fileID: 21300000, guid: c0f278f2cbc18fb4fb8c32ffa53a00e4, type: 3}
+  particles:
+  - {fileID: 21300000, guid: 8dd9dec1742562547a9045a1b7d053ed, type: 3}
+  - {fileID: 21300000, guid: f9c35e3d6cf4d9540af54e728b5b5202, type: 3}

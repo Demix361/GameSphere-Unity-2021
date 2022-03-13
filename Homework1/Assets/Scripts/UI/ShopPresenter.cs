@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using GameMechanics;
-using UnityEngine;
 
 namespace UI
 {
@@ -33,12 +33,21 @@ namespace UI
             _shopWindow.ShowSkinWindow();
             _shopWindow.DestroyBgPanels();
             
-            SpawnSkinPanels();
+            SpawnSkinCards();
 
             var c = 0;
             foreach (var skin in _playerModel.SkinInfos)
             {
-                if (!_playerModel.GetSkinStatus(skin.id))
+                var defaultSkin = false;
+                foreach (var amogusInfo in _playerModel.AmogusInfos)
+                {
+                    if (amogusInfo.defaultSkin == skin)
+                    {
+                        defaultSkin = true;
+                        break;
+                    }
+                }
+                if (!_playerModel.GetSkinStatus(skin.id) && !defaultSkin)
                 {
                     c += 1;
                 }
@@ -60,13 +69,26 @@ namespace UI
             _shopWindow.SetMoney(_playerModel.Money);
         }
 
-        private void SpawnSkinPanels()
+        private void SpawnSkinCards()
         {
-            foreach (var panel in _playerModel.SkinInfos)
+            IComparer<SkinInfo> skinComparer = new PlayerModel.ReverseSkinPriceComparer();
+            Array.Sort(_playerModel.SkinInfos, skinComparer);
+            
+            foreach (var skinInfo in _playerModel.SkinInfos)
             {
-                if (!_playerModel.GetSkinStatus(panel.id))
+                var defaultSkin = false;
+                foreach (var amogusInfo in _playerModel.AmogusInfos)
                 {
-                    _shopWindow.SpawnSkinPanel(panel);
+                    if (amogusInfo.defaultSkin == skinInfo)
+                    {
+                        defaultSkin = true;
+                        break;
+                    }
+                }
+                
+                if (!_playerModel.GetSkinStatus(skinInfo.id) && !defaultSkin)
+                {
+                    _shopWindow.SpawnSkinCard(skinInfo.id, Convert.ToString(skinInfo.price), skinInfo.skin, _playerModel.GetBorderColor(skinInfo.rarity));
                 }
             }
         }

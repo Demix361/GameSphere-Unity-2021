@@ -9,6 +9,7 @@ namespace UI
         [SerializeField] private Text buttonText;
         [SerializeField] private GameObject buyPS;
         [SerializeField] private Transform particleSystemSpawnPoint;
+        [SerializeField] private Image borderImage;
 
         public int Id;
         
@@ -17,14 +18,11 @@ namespace UI
             Instantiate(buyPS, particleSystemSpawnPoint.position, Quaternion.identity);
         }
 
-        public void SetPrice(string text)
+        public void Set(string text, Sprite sprite, Color borderColor)
         {
             buttonText.text = text;
-        }
-
-        public void SetSkinImage(Sprite sprite)
-        {
             skinImage.sprite = sprite;
+            borderImage.color = borderColor;
         }
     }
 }

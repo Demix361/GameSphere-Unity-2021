@@ -32,6 +32,21 @@ namespace GameMechanics
             }
         }
         
+        public void SetAmogus(int minSortingOrder, GameController gameController, AmogusInfo amogusInfo, Sprite skin)
+        {
+            _gameController = gameController;
+            Info = amogusInfo;
+            
+            GetComponent<SpriteRenderer>().sprite = skin;
+            GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder;
+            
+            if (Random.Range(0, 2) == 0)
+            {
+                var ls = transform.localScale;
+                transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
+            }
+        }
+        
         private void OnTriggerExit2D(Collider2D other)
         {
             if (!_destroyed && other.CompareTag("DeleteZone"))

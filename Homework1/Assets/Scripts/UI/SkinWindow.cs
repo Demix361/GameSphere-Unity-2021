@@ -23,6 +23,7 @@ namespace UI
         [SerializeField] private GameObject _selectCardPrefab;
         [SerializeField] private RectTransform _selectCardsParent;
         [SerializeField] private Image _currentSkinImage;
+        [SerializeField] private Image _currentSkinBorderImage;
 
         private List<ShowSkinCard> _showCards = new List<ShowSkinCard>();
         private List<SelectSkinCard> _selectCards = new List<SelectSkinCard>();
@@ -73,18 +74,18 @@ namespace UI
                 new Vector2(_selectCardsParent.sizeDelta.x / 2, _selectCardsParent.anchoredPosition.y);
         }
 
-        public void SpawnShowCard(string id, Sprite defaultSprite, Sprite skinSprite)
+        public void SpawnShowCard(string id, Sprite defaultSprite, Sprite skinSprite, Color borderColor)
         {
             var card = Instantiate(_showCardPrefab, _showCardsParent);
-            card.GetComponent<ShowSkinCard>().Set(skinSprite, defaultSprite);
+            card.GetComponent<ShowSkinCard>().Set(skinSprite, defaultSprite, borderColor);
             card.GetComponent<Button>().onClick.AddListener(delegate { OnShowSkins(id); });
             _showCards.Add(card.GetComponent<ShowSkinCard>());
         }
 
-        public void SpawnSelectCard(string colorId, int skinId, Sprite skinSprite, bool selected)
+        public void SpawnSelectCard(string colorId, int skinId, Sprite skinSprite, Color borderColor, bool selected)
         {
             var card = Instantiate(_selectCardPrefab, _selectCardsParent);
-            card.GetComponent<SelectSkinCard>().Set(skinId, skinSprite, selected);
+            card.GetComponent<SelectSkinCard>().Set(skinId, skinSprite, borderColor, selected);
             card.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnSelectSkin(colorId, skinId); });
             _selectCards.Add(card.GetComponent<SelectSkinCard>());
         }
@@ -105,9 +106,10 @@ namespace UI
             }
         }
 
-        public void SetCurrentSkin(Sprite skinSprite)
+        public void SetCurrentSkin(Sprite skinSprite, Color borderColor)
         {
             _currentSkinImage.sprite = skinSprite;
+            _currentSkinBorderImage.color = borderColor;
         }
 
         public void DestroySelectCards()

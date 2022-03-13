@@ -242,6 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinImage: {fileID: 1950580120882419435}
   buttonImage: {fileID: 314995035386861161}
+  borderImage: {fileID: 1950580122280805852}
   Id: 0
 --- !u!1001 &314995034108754385
 PrefabInstance:
