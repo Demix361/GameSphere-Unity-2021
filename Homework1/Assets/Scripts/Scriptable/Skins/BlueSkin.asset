@@ -17,4 +17,4 @@ MonoBehaviour:
   rarity: 0
   skin: {fileID: 21300000, guid: f93c533010da8464dadd22ab12128516, type: 3}
   particles:
-  - {fileID: 21300000, guid: 9a770bd2dded82f428e9aa92bb26912b, type: 3}
+  - {fileID: -5222132430435819675, guid: 8d0facc65fc476d409932eda9bb645cc, type: 3}

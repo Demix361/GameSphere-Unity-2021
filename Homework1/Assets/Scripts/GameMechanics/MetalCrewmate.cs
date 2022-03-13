@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,6 +17,7 @@ namespace GameMechanics
         private GameController _gameController;
         private bool _destroyed;
         private int _clickCount = 0;
+        private List<Sprite> _particleSprites = new List<Sprite>();
 
         public IAmogus.AmogusType Type { get; } = IAmogus.AmogusType.Metal;
         public AmogusInfo Info { get; private set; }
@@ -29,6 +31,29 @@ namespace GameMechanics
             GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder;
             _armorSpriteRenderer.sortingOrder = minSortingOrder + 1;
             
+            _particleSprites.Add(Info.miniSprite);
+            
+            if (Random.Range(0, 2) == 0)
+            {
+                var ls = transform.localScale;
+                transform.localScale = new Vector3(-ls.x, ls.y, ls.z);
+            }
+        }
+        
+        public void SetAmogus(int minSortingOrder, GameController gameController, AmogusInfo amogusInfo, Sprite skin, Sprite[] particles)
+        {
+            _gameController = gameController;
+            Info = amogusInfo;
+            
+            GetComponent<SpriteRenderer>().sprite = skin;
+            GetComponent<SpriteRenderer>().sortingOrder = minSortingOrder;
+            _armorSpriteRenderer.sortingOrder = minSortingOrder + 1;
+
+            foreach (var p in particles)
+            {
+                _particleSprites.Add(p);
+            }
+
             if (Random.Range(0, 2) == 0)
             {
                 var ls = transform.localScale;
@@ -68,7 +93,11 @@ namespace GameMechanics
             {
                 var particleSystem = Instantiate(_particleSystemPrefab, transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
                 var ps = particleSystem.textureSheetAnimation;
-                ps.SetSprite(0, Info.miniSprite);
+
+                foreach (var p in _particleSprites)
+                {
+                   ps.AddSprite(p); 
+                }
                 
                 Instantiate(_popSound);
                             

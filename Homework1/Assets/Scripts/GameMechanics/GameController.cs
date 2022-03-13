@@ -169,7 +169,8 @@ namespace GameMechanics
                 {
                     amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
                     var amogusInfo = amogusInfos[Random.Range(0, amogusInfos.Length)];
-                    amogus.GetComponent<Crewmate>().SetAmogus(lastSortingOrder, this, amogusInfo, _modelManager.PlayerModel.GetSkinSpriteByColor(amogusInfo.colorName));
+                    var skinInfo = _modelManager.PlayerModel.GetSkinInfoByColor(amogusInfo.colorName);
+                    amogus.GetComponent<Crewmate>().SetAmogus(lastSortingOrder, this, amogusInfo, skinInfo.skin, skinInfo.particles);
                     sortingOrder += 1;
                 }
                 
@@ -197,7 +198,7 @@ namespace GameMechanics
             comboLevel = 0;
             comboCount = 0;
 
-            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnBalls());
+            _spawnBallsCoroutine = StartCoroutine(ArcadeSpawnCoroutine());
             _inputCoroutine = StartCoroutine(ArcadeInputCoroutine());
             _comboCoroutine = StartCoroutine(ArcadeComboCoroutine());
         }
@@ -361,7 +362,7 @@ namespace GameMechanics
             }
         }
 
-        private IEnumerator ArcadeSpawnBalls()
+        private IEnumerator ArcadeSpawnCoroutine()
         {
             z = 0f;
             sortingOrder = 0;
@@ -369,6 +370,7 @@ namespace GameMechanics
             var spawnInterval = _modelManager.ArcadeGameModel.SpawnInterval;
             var lastRageSpawn = _modelManager.ArcadeGameModel.CurTimer;
             var lastFrozenSpawn = _modelManager.ArcadeGameModel.CurTimer;
+            var amogusInfos = _modelManager.PlayerModel.AmogusInfos;
 
             while (true)
             {
@@ -381,31 +383,39 @@ namespace GameMechanics
                 {
                     amogus = Instantiate(_impostorPrefab, pos, Quaternion.identity);
                     sortingOrder += 2;
+                    amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
                 }
                 else if (newAmogusType == IAmogus.AmogusType.Rage)
                 {
                     amogus = Instantiate(_ragePrefab, pos, Quaternion.identity);
                     sortingOrder += 2;
                     lastRageSpawn = _modelManager.ArcadeGameModel.CurTimer;
+                    amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
                 }
                 else if (newAmogusType == IAmogus.AmogusType.Frozen)
                 {
                     amogus = Instantiate(_frozenPrefab, pos, Quaternion.identity);
                     sortingOrder += 2;
                     lastFrozenSpawn = _modelManager.ArcadeGameModel.CurTimer;
+                    amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
                 }
                 else if (newAmogusType == IAmogus.AmogusType.Metal)
                 {
                     amogus = Instantiate(_metalPrefab, pos, Quaternion.identity);
                     sortingOrder += 2;
+                    var amogusInfo = amogusInfos[Random.Range(0, amogusInfos.Length)];
+                    var skinInfo = _modelManager.PlayerModel.GetSkinInfoByColor(amogusInfo.colorName);
+                    amogus.GetComponent<MetalCrewmate>().SetAmogus(lastSortingOrder, this, amogusInfo, skinInfo.skin, skinInfo.particles);
                 }
                 else
                 {
                     amogus = Instantiate(_crewmatePrefab, pos, Quaternion.identity);
                     sortingOrder += 1;
+                    var amogusInfo = amogusInfos[Random.Range(0, amogusInfos.Length)];
+                    var skinInfo = _modelManager.PlayerModel.GetSkinInfoByColor(amogusInfo.colorName);
+                    amogus.GetComponent<Crewmate>().SetAmogus(lastSortingOrder, this, amogusInfo, skinInfo.skin, skinInfo.particles);
                 }
-                
-                amogus.GetComponent<IAmogus>().SetAmogus(lastSortingOrder, this);
+
                 amogus.GetComponent<Rigidbody2D>().AddForce(CalculateForce(pos));
                 amogus.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-50f, 50f));
                 
