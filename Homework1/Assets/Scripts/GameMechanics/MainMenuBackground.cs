@@ -7,7 +7,7 @@ namespace GameMechanics
 {
     public class MainMenuBackground : MonoBehaviour
     {
-        [SerializeField] private ModelManager _modelManager;
+        [SerializeField] private ModelManager modelManager;
         [SerializeField] private GameObject amogusPrefab;
         [SerializeField] private AudioSource _menuSong;
 
@@ -20,8 +20,8 @@ namespace GameMechanics
             halfHeight = Camera.main.orthographicSize * 1.6f;
             halfWidth = halfHeight * Camera.main.aspect;
 
-            _modelManager.MainMenuModel.StartSpawnEvent += StartSpawn;
-            _modelManager.MainMenuModel.StopSpawnEvent += StopSpawn;
+            modelManager.MainMenuModel.StartSpawnEvent += StartSpawn;
+            modelManager.MainMenuModel.StopSpawnEvent += StopSpawn;
         }
 
         private void StartSpawn()
@@ -57,13 +57,15 @@ namespace GameMechanics
                 float x = (float) (Math.Cos(angle) * halfWidth);
                 float y = (float) (Math.Sin(angle) * halfWidth);
                 
-                var destination = new Vector2(Random.Range(-newW, newW) - x, Random.Range(-newH, newH) - y).normalized * _modelManager.MainMenuModel.Force;
+                var destination = new Vector2(Random.Range(-newW, newW) - x, Random.Range(-newH, newH) - y).normalized * modelManager.MainMenuModel.Force;
                 
                 var newAmogus = Instantiate(amogusPrefab, new Vector2(x, y), Quaternion.identity);
                 newAmogus.GetComponent<Rigidbody2D>().AddForce(destination);
-                newAmogus.GetComponent<Rigidbody2D>().AddTorque((Random.Range(-0.5f, 0.5f)) * _modelManager.MainMenuModel.Torque);
+                newAmogus.GetComponent<Rigidbody2D>().AddTorque((Random.Range(-0.5f, 0.5f)) * modelManager.MainMenuModel.Torque);
 
-                yield return new WaitForSeconds(_modelManager.MainMenuModel.SpawnInterval);
+                newAmogus.GetComponent<MainMenuAmogus>().SetSprite(modelManager.MainMenuModel.GetAmogusSprite());
+
+                yield return new WaitForSeconds(modelManager.MainMenuModel.SpawnInterval);
             }
         }
     }

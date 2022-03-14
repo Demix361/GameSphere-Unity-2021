@@ -6378,7 +6378,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 2643.0383, y: 0}
+  m_AnchoredPosition: {x: 2643.038, y: 0}
   m_SizeDelta: {x: 5286.08, y: 844.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1086337324
@@ -13101,7 +13101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1a5d0a392da74419853c9bfa72cc06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _modelManager: {fileID: 1065531965840163828}
+  modelManager: {fileID: 1065531965840163828}
   amogusPrefab: {fileID: 1729494502033308926, guid: 3ca4e739577c5344e8fe6521d033de4b, type: 3}
   _menuSong: {fileID: 2281733665616315762}
 --- !u!82 &2281733665616315762

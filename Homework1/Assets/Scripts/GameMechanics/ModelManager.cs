@@ -19,7 +19,7 @@ namespace GameMechanics
             _playerModel = new PlayerModel();
             _classicGameModel = new ClassicGameModel(_playerModel);
             _arcadeGameModel = new ArcadeGameModel(_playerModel);
-            _mainMenuModel = new MainMenuModel();
+            _mainMenuModel = new MainMenuModel(_playerModel);
         }
     }
 }
