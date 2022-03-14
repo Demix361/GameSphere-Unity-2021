@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: tr
   m_SharedData: {fileID: 11400000, guid: 1e0dfe6c2b9cc41449e80ea34d950090, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - id: 0
   m_TableData:
   - m_Id: 220663488512
     m_Localized: "\xE7\u0131k\u0131\u015F"
@@ -42,5 +43,38 @@ MonoBehaviour:
     m_Localized: "Y\xFCksek skor"
     m_Metadata:
       m_Items: []
+  - m_Id: 4733659690147840
+    m_Localized: Oyun bitti
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4733119275048960
+    m_Localized: "Yeni y\xFCksek puan!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4753628939264000
+    m_Localized: 'Maksimum kombinasyon!
+
+      +{values.tr1}'
+    m_Metadata:
+      m_Items:
+      - id: 0
+  - m_Id: 4753675386986496
+    m_Localized: '{values.tr1}''lu kombinasyon!
+
+      +{values.tr2}'
+    m_Metadata:
+      m_Items:
+      - id: 0
+  - m_Id: 4753812368760832
+    m_Localized: 'Arka arkaya {values.tr1} kombinasyon!
+
+      +{values.tr2}'
+    m_Metadata:
+      m_Items:
+      - id: 0
   references:
     version: 1
+    00000000:
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00a0517c66e3100000a0d14c71e3100000a0913191e31000

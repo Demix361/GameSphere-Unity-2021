@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: pt
   m_SharedData: {fileID: 11400000, guid: 1e0dfe6c2b9cc41449e80ea34d950090, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - id: 0
   m_TableData:
   - m_Id: 220663488512
     m_Localized: "Sa\xEDda"
@@ -42,5 +43,34 @@ MonoBehaviour:
     m_Localized: "Pontua\xE7\xE3o m\xE1xima"
     m_Metadata:
       m_Items: []
+  - m_Id: 4733659690147840
+    m_Localized: Fim de jogo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4733119275048960
+    m_Localized: Novo recorde!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4753628939264000
+    m_Localized: "Combina\xE7\xE3o m\xE1xima!\n+{values.tr1}"
+    m_Metadata:
+      m_Items:
+      - id: 0
+  - m_Id: 4753675386986496
+    m_Localized: "Combina\xE7\xE3o de {values.tr1}!\n+{values.tr2}"
+    m_Metadata:
+      m_Items:
+      - id: 0
+  - m_Id: 4753812368760832
+    m_Localized: '{values.tr1} combo em linha!
+
+      +{values.tr2}'
+    m_Metadata:
+      m_Items:
+      - id: 0
   references:
     version: 1
+    00000000:
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 00a0517c66e3100000a0d14c71e3100000a0913191e31000
